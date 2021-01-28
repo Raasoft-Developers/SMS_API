@@ -1,0 +1,6 @@
+[
+  {
+    "name": "LOGIN_OTP_NOTIFICATION",
+    "messageTemplate": "Hi {MobileNumber}, We have received your request to login through OTP. {Code} is your OTP number."
+  }
+]

@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{B468E3E7-658B-46DC-8D24-838021502476}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventBus", "EventBus", "{3873AA2E-24FF-4F70-B57C-3F36E40467F3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "BuildingBlocks\EventBus\EventBus\EventBus.csproj", "{BBAA17E2-2779-42F9-88EC-EBF0A133DF5D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBusRabbitMQ", "BuildingBlocks\EventBus\EventBusRabbitMQ\EventBusRabbitMQ.csproj", "{58F7446B-03E1-442A-85AC-B398964241B5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nvg.SMSService", "Nvg.SMSService\Nvg.SMSService.csproj", "{8D78648A-12B3-463A-B302-E7BEC97701D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nvg.API.SMS", "Nvg.API.SMS\Nvg.API.SMS.csproj", "{0492AE0E-276D-4C83-BA83-175B838A353F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nvg.SMSBackgroundTask", "Nvg.SMSBackgroundTask\Nvg.SMSBackgroundTask.csproj", "{B9986C62-81AB-4544-9348-A8C82F7EAE30}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BBAA17E2-2779-42F9-88EC-EBF0A133DF5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBAA17E2-2779-42F9-88EC-EBF0A133DF5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBAA17E2-2779-42F9-88EC-EBF0A133DF5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBAA17E2-2779-42F9-88EC-EBF0A133DF5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58F7446B-03E1-442A-85AC-B398964241B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58F7446B-03E1-442A-85AC-B398964241B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58F7446B-03E1-442A-85AC-B398964241B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58F7446B-03E1-442A-85AC-B398964241B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D78648A-12B3-463A-B302-E7BEC97701D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D78648A-12B3-463A-B302-E7BEC97701D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D78648A-12B3-463A-B302-E7BEC97701D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D78648A-12B3-463A-B302-E7BEC97701D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0492AE0E-276D-4C83-BA83-175B838A353F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0492AE0E-276D-4C83-BA83-175B838A353F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0492AE0E-276D-4C83-BA83-175B838A353F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0492AE0E-276D-4C83-BA83-175B838A353F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9986C62-81AB-4544-9348-A8C82F7EAE30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9986C62-81AB-4544-9348-A8C82F7EAE30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9986C62-81AB-4544-9348-A8C82F7EAE30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9986C62-81AB-4544-9348-A8C82F7EAE30}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3873AA2E-24FF-4F70-B57C-3F36E40467F3} = {B468E3E7-658B-46DC-8D24-838021502476}
+		{BBAA17E2-2779-42F9-88EC-EBF0A133DF5D} = {3873AA2E-24FF-4F70-B57C-3F36E40467F3}
+		{58F7446B-03E1-442A-85AC-B398964241B5} = {3873AA2E-24FF-4F70-B57C-3F36E40467F3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3782B1F4-243F-4796-9F5B-3EB5362A3131}
+	EndGlobalSection
+EndGlobal
