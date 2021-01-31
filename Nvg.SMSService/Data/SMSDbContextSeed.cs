@@ -19,8 +19,8 @@ namespace Nvg.SMSService.Data
             {
                 foreach (var smsTemplate in smsTemplatesData)
                 {
-                    var name = (string)smsTemplate.Name;
-                    var messageTemplate = (string)smsTemplate.MessageTemplate;
+                    var name = (string)smsTemplate.name;
+                    var messageTemplate = (string)smsTemplate.messageTemplate;
 
                     var smsTemplateFromTblHasValue = context.SMSTemplate.Any(s => s.Name == name && s.MessageTemplate == messageTemplate);
                     if (!smsTemplateFromTblHasValue)

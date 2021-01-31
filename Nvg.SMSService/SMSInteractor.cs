@@ -18,19 +18,18 @@ namespace Nvg.SMSService
 
         public void SendSMS(SMSDto smsInputs)
         {
-            var eventMessage = new SendSMSEvent()
-            {
-                TenantID = smsInputs.TenantID,
-                //FacilityID = smsInputs.FacilityID,
-                TemplateName = "LOGIN_OTP_NOTIFICATION",
-                Recipients = smsInputs.To,
-                MessageParts = new Dictionary<string, string>()
-                        {
-                            {"MobileNumber", smsInputs.To },
-                            {"OTP", "1234" },
-                        },
+            string user = (!string.IsNullOrEmpty(smsInputs.Username) ? smsInputs.Username : smsInputs.To);
+
+            var sendSMSEvent = new SendSMSEvent();
+            sendSMSEvent.TemplateName = smsInputs.Template;
+            sendSMSEvent.Recipients = smsInputs.To;
+            sendSMSEvent.MessageParts = new Dictionary<string, string> {
+                { "User", user},
+                { "Content", smsInputs.Content}
             };
-            _eventBus.Publish(eventMessage);
+            sendSMSEvent.TenantID = smsInputs.TenantID;
+            sendSMSEvent.FacilityID = smsInputs.FacilityID;
+            _eventBus.Publish(sendSMSEvent);
         }
     }
 }

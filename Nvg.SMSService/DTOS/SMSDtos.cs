@@ -9,8 +9,12 @@ namespace Nvg.SMSService.DTOS
     public class SMSDto
     {
         public string To { get; set; }
+        public string Content { get; set; }
+        public string Template { get; set; }
         public string Subject { get; set; }
         public string TenantID { get; set; }
+        public string FacilityID { get; set; }
+        public string Username { get; set; }
     }
 
     public class SMSTemplateDto

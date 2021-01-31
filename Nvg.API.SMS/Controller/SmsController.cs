@@ -24,7 +24,6 @@ namespace Nvg.API.SMS.Controller
         public ActionResult SendSMS(SMSDto smsInputs)
         {
             CustomeResponse<string> response = new CustomeResponse<string>();
-            //bool sent = _emailProvider.SendEmail(email.To, email.MailBody, email.Subject, email.HtmlContent, email.Sender).Result;
             _smsInteractor.SendSMS(smsInputs);
             response.Status = true;
             response.Message = $"SMS is sent successfully to {smsInputs.To} ";
