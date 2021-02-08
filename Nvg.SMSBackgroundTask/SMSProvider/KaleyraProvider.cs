@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using Nvg.SMSBackgroundTask.Service;
 
 namespace Nvg.SMSBackgroundTask.SMSProvider
@@ -16,8 +17,10 @@ namespace Nvg.SMSBackgroundTask.SMSProvider
             _smsProviderCS = smsProviderConnectionString;
         }
 
-        public async Task<string> SendSMS(string recipients, string message, string sender = "")
+        public async Task<string> SendSMS(string recipients, string message, string sender = null)
         {
+            string responseMsg = "NOT SENT";
+            // If external app didnt send the sender value and template also have sender as null, then get it from provider conn string.
             if (string.IsNullOrEmpty(sender))
                 sender = _smsProviderCS.Sender;
 
@@ -35,7 +38,13 @@ namespace Nvg.SMSBackgroundTask.SMSProvider
                 parameters,
                 headers);
             string apiResponse = response.Content.ReadAsStringAsync().Result;
-            return apiResponse;
+
+            if (response.IsSuccessStatusCode)
+                responseMsg = "SENT";
+            else
+                responseMsg = responseMsg +". "+ JObject.Parse(apiResponse)["message"].ToString();
+
+            return responseMsg;
         }
     }
 }

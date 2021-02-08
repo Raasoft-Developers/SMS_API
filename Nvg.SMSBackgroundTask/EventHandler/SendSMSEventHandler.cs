@@ -12,6 +12,8 @@ using Nvg.SMSBackgroundTask.Models;
 using Nvg.SMSBackgroundTask.Extensions;
 using Nvg.SMSService.Data.Models;
 using Nvg.SMSBackgroundTask.SMSProvider;
+using Nvg.SMSService.SMSQuota;
+using Nvg.SMSService.SMSProvider;
 
 namespace Nvg.SMSBackgroundTask.EventHandler
 {
@@ -28,11 +30,14 @@ namespace Nvg.SMSBackgroundTask.EventHandler
             _logger.LogDebug($"Subscriber received a SendSMSEvent notification.");
             if (@event.Id != Guid.Empty)
             {
-                using IServiceScope scope = GetScope(@event.TenantID, @event.FacilityID);
+                using IServiceScope scope = GetScope(@event.ChannelKey);
                 var smsManager = scope.ServiceProvider.GetService<SMSManager>();
 
-                var smsCounterInteractor = scope.ServiceProvider.GetService<ISMSCounterInteractor>();
-                var smsCount = smsCounterInteractor.GetSMSCounter(@event.TenantID, @event.FacilityID);
+                var smsQuotaInteractor = scope.ServiceProvider.GetService<ISMSQuotaInteractor>();
+                var smsQuota = smsQuotaInteractor.GetSMSQuota(@event.ChannelKey)?.Result;
+
+                var smsProviderService = scope.ServiceProvider.GetService<ISMSProviderInteractor>();
+                var providerName = smsProviderService.GetSMSProviderByChannel(@event.ChannelKey)?.Result?.Name;
 
                 //var smsSettings = scope.ServiceProvider.GetService<SMSSettings>();
                 //_logger.LogDebug($"Enable SMS Info: {smsSettings}");
@@ -41,12 +46,14 @@ namespace Nvg.SMSBackgroundTask.EventHandler
                 {*/
                 var sms = new SMS
                 {
-                    FacilityID = @event.FacilityID,
-                    MessageParts = @event.MessageParts,
                     Sender = @event.Sender,
+                    Recipients = @event.Recipients,
+                    ChannelKey = @event.ChannelKey,
+                    ProviderName = providerName,
+                    Variant = @event.Variant,
+                    MessageParts = @event.MessageParts,
                     TemplateName = @event.TemplateName,
-                    TenantID = @event.TenantID,
-                    To = @event.Recipients
+                    Tag = @event.Tag
                 };
                 smsManager.SendSMS(sms);
                 /*}
@@ -57,7 +64,7 @@ namespace Nvg.SMSBackgroundTask.EventHandler
             return Task.FromResult(true);
         }
 
-        private IServiceScope GetScope(string tenantID, string facilityID)
+        private IServiceScope GetScope(string channelKey)
         {
             var serviceProvider = new ServiceCollection();
             var configuration = Program.GetConfiguration();
@@ -75,8 +82,13 @@ namespace Nvg.SMSBackgroundTask.EventHandler
 
             serviceProvider.AddScoped<SMSProviderConnectionString>(provider =>
             {
-                string smsGatewayProvider = configuration.GetSection("SMSGatewayProvider")?.Value;
-                return new SMSProviderConnectionString(smsGatewayProvider);
+                var smsProviderService = provider.GetService<ISMSProviderInteractor>();
+                var smsProviderConfiguration = smsProviderService.GetSMSProviderByChannel(channelKey)?.Result?.Configuration;
+                /*
+                if(string.IsNullOrEmpty(smsProviderConfiguration))
+                    smsProviderConfiguration = configuration.GetSection("SMSGatewayProvider")?.Value;
+                */
+                return new SMSProviderConnectionString(smsProviderConfiguration);
             });
 
             var scope = serviceProvider.BuildServiceProvider().CreateScope();

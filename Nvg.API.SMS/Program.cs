@@ -43,10 +43,16 @@ namespace Nvg.API.SMS
 
                 host.MigrateDbContext<SMSDbContext>((context, services) =>
                 {
-                    var smsTemplateDataFromJson = File.ReadAllText(Path.Combine(path, "AppData", "SMSTemplate.json"));
-                    dynamic smsData = JsonConvert.DeserializeObject<object>(smsTemplateDataFromJson);
+                    var smsPoolsDataFromJson = File.ReadAllText(Path.Combine(path, "AppData", "SMSPool.json"));
+                    dynamic smsPoolsData = JsonConvert.DeserializeObject<object>(smsPoolsDataFromJson);
+                    var smsProviderDataFromJson = File.ReadAllText(Path.Combine(path, "AppData", "SMSProvider.json"));
+                    dynamic smsProviderData = JsonConvert.DeserializeObject<object>(smsProviderDataFromJson);
+                    var smsChannelsDataFromJson = File.ReadAllText(Path.Combine(path, "AppData", "SMSChannel.json"));
+                    dynamic smsChannelsData = JsonConvert.DeserializeObject<object>(smsChannelsDataFromJson);
+                    var smsTemplatesDataFromJson = File.ReadAllText(Path.Combine(path, "AppData", "SMSTemplate.json"));
+                    dynamic smsTemplatesData = JsonConvert.DeserializeObject<object>(smsTemplatesDataFromJson);
                     new SMSDbContextSeed()
-                        .SeedAsync(context, configuration, smsData)
+                        .SeedAsync(context, smsPoolsData, smsProviderData, smsChannelsData, smsTemplatesData)
                         .Wait();
                 });
                 Log.Information("Starting web host ({ApplicationContext})...", AppName);

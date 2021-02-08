@@ -1,6 +1,10 @@
 [
   {
-    "name": "DEFAULT_SMS_NOTIFICATION",
+    "id": "default-template",
+    "name": "MasterSMSTemplate",
+    "variant": "",
+    "sender": "",
+    "smsPoolID": "default-pool",
     "messageTemplate": "Hi {User}, We have received your request. {Content}."
   }
 ]

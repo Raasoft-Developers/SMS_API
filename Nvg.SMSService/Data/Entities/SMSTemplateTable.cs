@@ -10,10 +10,13 @@ namespace Nvg.SMSService.Data.Entities
     public class SMSTemplateTable
     {
         [Key]
-        public long ID { get; set; }
-        public string TenantID { get; set; }
-        public string FacilityID { get; set; }
+        public string ID { get; set; }
         public string Name { get; set; }
+        public string Variant { get; set; }
+        public string Sender { get; set; }
+        public string SMSPoolID { get; set; }
+        [ForeignKey("SMSPoolID")]
+        public SMSPoolTable SMSPool { get; set; }
         public string MessageTemplate { get; set; }
     }
 }

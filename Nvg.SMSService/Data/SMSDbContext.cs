@@ -8,9 +8,12 @@ namespace Nvg.SMSService.Data
 {
     public class SMSDbContext : DbContext
     {
-        public virtual DbSet<SMSTemplateTable> SMSTemplate { get; set; }
-        public virtual DbSet<SMSHistoryTable> SMSHistory { get; set; }
-        public virtual DbSet<SMSCounterTable> SMSCounter { get; set; }
+        public virtual DbSet<SMSTemplateTable> SMSTemplates { get; set; }
+        public virtual DbSet<SMSHistoryTable> SMSHistories { get; set; }
+        public virtual DbSet<SMSQuotaTable> SMSQuotas { get; set; }
+        public virtual DbSet<SMSChannelTable> SMSChannels { get; set; }
+        public virtual DbSet<SMSPoolTable> SMSPools { get; set; }
+        public virtual DbSet<SMSProviderSettingsTable> SMSProviderSettings { get; set; }
 
         public string _schema { get; set; }
 
@@ -27,6 +30,15 @@ namespace Nvg.SMSService.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema(_schema);
+
+            modelBuilder.Entity<SMSPoolTable>()
+                .HasIndex(p => new { p.Name })
+                .IsUnique(true);
+            /*
+            modelBuilder.Entity<SMSProviderSettingsTable>()
+                .HasIndex(p => new { p.Name })
+                .IsUnique(true);
+            */;
         }
     }
 }

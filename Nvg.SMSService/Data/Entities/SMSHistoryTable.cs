@@ -10,14 +10,21 @@ namespace Nvg.SMSService.Data.Entities
     public class SMSHistoryTable
     {
         [Key]
-        public long ID { get; set; }
-        public string TenantID { get; set; }
-        public string FacilityID { get; set; }
-        public string ToPhNumbers { get; set; }
-        public string Message { get; set; }
-        public DateTime CreatedOn { get; set; }
+        public string ID { get; set; }
+        public string MessageSent { get; set; }
+        public string Sender { get; set; }
+        public string Recipients { get; set; }
         public DateTime SentOn { get; set; }
+        public string TemplateName { get; set; }
+        public string TemplateVariant { get; set; }
+        public string SMSChannelID { get; set; }
+        [ForeignKey("SMSChannelID")]
+        public SMSChannelTable SMSChannel { get; set; }
+        public string SMSProviderID { get; set; }
+        [ForeignKey("SMSProviderID")]
+        public SMSProviderSettingsTable SMSProvider { get; set; }
+        public string Tags { get; set; }
         public string Status { get; set; }
-
+        public int Attempts { get; set; }
     }
 }

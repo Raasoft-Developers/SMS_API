@@ -1,0 +1,8 @@
+[
+  {
+    "id": "default-channel",
+    "name": "MasterSMSChannel",
+    "smsProviderID": "default-provider",
+    "smsPoolID": "default-pool"
+  }
+]

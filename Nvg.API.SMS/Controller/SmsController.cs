@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Nvg.SMSService;
+using Nvg.SMSService.Data;
+using Nvg.SMSService.Data.Entities;
 using Nvg.SMSService.DTOS;
+using Nvg.SMSService.SMS;
 
 namespace Nvg.API.SMS.Controller
 {
@@ -21,14 +24,63 @@ namespace Nvg.API.SMS.Controller
         }
 
         [HttpPost]
+        public ActionResult AddSMSPool(SMSPoolDto poolInput)
+        {
+            var poolResponse = _smsInteractor.AddSMSPool(poolInput);
+            if (poolResponse.Status)
+                return Ok(poolResponse);
+            else
+                return StatusCode(412, poolResponse);
+        }
+
+        [HttpPost]
+        public ActionResult AddSMSProvider(SMSProviderSettingsDto providerInput)
+        {
+            var providerResponse = _smsInteractor.AddSMSProvider(providerInput);
+            if (providerResponse.Status)
+                return Ok(providerResponse);
+            else
+                return StatusCode(412, providerResponse);
+        }
+
+        [HttpPost]
+        public ActionResult AddSMSChannel(SMSChannelDto channelInput)
+        {
+            var channelResponse = _smsInteractor.AddSMSChannel(channelInput);
+            if (channelResponse.Status)
+                return Ok(channelResponse);
+            else
+                return StatusCode(412, channelResponse);
+        }
+
+        [HttpPost]
+        public ActionResult AddSMSTemplate(SMSTemplateDto templateInput)
+        {
+            var templateResponse = _smsInteractor.AddSMSTemplate(templateInput);
+            if (templateResponse.Status)
+                return Ok(templateResponse);
+            else
+                return StatusCode(412, templateResponse);
+        }
+
+        [HttpGet]
+        public ActionResult GetSMSChannelByKey(string channelKey)
+        {
+            var channelResponse = _smsInteractor.GetSMSChannelByKey(channelKey);
+            if (channelResponse.Status)
+                return Ok(channelResponse);
+            else
+                return StatusCode(412, channelResponse);
+        }
+
+        [HttpPost]
         public ActionResult SendSMS(SMSDto smsInputs)
         {
-            CustomeResponse<string> response = new CustomeResponse<string>();
-            _smsInteractor.SendSMS(smsInputs);
-            response.Status = true;
-            response.Message = $"SMS is sent successfully to {smsInputs.To} ";
-            response.Result = "SENT";
-            return Ok(response);
+            var smsResponse = _smsInteractor.SendSMS(smsInputs);
+            if(smsResponse.Status)
+                return Ok(smsResponse);
+            else
+                return StatusCode(412, smsResponse);
         }
     }
 }

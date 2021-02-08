@@ -2,6 +2,8 @@
 using Nvg.SMSBackgroundTask.SMSProvider;
 using Nvg.SMSService;
 using Nvg.SMSService.DTOS;
+using Nvg.SMSService.SMSHistory;
+using Nvg.SMSService.SMSQuota;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,33 +15,52 @@ namespace Nvg.SMSBackgroundTask
         private readonly ISMSProvider _smsProvider;
         private readonly ISMSTemplateInteractor _smsTemplateInteractor;
         private readonly ISMSHistoryInteractor _smsHistoryInteractor;
-        private readonly ISMSCounterInteractor _smsCounterInteractor;
+        private readonly ISMSQuotaInteractor _smsQuotaInteractor;
+        private readonly SMSProviderConnectionString _smsProviderConnectionString;
 
-        public SMSManager(ISMSProvider smsProvider, ISMSTemplateInteractor smsTemplateInteractor, ISMSHistoryInteractor smsHistoryInteractor, ISMSCounterInteractor smsCountInteractor)
+        public SMSManager(ISMSProvider smsProvider, ISMSTemplateInteractor smsTemplateInteractor,
+            ISMSHistoryInteractor smsHistoryInteractor, ISMSQuotaInteractor smsQuotaInteractor,
+            SMSProviderConnectionString smsProviderConnectionString)
         {
             _smsProvider = smsProvider;
             _smsTemplateInteractor = smsTemplateInteractor;
             _smsHistoryInteractor = smsHistoryInteractor;
-            _smsCounterInteractor = smsCountInteractor;
+            _smsQuotaInteractor = smsQuotaInteractor;
+            _smsProviderConnectionString = smsProviderConnectionString;
         }
+
         public void SendSMS(SMS sms)
         {
+            string sender = string.Empty;
             string message = sms.GetMessage(_smsTemplateInteractor);
-            _smsProvider.SendSMS(sms.To, message, sms.Sender);
+            // If external application didnot send the sender value, get it from template.
+            if (string.IsNullOrEmpty(sms.Sender))
+                sender = sms.GetSender(_smsTemplateInteractor);
+            else
+                sender = sms.Sender;
+
+            if (string.IsNullOrEmpty(sender))
+                sender = _smsProviderConnectionString.Sender;
+
+            string smsResponseStatus = _smsProvider.SendSMS(sms.Recipients, message, sender).Result;
 
             var smsObj = new SMSHistoryDto()
             {
-                CreatedOn = DateTime.UtcNow,
-                Message = message,
-                ToPhNumbers = sms.To,
-                TenantID = sms.TenantID,
-                FacilityID = sms.FacilityID,
+                MessageSent = message,
+                Sender = sender,
+                Recipients = sms.Recipients,
+                TemplateName = sms.TemplateName,
+                TemplateVariant = sms.Variant,
+                ChannelKey = sms.ChannelKey,
+                ProviderName = sms.ProviderName,
+                Tags = sms.Tag,
                 SentOn = DateTime.UtcNow,
-                Status = "SENT"
+                Status = smsResponseStatus,
+                Attempts = 1,
             };
-            _smsHistoryInteractor.Add(smsObj);
+            _smsHistoryInteractor.AddSMSHistory(smsObj);
 
-            _smsCounterInteractor.UpdateSMSCounter(sms.TenantID, sms.FacilityID);
+            _smsQuotaInteractor.UpdateSMSQuota(sms.ChannelKey);
         }
     }
 }
