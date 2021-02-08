@@ -59,5 +59,11 @@ namespace Nvg.SMSService.SMSProvider
             var provider = _smsProviderRepository.GetSMSProviderByChannelKey(channelKey);
             return _mapper.Map<SMSResponseDto<SMSProviderSettingsDto>>(provider);
         }
+
+        public SMSResponseDto<List<SMSProviderSettingsDto>> GetSMSProvidersByPool(string poolName, string providerName)
+        {
+            var providers = _smsProviderRepository.GetSMSProvidersByPool(poolName, providerName);
+            return _mapper.Map<SMSResponseDto<List<SMSProviderSettingsDto>>>(providers);
+        }
     }
 }

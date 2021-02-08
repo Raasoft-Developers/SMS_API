@@ -66,21 +66,21 @@ namespace Nvg.SMSBackgroundTask.EventHandler
 
         private IServiceScope GetScope(string channelKey)
         {
-            var serviceProvider = new ServiceCollection();
+            var services = new ServiceCollection();
             var configuration = Program.GetConfiguration();
-            serviceProvider.AddScoped(_ => configuration);
-            serviceProvider.AddLogging();
-            serviceProvider.AddSMSBackgroundTask();
-            serviceProvider.AddSMSServices(Program.AppName);
+            services.AddScoped(_ => configuration);
+            services.AddLogging();
+            services.AddSMSBackgroundTask(channelKey);
+            services.AddSMSServices(Program.AppName);
 
-            serviceProvider.AddScoped<SMSDBInfo>(provider =>
+            services.AddScoped<SMSDBInfo>(provider =>
             {
                 string microservice = Program.AppName;
                 string connectionString = configuration.GetSection("ConnectionString")?.Value;
                 return new SMSDBInfo(connectionString);
             });
 
-            serviceProvider.AddScoped<SMSProviderConnectionString>(provider =>
+            services.AddScoped<SMSProviderConnectionString>(provider =>
             {
                 var smsProviderService = provider.GetService<ISMSProviderInteractor>();
                 var smsProviderConfiguration = smsProviderService.GetSMSProviderByChannel(channelKey)?.Result?.Configuration;
@@ -91,7 +91,7 @@ namespace Nvg.SMSBackgroundTask.EventHandler
                 return new SMSProviderConnectionString(smsProviderConfiguration);
             });
 
-            var scope = serviceProvider.BuildServiceProvider().CreateScope();
+            var scope = services.BuildServiceProvider().CreateScope();
             return scope;
         }
     }

@@ -34,11 +34,17 @@ namespace Nvg.SMSService.Data
             modelBuilder.Entity<SMSPoolTable>()
                 .HasIndex(p => new { p.Name })
                 .IsUnique(true);
+
+            // Change column Channel name to Channel key
+            modelBuilder.Entity<SMSChannelTable>()
+                .Property(c => c.Name)
+                .HasColumnName("Key");
+
             /*
             modelBuilder.Entity<SMSProviderSettingsTable>()
                 .HasIndex(p => new { p.Name })
                 .IsUnique(true);
-            */;
+            */
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Nvg.SMSService.DTOS
     public class SMSChannelDto
     {
         public string ID { get; set; }
-        public string Name { get; set; }
+        public string Key { get; set; }
         public string SMSPoolID { get; set; }
         public string SMSPoolName { get; set; }
         public string SMSProviderID { get; set; }

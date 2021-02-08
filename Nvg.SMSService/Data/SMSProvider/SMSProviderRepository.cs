@@ -81,9 +81,48 @@ namespace Nvg.SMSService.Data.SMSProvider
                                    join c in _context.SMSChannels on p.SMSPoolID equals c.SMSPoolID
                                    where c.Name.ToLower().Equals(channelKey.ToLower())
                                    select p).FirstOrDefault();
-                response.Status = true;
-                response.Message = $"Retrieved SMS provider data for channel {channelKey}";
+                if (smsProvider != null)
+                {
+                    response.Status = true;
+                    response.Message = $"Retrieved SMS provider data for channel {channelKey}";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"SMS provider data for channel {channelKey} is not available.";
+                }
                 response.Result = smsProvider;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<List<SMSProviderSettingsTable>> GetSMSProvidersByPool(string poolName, string providerName)
+        {
+            var response = new SMSResponseDto<List<SMSProviderSettingsTable>>();
+            try
+            {
+                var smsProviders = (from p in _context.SMSProviderSettings
+                                   join sp in _context.SMSPools on p.SMSPoolID equals sp.ID
+                                   where sp.Name.ToLower().Equals(poolName.ToLower())
+                                   select p).ToList();
+                if (smsProviders.Count != 0)
+                {
+                    if(!string.IsNullOrEmpty(providerName))
+                        smsProviders = smsProviders.Where(s => s.Name.ToLower().Equals(providerName)).ToList();
+                    response.Status = true;
+                }
+                else
+                    response.Status = false;
+                response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool {poolName}";
+                response.Status = true;
+                response.Message = $"Retrieved SMS provider data for pool {poolName}";
+                response.Result = smsProviders;
                 return response;
             }
             catch (Exception ex)

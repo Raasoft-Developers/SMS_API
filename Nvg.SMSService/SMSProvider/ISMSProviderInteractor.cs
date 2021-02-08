@@ -9,5 +9,6 @@ namespace Nvg.SMSService.SMSProvider
     {
         SMSResponseDto<SMSProviderSettingsDto> AddSMSProvider(SMSProviderSettingsDto smsProviderInput);
         SMSResponseDto<SMSProviderSettingsDto> GetSMSProviderByChannel(string channelKey);
+        SMSResponseDto<List<SMSProviderSettingsDto>> GetSMSProvidersByPool(string poolName, string providerName);
     }
 }

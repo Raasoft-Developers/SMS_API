@@ -33,9 +33,11 @@ namespace Nvg.SMSBackgroundTask.SMSProvider
                 if (part != "")
                 {
                     var splitString = part.Split("=");
-                    var key = splitString[0];
+                    var key = splitString[0].ToLower();
                     var value = splitString[1];
 
+                    Fields[key] = value;
+                    /*
                     switch (key)
                     {
                         case "Provider":
@@ -51,6 +53,7 @@ namespace Nvg.SMSBackgroundTask.SMSProvider
                             Fields[key] = value;
                             break;
                     }
+                    */
                 }
             }
         }

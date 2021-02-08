@@ -73,6 +73,16 @@ namespace Nvg.API.SMS.Controller
                 return StatusCode(412, channelResponse);
         }
 
+        [HttpGet]
+        public ActionResult GetSMSProvidersByPool(string poolName, string providerName)
+        {
+            var poolResponse = _smsInteractor.GetSMSProvidersByPool(poolName, providerName);
+            if (poolResponse.Status)
+                return Ok(poolResponse);
+            else
+                return StatusCode(412, poolResponse);
+        }
+
         [HttpPost]
         public ActionResult SendSMS(SMSDto smsInputs)
         {

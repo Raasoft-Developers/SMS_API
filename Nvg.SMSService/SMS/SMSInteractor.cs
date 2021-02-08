@@ -59,6 +59,12 @@ namespace Nvg.SMSService.SMS
             return channelResponse;
         }
 
+        public SMSResponseDto<List<SMSProviderSettingsDto>> GetSMSProvidersByPool(string poolName, string providerName)
+        {
+            var poolResponse = _smsProviderInteractor.GetSMSProvidersByPool(poolName, providerName);
+            return poolResponse;
+        }
+
         public SMSResponseDto<string> SendSMS(SMSDto smsInputs)
         {
             var response = new SMSResponseDto<string>();

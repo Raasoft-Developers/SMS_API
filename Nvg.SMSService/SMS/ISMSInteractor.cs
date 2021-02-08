@@ -13,5 +13,6 @@ namespace Nvg.SMSService.SMS
         SMSResponseDto<SMSChannelDto> AddSMSChannel(SMSChannelDto channelInput);
         SMSResponseDto<SMSTemplateDto> AddSMSTemplate(SMSTemplateDto templateInput);
         SMSResponseDto<SMSChannelDto> GetSMSChannelByKey(string channelKey);
+        SMSResponseDto<List<SMSProviderSettingsDto>> GetSMSProvidersByPool(string poolName, string providerName);
     }
 }

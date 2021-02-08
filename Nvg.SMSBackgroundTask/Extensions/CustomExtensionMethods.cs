@@ -12,6 +12,7 @@ using RabbitMQ.Client;
 using Serilog;
 using Nvg.SMSBackgroundTask.SMSProvider;
 using EventBusRabbitMQ;
+using Nvg.SMSService.SMSProvider;
 
 namespace Nvg.SMSBackgroundTask.Extensions
 {
@@ -100,16 +101,25 @@ namespace Nvg.SMSBackgroundTask.Extensions
             return builder;
         }
 
-        public static void AddSMSBackgroundTask(this IServiceCollection services)
+        public static void AddSMSBackgroundTask(this IServiceCollection services, string channelKey)
         {
             services.AddScoped<SMSManager>();
             services.AddScoped<ISMSProvider>(provider =>
             {
                 var cs = provider.GetService<SMSProviderConnectionString>();
+
+                var smsProviderService = provider.GetService<ISMSProviderInteractor>();
+                var smsProviderConfiguration = smsProviderService.GetSMSProviderByChannel(channelKey)?.Result;
+                if(smsProviderConfiguration != null)
+                {
+                    if (smsProviderConfiguration.Type.ToLowerInvariant() == "kaleyra")
+                        return new KaleyraProvider(cs);
+                }
+                /*
                 if (cs.Provider.ToLowerInvariant() == "kaleyra")
                 {
                     return new KaleyraProvider(cs);
-                }
+                }*/
                 return new KaleyraProvider(cs);
             });
         }
