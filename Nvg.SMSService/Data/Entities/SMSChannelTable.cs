@@ -11,7 +11,7 @@ namespace Nvg.SMSService.Data.Entities
     {
         [Key]
         public string ID { get; set; }
-        public string Name { get; set; }
+        public string Key { get; set; }
         public string SMSPoolID { get; set; }
         [ForeignKey("SMSPoolID")]
         public SMSPoolTable SMSPool { get; set; }

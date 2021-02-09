@@ -50,7 +50,7 @@ namespace Nvg.SMSService.Data.SMSChannel
             var response = new SMSResponseDto<SMSChannelTable>();
             try
             {
-                var smsChannel = _context.SMSChannels.FirstOrDefault(sp => sp.Name.ToLower().Equals(channelKey.ToLower()));
+                var smsChannel = _context.SMSChannels.FirstOrDefault(sp => sp.Key.ToLower().Equals(channelKey.ToLower()));
                 response.Status = true;
                 response.Message = $"Retrieved SMS channel data for {channelKey}";
                 response.Result = smsChannel;
@@ -69,7 +69,7 @@ namespace Nvg.SMSService.Data.SMSChannel
             var response = new SMSResponseDto<bool>();
             try
             {
-                var channelExist = _context.SMSChannels.Any(sp => sp.Name.ToLower().Equals(channelKey.ToLower()));
+                var channelExist = _context.SMSChannels.Any(sp => sp.Key.ToLower().Equals(channelKey.ToLower()));
                 response.Status = channelExist;
                 response.Message = $"Is channel existing : {channelExist}";
                 response.Result = channelExist;

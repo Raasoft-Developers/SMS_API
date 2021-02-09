@@ -57,7 +57,7 @@ namespace Nvg.SMSService.Data.SMSTemplate
             {
                 var templateExist = (from t in _context.SMSTemplates
                                    join c in _context.SMSChannels on t.SMSPoolID equals c.SMSPoolID
-                                   where t.Name.Equals(templateName) && c.Name.ToLower().Equals(channelKey.ToLower())
+                                   where t.Name.Equals(templateName) && c.Key.ToLower().Equals(channelKey.ToLower())
                                    select t).Any();
                 response.Status = templateExist;
                 response.Message = $"Is template existing : {templateExist}";
@@ -80,29 +80,19 @@ namespace Nvg.SMSService.Data.SMSTemplate
 
         public SMSTemplateTable GetSMSTemplate(string templateName, string channelKey, string variant = null)
         {
-            //string defaultTemplate = "DEFAULT_SMS_NOTIFICATION";
-            /*var qry = from st in _context.SMSTemplates
-                      where st.Name == templateName
-                      && (st.TenantID == null && st.FacilityID == null
-                           || tenantID != null && st.TenantID == tenantID
-                           || facilityID != null && st.FacilityID == facilityID
-                           )
-                      select st;
-
-            var smsTemplate = qry.FirstOrDefault();
-            */
             var smsTemplate = new SMSTemplateTable();
-            if (!string.IsNullOrEmpty(variant))
-                smsTemplate = (from t in _context.SMSTemplates
-                              join c in _context.SMSChannels on t.SMSPoolID equals c.SMSPoolID
-                              where t.Name.Equals(templateName) && c.Name.ToLower().Equals(channelKey.ToLower()) && t.Variant.ToLower().Equals(variant.ToLower()) 
-                              select t).FirstOrDefault();
-            else
-                smsTemplate = (from t in _context.SMSTemplates
-                               join c in _context.SMSChannels on t.SMSPoolID equals c.SMSPoolID
-                               where t.Name.Equals(templateName) && c.Name.ToLower().Equals(channelKey.ToLower())
-                               select t).FirstOrDefault();
+            var smsQry = (from t in _context.SMSTemplates
+                           join c in _context.SMSChannels on t.SMSPoolID equals c.SMSPoolID
+                           where c.Key.ToLower().Equals(channelKey.ToLower()) &&
+                           (t.Name.Equals(templateName) && string.IsNullOrEmpty(t.Variant) ||
+                            t.Name.Equals(templateName) && t.Variant.ToLower().Equals(variant.ToLower()))
+                           select t);
 
+            if (!string.IsNullOrEmpty(variant))
+                smsTemplate = smsQry.ToList().FirstOrDefault(st => !string.IsNullOrEmpty(st.Variant));
+            else
+                smsTemplate = smsQry.FirstOrDefault();
+            
             /*if (smsTemplate == null)
                 smsTemplate = _context.SMSTemplate.FirstOrDefault(t => t.Name == defaultTemplate);*/
 

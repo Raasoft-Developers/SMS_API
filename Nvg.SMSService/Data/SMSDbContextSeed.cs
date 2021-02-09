@@ -52,7 +52,7 @@ namespace Nvg.SMSService.Data
                     {
                         var name = (string)channel.name;
                         var smsPoolID = (string)channel.smsPoolID;
-                        var smsChannelFromTblHasValue = context.SMSChannels.Any(s => s.Name == name && s.SMSPoolID == smsPoolID);
+                        var smsChannelFromTblHasValue = context.SMSChannels.Any(s => s.Key == name && s.SMSPoolID == smsPoolID);
                         if (!smsChannelFromTblHasValue)
                             SeedSMSChannels(context, channel);
                     }
@@ -128,7 +128,7 @@ namespace Nvg.SMSService.Data
             context.SMSChannels.Add(new SMSChannelTable
             {
                 ID = smsChannel.id,
-                Name = smsChannel.name,
+                Key = smsChannel.name,
                 SMSPoolID = smsChannel.smsPoolID,
                 SMSProviderID = smsChannel.smsProviderID
             });

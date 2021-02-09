@@ -2,6 +2,7 @@
 using Nvg.SMSService.DTOS;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Nvg.SMSService.Data.SMSHistory
@@ -44,5 +45,36 @@ namespace Nvg.SMSService.Data.SMSHistory
             }
         }
 
+        public SMSResponseDto<List<SMSHistoryTable>> GetSMSHistoriesByTag(string channelKey, string tag)
+        {
+            var response = new SMSResponseDto<List<SMSHistoryTable>>();
+            try
+            {
+                var smsHistories = new List<SMSHistoryTable>();
+                if(!string.IsNullOrEmpty(tag))
+                    smsHistories = (from h in _context.SMSHistories
+                                    join c in _context.SMSChannels on h.SMSChannelID equals c.ID
+                                    where c.Key.ToLower().Equals(channelKey.ToLower()) && h.Tags.ToLower().Equals(tag.ToLower())
+                                    select h).ToList();
+                else
+                    smsHistories = (from h in _context.SMSHistories
+                                    join c in _context.SMSChannels on h.SMSChannelID equals c.ID
+                                    where c.Key.ToLower().Equals(channelKey.ToLower())
+                                    select h).ToList();
+                if (smsHistories.Count != 0)
+                    response.Status = true;
+                else
+                    response.Status = false;
+                response.Message = $"Retrieved {smsHistories.Count} SMS histories data for pool {tag}";
+                response.Result = smsHistories;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
     }
 }

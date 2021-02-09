@@ -23,7 +23,7 @@ namespace Nvg.SMSService.Data.SMSQuota
             {
                 var smsQuota = (from q in _context.SMSQuotas
                                 join c in _context.SMSChannels on q.SMSChannelID equals c.ID
-                                where c.Name.ToLower().Equals(channelKey.ToLower())
+                                where c.Key.ToLower().Equals(channelKey.ToLower())
                                 select q).FirstOrDefault();
                 response.Status = true;
                 response.Message = $"Retrieved SMS Quota";

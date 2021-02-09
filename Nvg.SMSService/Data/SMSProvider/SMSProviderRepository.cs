@@ -79,7 +79,7 @@ namespace Nvg.SMSService.Data.SMSProvider
             {
                 var smsProvider = (from p in _context.SMSProviderSettings
                                    join c in _context.SMSChannels on p.SMSPoolID equals c.SMSPoolID
-                                   where c.Name.ToLower().Equals(channelKey.ToLower())
+                                   where c.Key.ToLower().Equals(channelKey.ToLower())
                                    select p).FirstOrDefault();
                 if (smsProvider != null)
                 {
@@ -120,8 +120,6 @@ namespace Nvg.SMSService.Data.SMSProvider
                 else
                     response.Status = false;
                 response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool {poolName}";
-                response.Status = true;
-                response.Message = $"Retrieved SMS provider data for pool {poolName}";
                 response.Result = smsProviders;
                 return response;
             }

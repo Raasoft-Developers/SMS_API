@@ -2,6 +2,7 @@
 using Nvg.SMSService.DTOS;
 using Nvg.SMSService.Events;
 using Nvg.SMSService.SMSChannel;
+using Nvg.SMSService.SMSHistory;
 using Nvg.SMSService.SMSPool;
 using Nvg.SMSService.SMSProvider;
 using System;
@@ -17,16 +18,19 @@ namespace Nvg.SMSService.SMS
         private readonly ISMSProviderInteractor _smsProviderInteractor;
         private readonly ISMSChannelInteractor _smsChannelInteractor;
         private readonly ISMSTemplateInteractor _smsTemplateInteractor;
+        private readonly ISMSHistoryInteractor _smsHistoryInteractor;
 
         public SMSInteractor(ISMSEventInteractor smsEventInteractor, 
             ISMSPoolInteractor smsPoolInteractor, ISMSProviderInteractor smsProviderInteractor,
-            ISMSChannelInteractor smsChannelInteractor, ISMSTemplateInteractor smsTemplateInteractor)
+            ISMSChannelInteractor smsChannelInteractor, ISMSTemplateInteractor smsTemplateInteractor,
+            ISMSHistoryInteractor smsHistoryInteractor)
         {
             _smsEventInteractor = smsEventInteractor;
             _smsPoolInteractor = smsPoolInteractor;
             _smsProviderInteractor = smsProviderInteractor;
             _smsChannelInteractor = smsChannelInteractor;
             _smsTemplateInteractor = smsTemplateInteractor;
+            _smsHistoryInteractor = smsHistoryInteractor;
         }
 
         public SMSResponseDto<SMSPoolDto> AddSMSPool(SMSPoolDto poolInput)
@@ -62,6 +66,12 @@ namespace Nvg.SMSService.SMS
         public SMSResponseDto<List<SMSProviderSettingsDto>> GetSMSProvidersByPool(string poolName, string providerName)
         {
             var poolResponse = _smsProviderInteractor.GetSMSProvidersByPool(poolName, providerName);
+            return poolResponse;
+        }
+
+        public SMSResponseDto<List<SMSHistoryDto>> GetSMSHistoriesByTag(string channelKey, string tag)
+        {
+            var poolResponse = _smsHistoryInteractor.GetSMSHistoriesByTag(channelKey, tag);
             return poolResponse;
         }
 

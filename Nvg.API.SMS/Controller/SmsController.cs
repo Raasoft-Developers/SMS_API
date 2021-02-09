@@ -83,6 +83,16 @@ namespace Nvg.API.SMS.Controller
                 return StatusCode(412, poolResponse);
         }
 
+        [HttpGet]
+        public ActionResult GetSMSHistories(string channelKey, string tag = null)
+        {
+            var historiesResponse = _smsInteractor.GetSMSHistoriesByTag(channelKey, tag);
+            if (historiesResponse.Status)
+                return Ok(historiesResponse);
+            else
+                return StatusCode(412, historiesResponse);
+        }
+
         [HttpPost]
         public ActionResult SendSMS(SMSDto smsInputs)
         {

@@ -45,5 +45,10 @@ namespace Nvg.SMSService.SMSHistory
             return response;
         }
 
+        public SMSResponseDto<List<SMSHistoryDto>> GetSMSHistoriesByTag(string channelKey, string tag)
+        {
+            var histories = _smsHistoryRepository.GetSMSHistoriesByTag(channelKey, tag);
+            return _mapper.Map<SMSResponseDto<List<SMSHistoryDto>>>(histories);
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace Nvg.SMSService.DTOS
 {
     public class SMSHistoryDto
     {
-        public long ID { get; set; }
+        public string ID { get; set; }
         public string MessageSent { get; set; }
         public string Sender { get; set; }
         public string Recipients { get; set; }
@@ -30,6 +30,7 @@ namespace Nvg.SMSService.DTOS
         {
             CreateMap<SMSHistoryDto, SMSHistoryTable>().ReverseMap();
             CreateMap<SMSResponseDto<SMSHistoryTable>, SMSResponseDto<SMSHistoryDto>>();
+            CreateMap<SMSResponseDto<List<SMSHistoryTable>>, SMSResponseDto<List<SMSHistoryDto>>>();
 
         }
     }

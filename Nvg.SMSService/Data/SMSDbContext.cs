@@ -37,7 +37,7 @@ namespace Nvg.SMSService.Data
 
             // Change column Channel name to Channel key
             modelBuilder.Entity<SMSChannelTable>()
-                .Property(c => c.Name)
+                .Property(c => c.Key)
                 .HasColumnName("Key");
 
             /*
