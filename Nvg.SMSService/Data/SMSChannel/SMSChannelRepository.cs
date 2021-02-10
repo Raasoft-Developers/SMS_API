@@ -51,8 +51,16 @@ namespace Nvg.SMSService.Data.SMSChannel
             try
             {
                 var smsChannel = _context.SMSChannels.FirstOrDefault(sp => sp.Key.ToLower().Equals(channelKey.ToLower()));
-                response.Status = true;
-                response.Message = $"Retrieved SMS channel data for {channelKey}";
+                if (smsChannel != null)
+                {
+                    response.Status = true;
+                    response.Message = $"Retrieved SMS channel data for {channelKey}";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"SMS Channel Data Unavailable for {channelKey}";
+                }
                 response.Result = smsChannel;
                 return response;
             }
