@@ -40,7 +40,7 @@ namespace Nvg.SMSBackgroundTask
                 sender = sms.Sender;
 
             if (string.IsNullOrEmpty(sender))
-                sender = _smsProviderConnectionString.Sender;
+                sender = _smsProviderConnectionString.Fields["sender"];
 
             string smsResponseStatus = _smsProvider.SendSMS(sms.Recipients, message, sender).Result;
 

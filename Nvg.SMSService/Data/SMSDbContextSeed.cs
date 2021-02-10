@@ -36,8 +36,8 @@ namespace Nvg.SMSService.Data
                 }
                 else
                 {
-                    foreach (var provider in smsPoolData)
-                        SeedSMSPools(context, provider);
+                    foreach (var pool in smsPoolData)
+                        SeedSMSPools(context, pool);
                 }
             }
         }

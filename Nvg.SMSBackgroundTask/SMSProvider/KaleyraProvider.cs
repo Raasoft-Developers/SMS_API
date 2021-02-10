@@ -22,12 +22,12 @@ namespace Nvg.SMSBackgroundTask.SMSProvider
         {
             string responseMsg = "NOT SENT";
 
-            var url = _smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("url")).Value;
-            var apiKey = _smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("key")).Value;
+            var url = _smsProviderCS.Fields["url"]; //_smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("url")).Value;
+            var apiKey = _smsProviderCS.Fields["key"]; //_smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("key")).Value;
 
             // If external app didnt send the sender value and template also have sender as null, then get it from provider conn string.
             if (string.IsNullOrEmpty(sender))
-                sender = _smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("sender")).Value; //_smsProviderCS.Sender;
+                sender = _smsProviderCS.Fields["sender"]; // _smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("sender")).Value;
 
             //var url = _smsProviderCS.ApiUrl;
             var parameters = new Dictionary<string, string> {
@@ -36,7 +36,7 @@ namespace Nvg.SMSBackgroundTask.SMSProvider
                 { "body", message }
             };
             var headers = new Dictionary<string, string>() {
-                { "api-key", apiKey /* _smsProviderCS.Fields["ApiKey"]*/ }
+                { "api-key", apiKey }
             };
             HttpService httpService = new HttpService();
             HttpResponseMessage response = await httpService.Post(url,
