@@ -21,19 +21,39 @@ namespace Nvg.SMSService.Data.SMSChannel
             var response = new SMSResponseDto<SMSChannelTable>();
             try
             {
-                channelInput.ID = Guid.NewGuid().ToString();
-                _context.SMSChannels.Add(channelInput);
-                if (_context.SaveChanges() == 1)
+                var channel = _context.SMSChannels.FirstOrDefault(sp => sp.Key.Equals(channelInput.Key) && sp.SMSPoolID.Equals(channelInput.SMSPoolID));
+                if (channel != null)
                 {
-                    response.Status = true;
-                    response.Message = "Added";
-                    response.Result = channelInput;
+                    channel.SMSProviderID = channelInput.SMSProviderID;
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Updated";
+                        response.Result = channelInput;
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Failed To Update";
+                        response.Result = channelInput;
+                    }
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = "Not Added";
-                    response.Result = channelInput;
+                    channelInput.ID = Guid.NewGuid().ToString();
+                    _context.SMSChannels.Add(channelInput);
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Added";
+                        response.Result = channelInput;
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Not Added";
+                        response.Result = channelInput;
+                    }
                 }
                 return response;
             }

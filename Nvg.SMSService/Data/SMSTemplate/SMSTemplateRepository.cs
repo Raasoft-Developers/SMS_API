@@ -26,20 +26,42 @@ namespace Nvg.SMSService.Data.SMSTemplate
             var response = new SMSResponseDto<SMSTemplateTable>();
             try
             {
-                templateInput.ID = Guid.NewGuid().ToString();
-                _context.SMSTemplates.Add(templateInput);
-                if (_context.SaveChanges() == 1)
+                var template = _context.SMSTemplates.FirstOrDefault(st => st.Name.ToLower().Equals(templateInput.Name.ToLower()) && st.SMSPoolID.Equals(templateInput.SMSPoolID) && st.Variant.ToLower().Equals(templateInput.Variant.ToLower()));
+                if (template != null)
                 {
-                    response.Status = true;
-                    response.Message = "Added";
-                    response.Result = templateInput;
+                    template.MessageTemplate = templateInput.MessageTemplate;
+                    template.Sender = templateInput.Sender;
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Updated";
+                        response.Result = templateInput;
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Failed To Update";
+                        response.Result = templateInput;
+                    }
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = "Not Added";
-                    response.Result = templateInput;
+                    templateInput.ID = Guid.NewGuid().ToString();
+                    _context.SMSTemplates.Add(templateInput);
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Added";
+                        response.Result = templateInput;
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Not Added";
+                        response.Result = templateInput;
+                    }
                 }
+                
                 return response;
             }
             catch (Exception ex)
