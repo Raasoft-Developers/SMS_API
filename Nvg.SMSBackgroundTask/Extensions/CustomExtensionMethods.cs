@@ -114,6 +114,8 @@ namespace Nvg.SMSBackgroundTask.Extensions
                 {
                     if (smsProviderConfiguration.Type.ToLowerInvariant() == "kaleyra")
                         return new KaleyraProvider(cs);
+                    else if (smsProviderConfiguration.Type.ToLowerInvariant() == "variforrm")
+                        return new VariforrmProvider(cs);
                 }
                 /*
                 if (cs.Provider.ToLowerInvariant() == "kaleyra")

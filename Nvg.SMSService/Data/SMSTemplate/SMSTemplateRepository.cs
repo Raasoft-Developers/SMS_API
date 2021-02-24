@@ -26,20 +26,42 @@ namespace Nvg.SMSService.Data.SMSTemplate
             var response = new SMSResponseDto<SMSTemplateTable>();
             try
             {
-                templateInput.ID = Guid.NewGuid().ToString();
-                _context.SMSTemplates.Add(templateInput);
-                if (_context.SaveChanges() == 1)
+                var template = _context.SMSTemplates.FirstOrDefault(st => st.Name.ToLower().Equals(templateInput.Name.ToLower()) && st.SMSPoolID.Equals(templateInput.SMSPoolID) && st.Variant==templateInput.Variant);
+                if (template != null)
                 {
-                    response.Status = true;
-                    response.Message = "Added";
-                    response.Result = templateInput;
+                    template.MessageTemplate = templateInput.MessageTemplate;
+                    template.Sender = templateInput.Sender;
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Updated";
+                        response.Result = templateInput;
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Failed To Update";
+                        response.Result = templateInput;
+                    }
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = "Not Added";
-                    response.Result = templateInput;
+                    templateInput.ID = Guid.NewGuid().ToString();
+                    _context.SMSTemplates.Add(templateInput);
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Added";
+                        response.Result = templateInput;
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Not Added";
+                        response.Result = templateInput;
+                    }
                 }
+                
                 return response;
             }
             catch (Exception ex)
@@ -82,11 +104,11 @@ namespace Nvg.SMSService.Data.SMSTemplate
         {
             var smsTemplate = new SMSTemplateTable();
             var smsQry = (from t in _context.SMSTemplates
-                           join c in _context.SMSChannels on t.SMSPoolID equals c.SMSPoolID
-                           where c.Key.ToLower().Equals(channelKey.ToLower()) &&
-                           (t.Name.Equals(templateName) && string.IsNullOrEmpty(variant) ||
-                            !string.IsNullOrEmpty(variant) && t.Name.Equals(templateName) && t.Variant.ToLower().Equals(variant.ToLower()))
-                           select t);
+                          join c in _context.SMSChannels on t.SMSPoolID equals c.SMSPoolID
+                          where c.Key.ToLower().Equals(channelKey.ToLower()) &&
+                          (t.Name.Equals(templateName) && string.IsNullOrEmpty(variant) ||
+                           !string.IsNullOrEmpty(variant) && t.Name.Equals(templateName) && t.Variant.ToLower().Equals(variant.ToLower()))
+                          select t);
 
             if (!string.IsNullOrEmpty(variant))
                 smsTemplate = smsQry.ToList().FirstOrDefault(st => !string.IsNullOrEmpty(st.Variant));

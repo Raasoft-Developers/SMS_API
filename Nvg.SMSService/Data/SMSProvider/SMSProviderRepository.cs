@@ -21,19 +21,39 @@ namespace Nvg.SMSService.Data.SMSProvider
             var response = new SMSResponseDto<SMSProviderSettingsTable>();
             try
             {
-                providerInput.ID = Guid.NewGuid().ToString();
-                _context.SMSProviderSettings.Add(providerInput);
-                if (_context.SaveChanges() == 1)
+                var provider = _context.SMSProviderSettings.FirstOrDefault(sp => sp.Name.Equals(providerInput.Name) && sp.SMSPoolID.Equals(providerInput.SMSPoolID)&& sp.Type.Equals(providerInput.Type));
+                if (provider != null)
                 {
-                    response.Status = true;
-                    response.Message = "Added";
-                    response.Result = providerInput;
+                    provider.Configuration = providerInput.Configuration;
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Updated";
+                        response.Result = providerInput;
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Failed To Update";
+                        response.Result = providerInput;
+                    }
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = "Not Added";
-                    response.Result = providerInput;
+                    providerInput.ID = Guid.NewGuid().ToString();
+                    _context.SMSProviderSettings.Add(providerInput);
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Added";
+                        response.Result = providerInput;
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Not Added";
+                        response.Result = providerInput;
+                    }
                 }
                 return response;
             }
