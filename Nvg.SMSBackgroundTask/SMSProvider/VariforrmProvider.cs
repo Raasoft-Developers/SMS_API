@@ -19,7 +19,7 @@ namespace Nvg.SMSBackgroundTask.SMSProvider
         public async Task<string> SendSMS(string recipients, string message, string sender = null)
         {
             string responseMsg = "NOT SENT";
-            string method = string.Empty;
+            string method;
 
             var url = _smsProviderCS.Fields["url"];
             var apiKey = _smsProviderCS.Fields["key"];
