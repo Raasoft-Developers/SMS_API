@@ -17,5 +17,6 @@ namespace Nvg.SMSService.Data.Entities
         public string SMSPoolID { get; set; }
         [ForeignKey("SMSPoolID")]
         public SMSPoolTable SMSPool { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

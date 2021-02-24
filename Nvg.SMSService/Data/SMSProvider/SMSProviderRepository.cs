@@ -72,6 +72,33 @@ namespace Nvg.SMSService.Data.SMSProvider
             }
         }
 
+        public SMSResponseDto<SMSProviderSettingsTable> GetDefaultSMSProvider()
+        {
+            var response = new SMSResponseDto<SMSProviderSettingsTable>();
+            try
+            {
+                var smsProvider = _context.SMSProviderSettings.FirstOrDefault(sp => sp.IsDefault);
+                if (smsProvider != null)
+                {
+                    response.Status = true;
+                    response.Message = $"Retrieved default SMS provider data for {smsProvider.Name}";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"Default SMS provider data is not available";
+                }
+                response.Result = smsProvider;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
         public SMSResponseDto<SMSProviderSettingsTable> GetSMSProviderByChannelKey(string channelKey)
         {
             var response = new SMSResponseDto<SMSProviderSettingsTable>();

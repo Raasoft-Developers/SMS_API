@@ -84,8 +84,8 @@ namespace Nvg.SMSService.Data.SMSTemplate
             var smsQry = (from t in _context.SMSTemplates
                            join c in _context.SMSChannels on t.SMSPoolID equals c.SMSPoolID
                            where c.Key.ToLower().Equals(channelKey.ToLower()) &&
-                           (t.Name.Equals(templateName) && string.IsNullOrEmpty(t.Variant) ||
-                            t.Name.Equals(templateName) && t.Variant.ToLower().Equals(variant.ToLower()))
+                           (t.Name.Equals(templateName) && string.IsNullOrEmpty(variant) ||
+                            !string.IsNullOrEmpty(variant) && t.Name.Equals(templateName) && t.Variant.ToLower().Equals(variant.ToLower()))
                            select t);
 
             if (!string.IsNullOrEmpty(variant))
