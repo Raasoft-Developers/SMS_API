@@ -26,6 +26,13 @@ namespace Nvg.SMSBackgroundTask.Service
             return Client.GetAsync(url).Result;
         }
 
+        public async Task<HttpResponseMessage> PostData(string url, object model)
+        {
+            string stringData = JsonConvert.SerializeObject(model);
+            var contentData = new StringContent(stringData, Encoding.UTF8, "application/json");
+            return await Client.PostAsync(url, contentData);
+        }
+
         public async Task<HttpResponseMessage> Post(string url, Dictionary<string, string> parameters, Dictionary<string, string> headers)
         {
             var encodedContent = new FormUrlEncodedContent(parameters);
