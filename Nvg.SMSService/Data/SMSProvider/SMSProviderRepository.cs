@@ -125,7 +125,7 @@ namespace Nvg.SMSService.Data.SMSProvider
             try
             {
                 var smsProvider = (from p in _context.SMSProviderSettings
-                                   join c in _context.SMSChannels on p.SMSPoolID equals c.SMSPoolID
+                                   join c in _context.SMSChannels on new { PoolID = p.SMSPoolID, ProviderID = p.ID } equals new { PoolID = c.SMSPoolID, ProviderID = c.SMSProviderID }
                                    where c.Key.ToLower().Equals(channelKey.ToLower())
                                    select p).FirstOrDefault();
                 if (smsProvider != null)
