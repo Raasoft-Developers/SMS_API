@@ -161,7 +161,7 @@ namespace Nvg.SMSService.Data.SMSProvider
                 if (smsProviders.Count != 0)
                 {
                     if(!string.IsNullOrEmpty(providerName))
-                        smsProviders = smsProviders.Where(s => s.Name.ToLower().Equals(providerName)).ToList();
+                        smsProviders = smsProviders.Where(s => s.Name.ToLower().Equals(providerName.ToLower())).ToList();
                     response.Status = true;
                 }
                 else
