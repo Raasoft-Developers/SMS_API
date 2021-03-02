@@ -19,14 +19,16 @@ namespace Nvg.API.SMS.Helpers
     {
         public static void AddSMSService(this IServiceCollection services, string microservice, IConfiguration configuration)
         {
+            string databaseProviderMain = configuration.GetSection("DatabaseProvider")?.Value;
             services.AddScoped<SMSDBInfo>(provider =>
             {
                 var logger = provider.GetService<ILogger<SMSDBInfo>>();
                 logger.LogDebug($"RESOLVING SMSDBInfo");
                 string connectionString = configuration.GetSection("ConnectionString")?.Value;
-                return new SMSDBInfo(connectionString);
+                string databaseProvider = configuration.GetSection("DatabaseProvider")?.Value;
+                return new SMSDBInfo(connectionString, databaseProvider);
             });
-            SMSServiceExtension.AddSMSServices(services, microservice);
+            SMSServiceExtension.AddSMSServices(services, microservice, databaseProviderMain);
         }
 
         public static void RegisterEventBus(this IServiceCollection services, IConfiguration configuration)

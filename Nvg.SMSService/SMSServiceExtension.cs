@@ -24,7 +24,7 @@ namespace Nvg.SMSService
 {
     public static class SMSServiceExtension
     {
-        public static void AddSMSServices(this IServiceCollection services, string microservice)
+        public static void AddSMSServices(this IServiceCollection services, string microservice, string databaseProvider)
         {
             services.AddScoped<ISMSInteractor, SMSInteractor>();
 
@@ -44,19 +44,53 @@ namespace Nvg.SMSService
 
             services.AddScoped<ISMSQuotaInteractor, SMSQuotaInteractor>();
             services.AddScoped<ISMSQuotaRepository, SMSQuotaRepository>();
-            
+
             services.AddScoped<ISMSHistoryRepository, SMSHistoryRepository>();
             services.AddScoped<ISMSHistoryInteractor, SMSHistoryInteractor>();
-
-            services.AddScoped(provider =>
+            databaseProvider ??= string.Empty;
+            switch (databaseProvider.ToLower())
             {
-                var dbInfo = provider.GetService<SMSDBInfo>();
-                var builder = new DbContextOptionsBuilder<SMSDbContext>();
-                builder.UseNpgsql(dbInfo.ConnectionString,
-                                  x => x.MigrationsHistoryTable("__MyMigrationsHistory", microservice));
-                return new SMSDbContext(builder.Options, microservice);
-            });
-
+                case "postgresql":
+                    services.AddScoped<SMSDbContext, SMSPgSqlDbContext>(provider =>
+                    {
+                        var dbInfo = provider.GetService<SMSDBInfo>();
+                        var builder = new DbContextOptionsBuilder<SMSPgSqlDbContext>();
+                        builder.UseNpgsql(dbInfo.ConnectionString,
+                                          x => x.MigrationsHistoryTable("__MyMigrationsHistory", microservice));
+                        return new SMSPgSqlDbContext(builder.Options, microservice);
+                    });
+                    break;
+                case "mssql":
+                    services.AddScoped<SMSDbContext, SMSSqlServerDbContext>(provider =>
+                    {
+                        var dbInfo = provider.GetService<SMSDBInfo>();
+                        var builder = new DbContextOptionsBuilder<SMSSqlServerDbContext>();
+                        builder.UseSqlServer(dbInfo.ConnectionString,
+                                          x => x.MigrationsHistoryTable("__MyMigrationsHistory", microservice));
+                        return new SMSSqlServerDbContext(builder.Options, microservice);
+                    });
+                    break;
+                case "oracle":
+                    services.AddScoped<SMSDbContext, SMSOracleDbContext>(provider =>
+                    {
+                        var dbInfo = provider.GetService<SMSDBInfo>();
+                        var builder = new DbContextOptionsBuilder<SMSOracleDbContext>();
+                        builder.UseOracle(dbInfo.ConnectionString,
+                                          x => x.MigrationsHistoryTable("__MyMigrationsHistory", microservice));
+                        return new SMSOracleDbContext(builder.Options, microservice);
+                    });
+                    break;
+                default:
+                    services.AddScoped<SMSDbContext, SMSSqlServerDbContext>(provider =>
+                    {
+                        var dbInfo = provider.GetService<SMSDBInfo>();
+                        var builder = new DbContextOptionsBuilder<SMSSqlServerDbContext>();
+                        builder.UseSqlServer(dbInfo.ConnectionString,
+                                          x => x.MigrationsHistoryTable("__MyMigrationsHistory", microservice));
+                        return new SMSSqlServerDbContext(builder.Options, microservice);
+                    });
+                    break;
+            }
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }
 
