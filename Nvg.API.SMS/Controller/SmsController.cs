@@ -63,7 +63,7 @@ namespace Nvg.API.SMS.Controller
                 return StatusCode(412, templateResponse);
         }
 
-        [HttpGet]
+        [HttpGet("{channelKey}")]
         public ActionResult GetSMSChannelByKey(string channelKey)
         {
             var channelResponse = _smsInteractor.GetSMSChannelByKey(channelKey);
@@ -73,7 +73,7 @@ namespace Nvg.API.SMS.Controller
                 return StatusCode(412, channelResponse);
         }
 
-        [HttpGet]
+        [HttpGet("{poolName}/{providerName}")]
         public ActionResult GetSMSProvidersByPool(string poolName, string providerName)
         {
             var poolResponse = _smsInteractor.GetSMSProvidersByPool(poolName, providerName);
@@ -83,7 +83,7 @@ namespace Nvg.API.SMS.Controller
                 return StatusCode(412, poolResponse);
         }
 
-        [HttpGet]
+        [HttpGet("{channelKey}/{tag?}")]
         public ActionResult GetSMSHistories(string channelKey, string tag = null)
         {
             var historiesResponse = _smsInteractor.GetSMSHistoriesByTag(channelKey, tag);

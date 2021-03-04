@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Nvg.SMSService.Data;
 
-namespace Nvg.SMSService.Data.Migrations
+namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
 {
-    [DbContext(typeof(SMSDbContext))]
-    [Migration("20210224060626_AddedIsDefaultColumnToProviderTable")]
-    partial class AddedIsDefaultColumnToProviderTable
+    [DbContext(typeof(SMSPgSqlDbContext))]
+    [Migration("20210302105415_InitialMigrationPgSql")]
+    partial class InitialMigrationPgSql
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,7 +19,7 @@ namespace Nvg.SMSService.Data.Migrations
             modelBuilder
                 .HasDefaultSchema("SMS")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.5")
+                .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Nvg.SMSService.Data.Entities.SMSChannelTable", b =>

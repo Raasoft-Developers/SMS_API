@@ -17,34 +17,34 @@ namespace Nvg.SMSService.Data
 
         public string _schema { get; set; }
 
-        public SMSDbContext(DbContextOptions<SMSDbContext> options) : base(options)
+        public SMSDbContext(DbContextOptions options) : base(options)
         {
 
         }
 
-        public SMSDbContext(DbContextOptions<SMSDbContext> options, string schema) : base(options)
+        public SMSDbContext(DbContextOptions options, string schema) : base(options)
         {
             _schema = schema;
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasDefaultSchema(_schema);
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.HasDefaultSchema(_schema);
 
-            modelBuilder.Entity<SMSPoolTable>()
-                .HasIndex(p => new { p.Name })
-                .IsUnique(true);
+        //    modelBuilder.Entity<SMSPoolTable>()
+        //        .HasIndex(p => new { p.Name })
+        //        .IsUnique(true);
 
-            // Change column Channel name to Channel key
-            modelBuilder.Entity<SMSChannelTable>()
-                .Property(c => c.Key)
-                .HasColumnName("Key");
+        //    // Change column Channel name to Channel key
+        //    modelBuilder.Entity<SMSChannelTable>()
+        //        .Property(c => c.Key)
+        //        .HasColumnName("Key");
 
-            /*
-            modelBuilder.Entity<SMSProviderSettingsTable>()
-                .HasIndex(p => new { p.Name })
-                .IsUnique(true);
-            */
-        }
+        //    /*
+        //    modelBuilder.Entity<SMSProviderSettingsTable>()
+        //        .HasIndex(p => new { p.Name })
+        //        .IsUnique(true);
+        //    */
+        //}
     }
 }

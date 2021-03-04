@@ -68,16 +68,18 @@ namespace Nvg.SMSBackgroundTask.EventHandler
         {
             var services = new ServiceCollection();
             var configuration = Program.GetConfiguration();
+            string databaseProvider = configuration.GetSection("DatabaseProvider")?.Value;
             services.AddScoped(_ => configuration);
             services.AddLogging();
             services.AddSMSBackgroundTask(channelKey);
-            services.AddSMSServices(Program.AppName);
+            services.AddSMSServices(Program.AppName, databaseProvider);
 
             services.AddScoped<SMSDBInfo>(provider =>
             {
                 string microservice = Program.AppName;
                 string connectionString = configuration.GetSection("ConnectionString")?.Value;
-                return new SMSDBInfo(connectionString);
+                string databaseProvider = configuration.GetSection("DatabaseProvider")?.Value;
+                return new SMSDBInfo(connectionString, databaseProvider);
             });
 
             services.AddScoped<SMSProviderConnectionString>(provider =>
