@@ -71,14 +71,14 @@ namespace Nvg.SMSService
                     });
                     break;
                 case "oracle":
-                    services.AddScoped<SMSDbContext, SMSOracleDbContext>(provider =>
-                    {
-                        var dbInfo = provider.GetService<SMSDBInfo>();
-                        var builder = new DbContextOptionsBuilder<SMSOracleDbContext>();
-                        builder.UseOracle(dbInfo.ConnectionString,
-                                          x => x.MigrationsHistoryTable("__MyMigrationsHistory", microservice));
-                        return new SMSOracleDbContext(builder.Options, microservice);
-                    });
+                    //services.AddScoped<SMSDbContext, SMSOracleDbContext>(provider =>
+                    //{
+                    //    var dbInfo = provider.GetService<SMSDBInfo>();
+                    //    var builder = new DbContextOptionsBuilder<SMSOracleDbContext>();
+                    //    builder.UseOracle(dbInfo.ConnectionString,
+                    //                      x => x.MigrationsHistoryTable("__MyMigrationsHistory", microservice));
+                    //    return new SMSOracleDbContext(builder.Options, microservice);
+                    //});
                     break;
                 default:
                     services.AddScoped<SMSDbContext, SMSSqlServerDbContext>(provider =>

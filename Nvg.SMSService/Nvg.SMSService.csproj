@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\OracleMigrations\**" />
+    <EmbeddedResource Remove="Data\Migrations\OracleMigrations\**" />
+    <None Remove="Data\Migrations\OracleMigrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Data\Migrations\20201103043614_SaasInitialMigration.cs" />
     <Compile Remove="Data\Migrations\20201103043614_SaasInitialMigration.Designer.cs" />
     <Compile Remove="Data\Migrations\20210127135713_SMSDBInitialMigration.cs" />
@@ -30,7 +36,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Oracle.EntityFrameworkCore" Version="3.19.80" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\OracleMigrations\" />
     <Folder Include="Data\Migrations\SqlServerMigrations\" />
     <Folder Include="Data\Migrations\PgSqlMigrations\" />
   </ItemGroup>
