@@ -4,6 +4,6 @@
     "name": "MasterSMSProvider",
     "type": "kaleyra",
     "configuration": "Provider=kaleyra;Url=https://api.kaleyra.io/v1/HXAP1690108937IN/messages;Key=A21a84a110cab170779889c15a0aeb0a2;Sender=KLRHXA",
-    "smsPoolID": "default-pool"
+    "smsPoolID": "fa32bf59-4832-4d10-b7e2-80f46f90520e"
   }
 ]

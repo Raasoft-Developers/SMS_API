@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>dotnet-Tv2.SMSBackgroundTask-CB4D8A98-F994-4ADA-8C5E-C85CE3B3BD8F</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..\..\..</DockerfileContext>
+    <!--<DockerfileContext>..\..\..\..</DockerfileContext>-->
     <AssemblyName>Nvg.SMSBackgroundTask</AssemblyName>
     <RootNamespace>Nvg.SMSBackgroundTask</RootNamespace>
   </PropertyGroup>

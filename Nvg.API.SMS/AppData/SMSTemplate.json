@@ -4,7 +4,7 @@
     "name": "MasterSMSTemplate",
     "variant": "",
     "sender": "",
-    "smsPoolID": "default-pool",
+    "smsPoolID": "fa32bf59-4832-4d10-b7e2-80f46f90520e",
     "messageTemplate": "Hi {User}, We have received your request. {Content}."
   }
 ]

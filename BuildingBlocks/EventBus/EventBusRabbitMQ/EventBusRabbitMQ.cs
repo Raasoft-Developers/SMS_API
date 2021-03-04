@@ -138,8 +138,7 @@ namespace EventBusRabbitMQ
                 var message = JsonConvert.SerializeObject(@event);
                 var body = Encoding.UTF8.GetBytes(message);
 
-                string replyQueueName = channel.QueueDeclare().QueueName;
-                _logger.LogDebug("ReplyQueueName: {replyQueueName}", replyQueueName);
+                string replyQueueName = "";
 
                 policy.Execute(() =>
                 {
@@ -151,6 +150,8 @@ namespace EventBusRabbitMQ
                     properties.CorrelationId = @event.CorrelationId;
                     if (isResponse)
                     {
+                        replyQueueName = channel.QueueDeclare().QueueName;
+                        _logger.LogDebug("ReplyQueueName: {replyQueueName}", replyQueueName);
                         properties.CorrelationId = guidId;
                         properties.ReplyTo = replyQueueName;
                     }
@@ -161,7 +162,7 @@ namespace EventBusRabbitMQ
                         basicProperties: properties,
                         body: body);
                 });
-                if(isResponse)
+                if (isResponse)
                     SubscribeResponse(replyQueueName, guidId);
             }
         }
@@ -220,13 +221,13 @@ namespace EventBusRabbitMQ
 
         private async Task Consumer_Received(object sender, BasicDeliverEventArgs eventArgs)
         {
-            _logger.LogError("Consumer_Received");
+            _logger.LogDebug("Consumer_Received");
 
             var routingKey = eventArgs.RoutingKey;
-            _logger.LogError($"ROUTING KEY {routingKey}");
+            _logger.LogDebug($"ROUTING KEY {routingKey}");
 
             var message = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
-            _logger.LogError($"MESSAGE {message}");
+            _logger.LogDebug($"MESSAGE {message}");
 
             try
             {
@@ -259,7 +260,7 @@ namespace EventBusRabbitMQ
                                     type: _xchangeType);
 
             channel.QueueDeclare(queue: _queueName,
-                                 durable: false,
+                                 durable: true,
                                  exclusive: false,
                                  autoDelete: false,
                                  arguments: null);
