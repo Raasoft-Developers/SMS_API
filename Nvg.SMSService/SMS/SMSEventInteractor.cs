@@ -1,4 +1,5 @@
 ﻿using EventBus.Abstractions;
+using Microsoft.Extensions.Logging;
 using Nvg.SMSService.DTOS;
 using Nvg.SMSService.Events;
 using System;
@@ -10,14 +11,17 @@ namespace Nvg.SMSService.SMS
     public class SMSEventInteractor : ISMSEventInteractor
     {
         private readonly IEventBus _eventBus;
+        private readonly ILogger<SMSEventInteractor> _logger;
 
-        public SMSEventInteractor(IEventBus eventBus)
+        public SMSEventInteractor(IEventBus eventBus, ILogger<SMSEventInteractor> logger)
         {
             _eventBus = eventBus;
+            _logger = logger;
         }
 
         public void SendSMS(SMSDto smsInputs)
         {
+            _logger.LogInformation($"In SMSEventInteractor: Channel Key: {smsInputs.ChannelKey} , Template Name: {smsInputs.TemplateName}, Variant: {smsInputs.Variant}.");
             string user = !string.IsNullOrEmpty(smsInputs.Username) ? smsInputs.Username : smsInputs.Recipients;
             var sendSMSEvent = new SendSMSEvent();
             sendSMSEvent.ChannelKey = smsInputs.ChannelKey;
@@ -30,6 +34,7 @@ namespace Nvg.SMSService.SMS
                 { "content", smsInputs.Content}
             };
             sendSMSEvent.Tag = smsInputs.Tag;
+            _logger.LogInformation("In SMSEventInteractor: Publishing SMS data.");
             _eventBus.Publish(sendSMSEvent);
         }
     }

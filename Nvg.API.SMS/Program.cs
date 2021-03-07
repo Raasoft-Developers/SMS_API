@@ -90,7 +90,7 @@ namespace Nvg.API.SMS
                 .Enrich.FromLogContext()
                 // uncomment to write to Azure diagnostics stream
                 .WriteTo.File(
-                    @"C:\NovigoIdentityPortal\IdentityServerPortalLogs\IdentityLog.txt",
+                    @"C:\NovigoIdentityPortal\IdentityServerPortalLogs\SMSLog.txt",
                     fileSizeLimitBytes: 1_000_000,
                     rollOnFileSizeLimit: true,
                     shared: true,
