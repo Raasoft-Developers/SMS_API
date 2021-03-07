@@ -46,7 +46,7 @@ namespace Nvg.SMSService.SMSChannel
                     }
                 }
             }
-            else
+            else if (string.IsNullOrEmpty(channelInput.SMSPoolID))
             {
                 response.Status = false;
                 response.Message = "SMS pool cannot be blank.";
