@@ -110,19 +110,23 @@ namespace Nvg.SMSBackgroundTask.Extensions
 
                 var smsProviderService = provider.GetService<ISMSProviderInteractor>();
                 var smsProviderConfiguration = smsProviderService.GetSMSProviderByChannel(channelKey)?.Result;
+                var loggerKaleyra = provider.GetRequiredService<ILogger<KaleyraProvider>>();
                 if(smsProviderConfiguration != null)
                 {
                     if (smsProviderConfiguration.Type.ToLowerInvariant() == "kaleyra")
-                        return new KaleyraProvider(cs);
+                        return new KaleyraProvider(cs, loggerKaleyra);
                     else if (smsProviderConfiguration.Type.ToLowerInvariant() == "variforrm")
-                        return new VariforrmProvider(cs);
+                    {
+                        var loggerVariforrm = provider.GetRequiredService<ILogger<VariforrmProvider>>();
+                        return new VariforrmProvider(cs, loggerVariforrm);
+                    }
                 }
                 /*
                 if (cs.Provider.ToLowerInvariant() == "kaleyra")
                 {
                     return new KaleyraProvider(cs);
                 }*/
-                return new KaleyraProvider(cs);
+                return new KaleyraProvider(cs, loggerKaleyra);
             });
         }
 

@@ -86,6 +86,7 @@ namespace Nvg.SMSBackgroundTask.EventHandler
             {
                 var smsProviderService = provider.GetService<ISMSProviderInteractor>();
                 var smsProviderConfiguration = smsProviderService.GetSMSProviderByChannel(channelKey)?.Result?.Configuration;
+                _logger.LogDebug($"smsProviderConfiguration : {smsProviderConfiguration}");
                 /*
                 if(string.IsNullOrEmpty(smsProviderConfiguration))
                     smsProviderConfiguration = configuration.GetSection("SMSGatewayProvider")?.Value;

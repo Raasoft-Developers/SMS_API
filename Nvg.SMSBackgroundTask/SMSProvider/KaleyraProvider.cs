@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using Nvg.SMSBackgroundTask.Service;
 
@@ -12,10 +13,12 @@ namespace Nvg.SMSBackgroundTask.SMSProvider
     public class KaleyraProvider : ISMSProvider
     {
         private readonly SMSProviderConnectionString _smsProviderCS;
+        private readonly ILogger<KaleyraProvider> _logger;
 
-        public KaleyraProvider(SMSProviderConnectionString smsProviderConnectionString)
+        public KaleyraProvider(SMSProviderConnectionString smsProviderConnectionString, ILogger<KaleyraProvider> logger)
         {
             _smsProviderCS = smsProviderConnectionString;
+            _logger = logger;
         }
 
         public async Task<string> SendSMS(string recipients, string message, string sender = null)
@@ -23,12 +26,13 @@ namespace Nvg.SMSBackgroundTask.SMSProvider
             string responseMsg = "NOT SENT";
 
             var url = _smsProviderCS.Fields["url"]; //_smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("url")).Value;
+            _logger.LogDebug("URL: " + url);
             var apiKey = _smsProviderCS.Fields["key"]; //_smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("key")).Value;
-
+            _logger.LogDebug("APIKey: "+apiKey);
             // If external app didnt send the sender value and template also have sender as null, then get it from provider conn string.
             if (string.IsNullOrEmpty(sender))
                 sender = _smsProviderCS.Fields["sender"]; // _smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("sender")).Value;
-
+            _logger.LogDebug("sender: " + sender);
             //var url = _smsProviderCS.ApiUrl;
             var parameters = new Dictionary<string, string> {
                 { "sender", sender },
@@ -45,9 +49,15 @@ namespace Nvg.SMSBackgroundTask.SMSProvider
             string apiResponse = response.Content.ReadAsStringAsync().Result;
 
             if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("SMS Sent");
                 responseMsg = "SENT";
+            }
             else
-                responseMsg = responseMsg +". "+ JObject.Parse(apiResponse)["message"].ToString();
+            {
+                _logger.LogError("Could not send SMS. " + JObject.Parse(apiResponse)["message"].ToString());
+                responseMsg = responseMsg + ". " + JObject.Parse(apiResponse)["message"].ToString();
+            }
 
             return responseMsg;
         }

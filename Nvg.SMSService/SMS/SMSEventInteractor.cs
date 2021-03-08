@@ -21,7 +21,8 @@ namespace Nvg.SMSService.SMS
 
         public void SendSMS(SMSDto smsInputs)
         {
-            _logger.LogInformation($"In SMSEventInteractor: Channel Key: {smsInputs.ChannelKey} , Template Name: {smsInputs.TemplateName}, Variant: {smsInputs.Variant}.");
+            _logger.LogInformation("SendSMS method.");
+            _logger.LogDebug($"Channel Key: {smsInputs.ChannelKey} , Template Name: {smsInputs.TemplateName}, Variant: {smsInputs.Variant}.");
             string user = !string.IsNullOrEmpty(smsInputs.Username) ? smsInputs.Username : smsInputs.Recipients;
             var sendSMSEvent = new SendSMSEvent();
             sendSMSEvent.ChannelKey = smsInputs.ChannelKey;
@@ -34,7 +35,7 @@ namespace Nvg.SMSService.SMS
                 { "content", smsInputs.Content}
             };
             sendSMSEvent.Tag = smsInputs.Tag;
-            _logger.LogInformation("In SMSEventInteractor: Publishing SMS data.");
+            _logger.LogInformation("Publishing SMS data.");
             _eventBus.Publish(sendSMSEvent);
         }
     }

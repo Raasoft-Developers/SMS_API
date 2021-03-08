@@ -29,24 +29,25 @@ namespace Nvg.API.SMS.Controller
         [HttpPost]
         public ActionResult AddSMSPool(SMSPoolDto poolInput)
         {
-            _logger.LogInformation("In SmsController: AddSMSPool action method hit.");
+            _logger.LogInformation("AddSMSPool action method.");
+            _logger.LogInformation($"SMSPoolName: {poolInput.Name}.");
             try
             {
                 var poolResponse = _smsInteractor.AddSMSPool(poolInput);
                 if (poolResponse.Status)
                 {
-                    _logger.LogDebug("In SmsController: " + poolResponse.Message);
+                    _logger.LogDebug("Status: "+poolResponse.Status+", Message:" + poolResponse.Message);
                     return Ok(poolResponse);
                 }
                 else
                 {
-                    _logger.LogError("In SmsController: " + poolResponse.Message);
+                    _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
                     return StatusCode(412, poolResponse);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("In SmsController: Internal server error: Error occurred while adding SMS pool: " + ex.Message);
+                _logger.LogError("Internal server error: Error occurred while adding SMS pool: " + ex.Message);
                 return StatusCode(500, ex);
             }
         }
@@ -54,24 +55,25 @@ namespace Nvg.API.SMS.Controller
         [HttpPost]
         public ActionResult AddSMSProvider(SMSProviderSettingsDto providerInput)
         {
-            _logger.LogInformation("In SmsController: AddSMSProvider action method hit.");
+            _logger.LogInformation("AddSMSProvider action method.");
+            _logger.LogInformation($"SMSPoolName: {providerInput.SMSPoolName}, ProviderName: {providerInput.Name}, Configuration: {providerInput.Configuration}.");
             try
             {
                 var providerResponse = _smsInteractor.AddSMSProvider(providerInput);
                 if (providerResponse.Status)
                 {
-                    _logger.LogDebug("In SmsController: " + providerResponse.Message);
+                    _logger.LogDebug("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
                     return Ok(providerResponse);
                 }
                 else
                 {
-                    _logger.LogError("In SmsController: " + providerResponse.Message);
+                    _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
                     return StatusCode(412, providerResponse);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("In SmsController: Internal server error: Error occurred while adding SMS provider: " + ex.Message);
+                _logger.LogError("Internal server error: Error occurred while adding SMS provider: " + ex.Message);
                 return StatusCode(500, ex);
             }
         }
@@ -79,24 +81,25 @@ namespace Nvg.API.SMS.Controller
         [HttpPost]
         public ActionResult AddSMSChannel(SMSChannelDto channelInput)
         {
-            _logger.LogInformation("In SmsController: AddSMSChannel action method hit.");
+            _logger.LogInformation("AddSMSChannel action method.");
+            _logger.LogInformation($"SMSPoolName: {channelInput.SMSPoolName}, ProviderName: {channelInput.SMSProviderName}.");
             try
             {
                 var channelResponse = _smsInteractor.AddSMSChannel(channelInput);
                 if (channelResponse.Status)
                 {
-                    _logger.LogDebug("In SmsController: " + channelResponse.Message);
+                    _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
                     return Ok(channelResponse);
                 }
                 else
                 {
-                    _logger.LogError("In SmsController: " + channelResponse.Message);
+                    _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
                     return StatusCode(412, channelResponse);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("In SmsController: Internal server error: Error occurred while adding SMS channel: " + ex.Message);
+                _logger.LogError("Internal server error: Error occurred while adding SMS channel: " + ex.Message);
                 return StatusCode(500, ex);
             }
         }
@@ -104,24 +107,25 @@ namespace Nvg.API.SMS.Controller
         [HttpPost]
         public ActionResult AddSMSTemplate(SMSTemplateDto templateInput)
         {
-            _logger.LogInformation("In SmsController: AddSMSTemplate action method hit.");
+            _logger.LogInformation("AddSMSTemplate action method.");
+            _logger.LogInformation($"SMSPoolName: {templateInput.SMSPoolName}, MessageTemplate: {templateInput.MessageTemplate}, Variant: {templateInput.Variant}.");
             try
             {
                 var templateResponse = _smsInteractor.AddSMSTemplate(templateInput);
                 if (templateResponse.Status)
                 {
-                    _logger.LogDebug("In SmsController: " + templateResponse.Message);
+                    _logger.LogDebug("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
                     return Ok(templateResponse);
                 }
                 else
                 {
-                    _logger.LogError("In SmsController: " + templateResponse.Message);
+                    _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
                     return StatusCode(412, templateResponse);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("In SmsController: Internal server error: Error occurred while adding SMS template: " + ex.Message);
+                _logger.LogError("Internal server error: Error occurred while adding SMS template: " + ex.Message);
                 return StatusCode(500, ex);
             }
         }
@@ -129,24 +133,25 @@ namespace Nvg.API.SMS.Controller
         [HttpGet("{channelKey}")]
         public ActionResult GetSMSChannelByKey(string channelKey)
         {
-            _logger.LogInformation("In SmsController: GetSMSChannelByKey action method hit.");
+            _logger.LogInformation("GetSMSChannelByKey action method.");
+            _logger.LogInformation($"ChannelKey: {channelKey}");
             try
             {
                 var channelResponse = _smsInteractor.GetSMSChannelByKey(channelKey);
                 if (channelResponse.Status)
                 {
-                    _logger.LogDebug("In SmsController: " + channelResponse.Message);
+                    _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
                     return Ok(channelResponse);
                 }
                 else
                 {
-                    _logger.LogError("In SmsController: " + channelResponse.Message);
+                    _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
                     return StatusCode(412, channelResponse);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("In SmsController: Internal server error: Error occurred while getting SMS channel by key: " + ex.Message);
+                _logger.LogError("Internal server error: Error occurred while getting SMS channel by key: " + ex.Message);
                 return StatusCode(500, ex);
             }
         }
@@ -154,24 +159,25 @@ namespace Nvg.API.SMS.Controller
         [HttpGet("{poolName}/{providerName}")]
         public ActionResult GetSMSProvidersByPool(string poolName, string providerName)
         {
-            _logger.LogInformation("In SmsController: GetSMSProvidersByPool action method hit.");
+            _logger.LogInformation("GetSMSProvidersByPool action method.");
+            _logger.LogInformation($"PoolName: {poolName}, ProviderName: {providerName}");
             try
             {
                 var poolResponse = _smsInteractor.GetSMSProvidersByPool(poolName, providerName);
                 if (poolResponse.Status)
                 {
-                    _logger.LogDebug("In SmsController: " + poolResponse.Message);
+                    _logger.LogDebug("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
                     return Ok(poolResponse);
                 }
                 else
                 {
-                    _logger.LogError("In SmsController: " + poolResponse.Message);
+                    _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
                     return StatusCode(412, poolResponse);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("In SmsController: Internal server error: Error occurred while getting SMS providers by pool: " + ex.Message);
+                _logger.LogError("Internal server error: Error occurred while getting SMS providers by pool: " + ex.Message);
                 return StatusCode(500, ex);
             }
         }
@@ -179,24 +185,25 @@ namespace Nvg.API.SMS.Controller
         [HttpGet("{channelKey}/{tag?}")]
         public ActionResult GetSMSHistories(string channelKey, string tag = null)
         {
-            _logger.LogInformation("In SmsController: GetSMSHistories action method hit.");
+            _logger.LogInformation("GetSMSHistories action method.");
+            _logger.LogInformation($"ChannelKey: {channelKey}, Tag: {tag}");
             try
             {
                 var historiesResponse = _smsInteractor.GetSMSHistoriesByTag(channelKey, tag);
                 if (historiesResponse.Status)
                 {
-                    _logger.LogDebug("In SmsController: " + historiesResponse.Message);
+                    _logger.LogDebug("Status: " + historiesResponse.Status + ", Message:" + historiesResponse.Message);
                     return Ok(historiesResponse);
                 }
                 else
                 {
-                    _logger.LogError("In SmsController: " + historiesResponse.Message);
+                    _logger.LogError("Status: " + historiesResponse.Status + ", Message:" + historiesResponse.Message);
                     return StatusCode(412, historiesResponse);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("In SmsController: Internal server error: Error occurred while getting SMS histories: " + ex.Message);
+                _logger.LogError("Internal server error: Error occurred while getting SMS histories: " + ex.Message);
                 return StatusCode(500, ex);
             }
         }
@@ -204,24 +211,25 @@ namespace Nvg.API.SMS.Controller
         [HttpPost]
         public ActionResult SendSMS(SMSDto smsInputs)
         {
-            _logger.LogInformation("In SmsController: SendSMS action method hit.");
+            _logger.LogInformation("SendSMS action method.");
+            _logger.LogInformation($"ChannelKey: {smsInputs.ChannelKey}, Tag: {smsInputs.Tag},TemplateName: {smsInputs.TemplateName}, Recipients: {smsInputs.Recipients},Content: {smsInputs.Content}");
             try
             {
                 var smsResponse = _smsInteractor.SendSMS(smsInputs);
             if (smsResponse.Status)
                 {
-                    _logger.LogDebug("In SmsController: " + smsResponse.Message);
+                    _logger.LogDebug("Status: " + smsResponse.Status + ", Message:" + smsResponse.Message);
                     return Ok(smsResponse);
                 }
             else
                 {
-                    _logger.LogError("In SmsController: " + smsResponse.Message);
+                    _logger.LogError("Status: " + smsResponse.Status + ", Message:" + smsResponse.Message);
                     return StatusCode(412, smsResponse);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError("In SmsController: Internal server error: Error occurred while sending SMS: " + ex.Message);
+                _logger.LogError("Internal server error: Error occurred while sending SMS: " + ex.Message);
                 return StatusCode(500, ex);
             }
         }
