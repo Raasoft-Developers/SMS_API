@@ -100,7 +100,7 @@ namespace Nvg.SMSService.Data
                         var name = (string)provider.name;
                         var configuration = (string)provider.configuration;
                         var smsPoolID = (string)provider.smsPoolID;
-                        var smsProviderFromTblHasValue = context.SMSProviderSettings.Any(s => s.Name == name && s.SMSPoolID == smsPoolID && s.Configuration == configuration);
+                        var smsProviderFromTblHasValue = context.SMSProviderSettings.Any(s => s.Name == name && s.SMSPoolID == smsPoolID);
                         if (!smsProviderFromTblHasValue)
                             SeedSMSProviders(context, provider);
                     }
