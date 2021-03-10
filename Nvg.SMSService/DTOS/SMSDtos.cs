@@ -13,8 +13,9 @@ namespace Nvg.SMSService.DTOS
         public string Variant { get; set; }
         public string Sender { get; set; }
         public string Recipients { get; set; }
-        public string Content { get; set; }
-        public string Username { get; set; }
+        /*public string Content { get; set; }
+        public string Username { get; set; }*/
+        public Dictionary<string, string> MessageParts { get; set; }
         public string Tag { get; set; }
     }
 

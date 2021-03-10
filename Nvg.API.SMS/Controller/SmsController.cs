@@ -212,7 +212,7 @@ namespace Nvg.API.SMS.Controller
         public ActionResult SendSMS(SMSDto smsInputs)
         {
             _logger.LogInformation("SendSMS action method.");
-            _logger.LogInformation($"ChannelKey: {smsInputs.ChannelKey}, Tag: {smsInputs.Tag},TemplateName: {smsInputs.TemplateName}, Recipients: {smsInputs.Recipients},Content: {smsInputs.Content}");
+            _logger.LogInformation($"ChannelKey: {smsInputs.ChannelKey}, Tag: {smsInputs.Tag},TemplateName: {smsInputs.TemplateName}, Recipients: {smsInputs.Recipients}");
             try
             {
                 var smsResponse = _smsInteractor.SendSMS(smsInputs);
