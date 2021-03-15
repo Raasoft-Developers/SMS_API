@@ -158,7 +158,8 @@ namespace Nvg.SMSService.Data
                 Name = smsProvider.name,
                 Configuration = smsProvider.configuration,
                 Type = smsProvider.type,
-                SMSPoolID = smsProvider.smsPoolID
+                SMSPoolID = smsProvider.smsPoolID,
+                IsDefault = smsProvider.isDefault
             });
             context.SaveChanges();
         }
