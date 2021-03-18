@@ -44,7 +44,18 @@ namespace Nvg.API.SMS
             services.RegisterEventBus(Configuration);
 
             services.AddSMSService(Program.AppName, Configuration);
+            services.AddCors(options =>
+            {
+                options.AddPolicy("VueCorsPolicy", builder =>
+                {
+                    builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                    //.AllowCredentials();
+                });
 
+            });
             //services.AddSwaggerGen(c =>
             //{
             //    c.SwaggerDoc("v1", new OpenApiInfo
@@ -97,7 +108,7 @@ namespace Nvg.API.SMS
             //});
 
             app.UseRouting();
-
+            app.UseCors("VueCorsPolicy");
             app.UseAuthorization();
 
             app.UseSerilogRequestLogging();

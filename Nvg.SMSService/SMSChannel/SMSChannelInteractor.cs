@@ -73,7 +73,7 @@ namespace Nvg.SMSService.SMSChannel
                 channelInput.SMSProviderID = _smsProviderRepository.GetDefaultSMSProvider()?.Result?.ID;
 
             var mappedSMSInput = _mapper.Map<SMSChannelTable>(channelInput);
-            var mappedResponse = _smsChannelRepository.AddSMSChannel(mappedSMSInput);
+            var mappedResponse = _smsChannelRepository.AddUpdateSMSChannel(mappedSMSInput);
             response = _mapper.Map<SMSResponseDto<SMSChannelDto>>(mappedResponse);
             return response;
         }

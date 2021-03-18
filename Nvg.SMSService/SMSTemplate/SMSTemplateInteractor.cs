@@ -50,7 +50,7 @@ namespace Nvg.SMSService
                 return response;
             }
             var mappedInput = _mapper.Map<SMSTemplateTable>(templateInput);
-            var mappedResponse = _smsTemplateRepository.AddSMSTemplate(mappedInput);
+            var mappedResponse = _smsTemplateRepository.AddUpdateSMSTemplate(mappedInput);
             response = _mapper.Map<SMSResponseDto<SMSTemplateDto>>(mappedResponse);
             return response;
         }

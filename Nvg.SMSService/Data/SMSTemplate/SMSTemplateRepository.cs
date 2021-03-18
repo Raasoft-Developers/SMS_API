@@ -21,7 +21,7 @@ namespace Nvg.SMSService.Data.SMSTemplate
             _logger = logger;
         }
 
-        public SMSResponseDto<SMSTemplateTable> AddSMSTemplate(SMSTemplateTable templateInput)
+        public SMSResponseDto<SMSTemplateTable> AddUpdateSMSTemplate(SMSTemplateTable templateInput)
         {
             var response = new SMSResponseDto<SMSTemplateTable>();
             try
@@ -123,5 +123,69 @@ namespace Nvg.SMSService.Data.SMSTemplate
             return smsTemplate;
         }
 
+        public SMSResponseDto<List<SMSTemplateTable>> GetSMSTemplatesByPool(string poolID)
+        {
+            var response = new SMSResponseDto<List<SMSTemplateTable>>();
+            try
+            {
+                var smsTemplates = (from t in _context.SMSTemplates
+                                      join p in _context.SMSPools on t.SMSPoolID equals p.ID
+                                      where p.ID.ToLower().Equals(poolID.ToLower())
+                                      select t).ToList();
+                if (smsTemplates.Count > 0)
+                {
+                    response.Status = true;
+                    response.Message = $"Obtained {smsTemplates.Count} records";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"Found no record";
+                }
+                response.Result = smsTemplates;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<string> DeleteSMSTemplate(string templateID)
+        {
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                var smsTemplate = _context.SMSTemplates.Where(o => o.ID.ToLower().Equals(templateID.ToLower())).FirstOrDefault();
+                if (smsTemplate != null)
+                {
+                    _context.SMSTemplates.Remove(smsTemplate);
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = $"Deleted Template";
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = $"Failed to delete Template";
+                    }
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"Found no record";
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
     }
 }

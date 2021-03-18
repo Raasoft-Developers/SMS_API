@@ -16,7 +16,7 @@ namespace Nvg.SMSService.Data.SMSChannel
             _context = context;
         }
 
-        public SMSResponseDto<SMSChannelTable> AddSMSChannel(SMSChannelTable channelInput)
+        public SMSResponseDto<SMSChannelTable> AddUpdateSMSChannel(SMSChannelTable channelInput)
         {
             var response = new SMSResponseDto<SMSChannelTable>();
             try
@@ -108,6 +108,131 @@ namespace Nvg.SMSService.Data.SMSChannel
                 response.Status = false;
                 response.Message = ex.Message;
                 response.Result = false;
+                return response;
+            }
+        }
+
+        /// <summary>
+        /// Gets the Channel by Channel Key.
+        /// </summary>
+        /// <param name="channelID">Channel Key</param>
+        /// <returns><see cref="SMSResponseDto{SMSChannelTable}"/> model</returns>
+        public SMSResponseDto<SMSChannelTable> GetSMSChannelByID(string channelID)
+        {
+            var response = new SMSResponseDto<SMSChannelTable>();
+            try
+            {
+                var smsChannel = _context.SMSChannels.FirstOrDefault(sp => sp.ID.ToLower().Equals(channelID.ToLower()));
+                if (smsChannel != null)
+                {
+                    response.Status = true;
+                    response.Message = $"Retrieved SMS channel data for {channelID}";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"SMS Channel Data Unavailable for {channelID}";
+                }
+                response.Result = smsChannel;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<List<SMSChannelTable>> GetSMSChannels(string poolID)
+        {
+            var response = new SMSResponseDto<List<SMSChannelTable>>();
+            try
+            {
+                var smsChannels = (from p in _context.SMSPools
+                                     join c in _context.SMSChannels on p.ID equals c.SMSPoolID
+                                     join pr in _context.SMSProviderSettings on c.SMSProviderID equals pr.ID
+                                     where p.ID.ToLower().Equals(poolID.ToLower())
+                                     select c).ToList();
+                if (smsChannels.Count > 0)
+                {
+                    response.Status = true;
+                    response.Message = $"Retrieved SMS channel data for {poolID}";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"SMS Channel Data Unavailable for {poolID}";
+                }
+                response.Result = smsChannels;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<string> DeleteSMSChannel(string channelID)
+        {
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                var smsChannel = _context.SMSChannels.Where(o => o.ID.ToLower().Equals(channelID.ToLower())).FirstOrDefault();
+                if (smsChannel != null)
+                {
+                    _context.SMSChannels.Remove(smsChannel);
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = $"Deleted Successfully";
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = $"Failed to delete";
+                    }
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"SMS Channel Data not found";
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<List<SMSChannelTable>> GetSMSChannelKeys()
+        {
+            var response = new SMSResponseDto<List<SMSChannelTable>>();
+            try
+            {
+                var smsChannelKeys = _context.SMSChannels.Select(o => new SMSChannelTable { Key = o.Key, ID = o.ID }).ToList();
+                if (smsChannelKeys.Count > 0)
+                {
+                    response.Status = true;
+                    response.Message = $"Retrieved {smsChannelKeys.Count} keys";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"No keys found";
+                }
+                response.Result = smsChannelKeys;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
                 return response;
             }
         }

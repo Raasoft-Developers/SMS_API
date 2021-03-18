@@ -16,7 +16,7 @@ namespace Nvg.SMSService.Data.SMSProvider
             _context = context;
         }
 
-        public SMSResponseDto<SMSProviderSettingsTable> AddSMSProvider(SMSProviderSettingsTable providerInput)
+        public SMSResponseDto<SMSProviderSettingsTable> AddUpdateSMSProvider(SMSProviderSettingsTable providerInput)
         {
             var response = new SMSResponseDto<SMSProviderSettingsTable>();
             try
@@ -168,6 +168,100 @@ namespace Nvg.SMSService.Data.SMSProvider
                     response.Status = false;
                 response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool {poolName}";
                 response.Result = smsProviders;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<List<SMSProviderSettingsTable>> GetSMSProviders(string poolID)
+        {
+            var response = new SMSResponseDto<List<SMSProviderSettingsTable>>();
+            try
+            {
+                var smsProviders = (from p in _context.SMSProviderSettings
+                                      join sp in _context.SMSPools on p.SMSPoolID equals sp.ID
+                                      where sp.ID.ToLower().Equals(poolID.ToLower())
+                                      select p).ToList();
+
+                if (smsProviders.Count > 0)
+                {
+                    response.Status = true;
+                }
+                else
+                    response.Status = false;
+
+                response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool {poolID}";
+                response.Result = smsProviders;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<List<SMSProviderSettingsTable>> GetSMSProviderNames(string poolID)
+        {
+            var response = new SMSResponseDto<List<SMSProviderSettingsTable>>();
+            try
+            {
+                var smsProviders = (from p in _context.SMSProviderSettings
+                                      join sp in _context.SMSPools on p.SMSPoolID equals sp.ID
+                                      where sp.ID.ToLower().Equals(poolID.ToLower())
+                                      select p).ToList();
+
+                if (smsProviders.Count > 0)
+                {
+                    response.Status = true;
+                }
+                else
+                    response.Status = false;
+
+                response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool {poolID}";
+                response.Result = smsProviders;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<string> DeleteSMSProvider(string providerID)
+        {
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                var smsProvider = _context.SMSProviderSettings.Where(o => o.ID.ToLower().Equals(providerID.ToLower())).FirstOrDefault();
+
+                if (smsProvider != null)
+                {
+                    _context.SMSProviderSettings.Remove(smsProvider);
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = $"Deleted successfully";
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = $"Delete failed";
+                    }
+                }
+                else
+                {
+                    response.Message = "No record found.";
+                    response.Status = false;
+                }
                 return response;
             }
             catch (Exception ex)

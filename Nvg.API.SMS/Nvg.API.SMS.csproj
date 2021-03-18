@@ -36,10 +36,6 @@
 		<ProjectReference Include="..\Nvg.SMSService\Nvg.SMSService.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Controller\" />
-	</ItemGroup>
-
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
