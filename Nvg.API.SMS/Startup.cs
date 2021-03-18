@@ -18,7 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-//using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models;
 using Nvg.API.SMS.AutofacModules;
 using Nvg.API.SMS.Filters;
 using Nvg.API.SMS.Helpers;
@@ -56,34 +56,34 @@ namespace Nvg.API.SMS
                 });
 
             });
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new OpenApiInfo
-            //    {
-            //        Version = "v1",
-            //        Title = "Email API",
-            //        Description = "Email API Swagger.",
-            //        TermsOfService = new Uri("https://example.com/terms"),
-            //        Contact = new OpenApiContact
-            //        {
-            //            Name = "Placeholder Name",
-            //            Email = "Placeholder@gmail.com",
-            //            Url = new Uri("https://example.com/user"),
-            //        },
-            //        License = new OpenApiLicense
-            //        {
-            //            Name = "Use under LICX",
-            //            Url = new Uri("https://example.com/license"),
-            //        }
-            //    });
-            //    // Set the comments path for the Swagger JSON and UI.
-            //    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            //    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            //    c.IncludeXmlComments(xmlPath);
-            //    // Filter to modify what to display in the browser when using swagger.
-            //    //c.DocumentFilter<OpenApiCustomDocumentFilter>();
-            //    c.OperationFilter<OpenApiCustomOperationFilter>();
-            //});
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "SMS API",
+                    Description = "SMS API Swagger.",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Placeholder Name",
+                        Email = "Placeholder@gmail.com",
+                        Url = new Uri("https://example.com/user"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under LICX",
+                        Url = new Uri("https://example.com/license"),
+                    }
+                });
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+                // Filter to modify what to display in the browser when using swagger.
+                //c.DocumentFilter<OpenApiCustomDocumentFilter>();
+                c.OperationFilter<OpenApiCustomOperationFilter>();
+            });
             var container = new ContainerBuilder();
             container.RegisterModule(new ApplicationModule());
             container.Populate(services);
@@ -99,13 +99,13 @@ namespace Nvg.API.SMS
             }
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-            //app.UseSwagger();
+            app.UseSwagger();
 
             // specifying the Swagger JSON endpoint.
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            //});
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseRouting();
             app.UseCors("VueCorsPolicy");
