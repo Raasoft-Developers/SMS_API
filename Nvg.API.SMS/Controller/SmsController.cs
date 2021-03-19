@@ -19,7 +19,7 @@ namespace Nvg.API.SMS.Controller
     {
         private readonly ISMSInteractor _smsInteractor;
         private readonly ILogger<SmsController> _logger;
-
+        private readonly string defaultChannelKey = "MasterSMSChannel";
         public SmsController(ISMSInteractor smsInteractor, ILogger<SmsController> logger)
         {
             _smsInteractor = smsInteractor;
@@ -138,6 +138,31 @@ namespace Nvg.API.SMS.Controller
             try
             {
                 var channelResponse = _smsInteractor.GetSMSChannelByKey(channelKey);
+                if (channelResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                    return Ok(channelResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                    return StatusCode(412, channelResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while getting SMS channel by key: " + ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetDefaultChannelKey()
+        {
+            _logger.LogInformation("GetSMSChannelByKey action method.");
+            try
+            {
+                var channelResponse = _smsInteractor.GetSMSChannelByKey(defaultChannelKey);
                 if (channelResponse.Status)
                 {
                     _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
