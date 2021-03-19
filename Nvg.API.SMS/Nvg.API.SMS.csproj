@@ -40,5 +40,6 @@
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
+		<UserSecretsId>27373409-92ae-474c-9bd1-8242fd84e30b</UserSecretsId>
 	</PropertyGroup>
 </Project>

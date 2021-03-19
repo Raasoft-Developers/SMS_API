@@ -26,7 +26,7 @@ namespace Nvg.SMSService.Data.SMSTemplate
             var response = new SMSResponseDto<SMSTemplateTable>();
             try
             {
-                var template = _context.SMSTemplates.FirstOrDefault(st => st.Name.ToLower().Equals(templateInput.Name.ToLower()) && st.SMSPoolID.Equals(templateInput.SMSPoolID) && st.Variant==templateInput.Variant);
+                var template = _context.SMSTemplates.FirstOrDefault(st => st.Name.ToLower().Equals(templateInput.Name.ToLower()) && st.SMSPoolID.Equals(templateInput.SMSPoolID) && (string.IsNullOrEmpty(templateInput.Variant) || st.Variant.ToLower().Equals(templateInput.Variant.ToLower())));
                 if (template != null)
                 {
                     template.MessageTemplate = templateInput.MessageTemplate;
