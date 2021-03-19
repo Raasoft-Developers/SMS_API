@@ -136,33 +136,33 @@ namespace Nvg.SMSService.Data.SMSPool
             }
         }
 
-        public SMSResponseDto<SMSPoolTable> UpdateSMSPool(SMSPoolTable SMSPoolInput)
+        public SMSResponseDto<SMSPoolTable> UpdateSMSPool(SMSPoolTable smsPoolInput)
         {
             var response = new SMSResponseDto<SMSPoolTable>();
             try
             {
-                var queryResult = _context.SMSPools.Where(sp => sp.ID.ToLower().Equals(SMSPoolInput.ID.ToLower())).FirstOrDefault();
+                var queryResult = _context.SMSPools.Where(sp => sp.ID.ToLower().Equals(smsPoolInput.ID.ToLower())).FirstOrDefault();
                 if (queryResult != null)
                 {
-                    queryResult.Name = SMSPoolInput.Name;
+                    queryResult.Name = smsPoolInput.Name;
                     if (_context.SaveChanges() == 1)
                     {
                         response.Status = true;
                         response.Message = "Updated";
-                        response.Result = SMSPoolInput;
+                        response.Result = smsPoolInput;
                     }
                     else
                     {
                         response.Status = false;
                         response.Message = "Not Updated";
-                        response.Result = SMSPoolInput;
+                        response.Result = smsPoolInput;
                     }
                 }
                 else
                 {
                     response.Status = false;
                     response.Message = "No Record found.";
-                    response.Result = SMSPoolInput;
+                    response.Result = smsPoolInput;
                 }
                 return response;
             }

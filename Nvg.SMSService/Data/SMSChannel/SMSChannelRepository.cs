@@ -153,7 +153,14 @@ namespace Nvg.SMSService.Data.SMSChannel
                                      join c in _context.SMSChannels on p.ID equals c.SMSPoolID
                                      join pr in _context.SMSProviderSettings on c.SMSProviderID equals pr.ID
                                      where p.ID.ToLower().Equals(poolID.ToLower())
-                                     select c).ToList();
+                                     select new SMSChannelTable { 
+                                     ID=c.ID,
+                                     Key=c.Key,
+                                     SMSPoolID=c.SMSPoolID,
+                                     SMSProviderID=c.SMSProviderID,
+                                     SMSPoolName=p.Name,
+                                     SMSProviderName=pr.Name
+                                     }).ToList();
                 if (smsChannels.Count > 0)
                 {
                     response.Status = true;
