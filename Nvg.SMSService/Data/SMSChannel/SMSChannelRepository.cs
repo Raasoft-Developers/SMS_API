@@ -126,12 +126,12 @@ namespace Nvg.SMSService.Data.SMSChannel
                 if (smsChannel != null)
                 {
                     response.Status = true;
-                    response.Message = $"Retrieved SMS channel data for {channelID}";
+                    response.Message = $"Retrieved SMS channel data";
                 }
                 else
                 {
                     response.Status = false;
-                    response.Message = $"SMS Channel Data Unavailable for {channelID}";
+                    response.Message = $"SMS Channel Data Unavailable";
                 }
                 response.Result = smsChannel;
                 return response;
@@ -164,12 +164,12 @@ namespace Nvg.SMSService.Data.SMSChannel
                 if (smsChannels.Count > 0)
                 {
                     response.Status = true;
-                    response.Message = $"Retrieved SMS channel data for {poolID}";
+                    response.Message = $"Retrieved SMS channel data";
                 }
                 else
                 {
                     response.Status = false;
-                    response.Message = $"SMS Channel Data Unavailable for {poolID}";
+                    response.Message = $"SMS Channel Data Unavailable";
                 }
                 response.Result = smsChannels;
                 return response;

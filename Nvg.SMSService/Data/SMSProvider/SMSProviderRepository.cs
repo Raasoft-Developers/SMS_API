@@ -195,7 +195,7 @@ namespace Nvg.SMSService.Data.SMSProvider
                 else
                     response.Status = false;
 
-                response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool {poolID}";
+                response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool";
                 response.Result = smsProviders;
                 return response;
             }
@@ -224,7 +224,7 @@ namespace Nvg.SMSService.Data.SMSProvider
                 else
                     response.Status = false;
 
-                response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool {poolID}";
+                response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool";
                 response.Result = smsProviders;
                 return response;
             }

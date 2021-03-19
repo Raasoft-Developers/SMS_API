@@ -75,7 +75,7 @@ namespace Nvg.SMSService.Data.SMSHistory
                     response.Status = true;
                 else
                     response.Status = false;
-                response.Message = $"Retrieved {smsHistories.Count} SMS histories data for pool {tag}";
+                response.Message = $"Retrieved {smsHistories.Count} SMS histories data for pool";
                 response.Result = smsHistories;
                 return response;
             }
