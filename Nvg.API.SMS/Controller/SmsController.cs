@@ -241,7 +241,7 @@ namespace Nvg.API.SMS.Controller
             _logger.LogInformation("DownloadApiDocument action method.");
             var path = Path.Combine(
                            Directory.GetCurrentDirectory(),
-                           "wwwroot", "Email.docx");
+                           "wwwroot", "SMS.docx");
 
             var memory = new MemoryStream();
             using (var stream = new FileStream(path, FileMode.Open))
