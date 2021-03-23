@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -232,6 +233,24 @@ namespace Nvg.API.SMS.Controller
                 _logger.LogError("Internal server error: Error occurred while sending SMS: " + ex.Message);
                 return StatusCode(500, ex);
             }
+        }
+
+        [HttpGet]
+        public IActionResult DownloadApiDocument()
+        {
+            _logger.LogInformation("DownloadApiDocument action method.");
+            var path = Path.Combine(
+                           Directory.GetCurrentDirectory(),
+                           "wwwroot", "Email.docx");
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                stream.CopyTo(memory);
+            }
+            memory.Position = 0;
+            _logger.LogInformation("Download success.");
+            return File(memory, "application/octet-stream", Path.GetFileName(path));
         }
     }
 }
