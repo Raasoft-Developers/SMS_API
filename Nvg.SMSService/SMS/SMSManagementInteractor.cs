@@ -240,7 +240,7 @@ namespace Nvg.SMSService.SMS
                 channelResponse.Status = false;
                 return channelResponse;
             }
-        }
+        }        
 
         public SMSResponseDto<SMSChannelDto> AddUpdateSMSChannel(SMSChannelDto channelInput)
         {
@@ -332,6 +332,39 @@ namespace Nvg.SMSService.SMS
                 return templateResponse;
             }
         }
+
+        public SMSResponseDto<List<SMSTemplateDto>> GetSMSTemplatesByChannelID(string channelID)
+        {
+            _logger.LogInformation("GetSMSTemplatesByChannelID interactor method.");
+            _logger.LogDebug("Channel ID:" + channelID);
+            SMSResponseDto<List<SMSTemplateDto>> templateResponse = new SMSResponseDto<List<SMSTemplateDto>>();
+            try
+            {
+                _logger.LogInformation("Trying to get SMS Templates.");
+                var poolID = _smsChannelRepository.GetSMSChannelByID(channelID)?.Result?.SMSPoolID;
+                if (!string.IsNullOrEmpty(poolID))
+                {
+                    var response = _smsTemplateRepository.GetSMSTemplatesByPool(poolID);
+                    templateResponse = _mapper.Map<SMSResponseDto<List<SMSTemplateDto>>>(response);
+                }
+                else
+                {
+                    templateResponse.Message = "Channel does not exist.";
+                    templateResponse.Status = false;
+                }
+                _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                return templateResponse;
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError("Error occurred in SMS Management Interactor while getting sms templates: ", ex.Message);
+                templateResponse.Message = "Error occurred while getting sms templates: " + ex.Message;
+                templateResponse.Status = false;
+                return templateResponse;
+            }
+        }
+
         public SMSResponseDto<SMSTemplateDto> AddUpdateSMSTemplate(SMSTemplateDto templateInput)
         {
             _logger.LogInformation("UpdateSMSProvider interactor method.");

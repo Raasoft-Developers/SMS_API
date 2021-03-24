@@ -73,6 +73,8 @@ namespace Nvg.SMSService.SMS
         /// <returns><see cref="SMSResponseDto{T}"/></returns>
         SMSResponseDto<List<SMSChannelDto>> GetSMSChannelsByPool(string poolID);
 
+        SMSResponseDto<List<SMSTemplateDto>> GetSMSTemplatesByChannelID(string channelID);
+
         /// <summary>
         /// Delete the SMS Channel into the database.
         /// </summary>

@@ -311,6 +311,32 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        [HttpGet("{channelID}")]
+        public ActionResult GetSMSTemplatesByChannelID(string channelID)
+        {
+            _logger.LogInformation("GetSMSTemplatesByChannelID action method.");
+            _logger.LogDebug("Channel ID: " + channelID);
+            try
+            {
+                var templateResponse = _smsManagementInteractor.GetSMSTemplatesByChannelID(channelID);
+                if (templateResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                    return Ok(templateResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, templateResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while getting sms templates by pool: " + ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
         [HttpPost]
         public ActionResult AddSMSChannel(SMSChannelDto channelInput)
         {
