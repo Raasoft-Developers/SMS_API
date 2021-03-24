@@ -104,6 +104,13 @@ namespace Nvg.SMSService.SMS
         SMSResponseDto<List<SMSTemplateDto>> GetSMSTemplatesByPool(string poolID);
 
         /// <summary>
+        /// Gets the sms template by ID.
+        /// </summary>
+        /// <param name="templateID">template ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<SMSTemplateDto> GetSMSTemplate(string templateID);
+
+        /// <summary>
         /// Add/Updates the SMS template
         /// </summary>
         /// <param name="templateInput"><see cref="SMSTemplateDto"/></param>

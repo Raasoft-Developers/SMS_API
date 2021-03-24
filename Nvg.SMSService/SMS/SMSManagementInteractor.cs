@@ -365,6 +365,39 @@ namespace Nvg.SMSService.SMS
             }
         }
 
+        public SMSResponseDto<SMSTemplateDto> GetSMSTemplate(string templateID)
+        {
+            _logger.LogInformation("GetSMSTemplate interactor method.");
+            _logger.LogDebug("Template ID:" + templateID);
+            SMSResponseDto<SMSTemplateDto> templateResponse = new SMSResponseDto<SMSTemplateDto>();
+            try
+            {
+                _logger.LogInformation("Trying to get Email Templates.");
+                var response = _smsTemplateRepository.GetSMSTemplate(templateID);
+                if (response != null)
+                {
+                    templateResponse.Status = true;
+                    templateResponse.Message = "Successfully retrieved data";
+                    templateResponse.Result = _mapper.Map<SMSTemplateDto>(response);
+                }
+                else
+                {
+                    templateResponse.Status = false;
+                    templateResponse.Message = "Template not found";
+                }
+                _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                return templateResponse;
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError("Error occurred in Email Management Interactor while getting email template by id: ", ex.Message);
+                templateResponse.Message = "Error occurred while getting email template by id: " + ex.Message;
+                templateResponse.Status = false;
+                return templateResponse;
+            }
+        }
+
         public SMSResponseDto<SMSTemplateDto> AddUpdateSMSTemplate(SMSTemplateDto templateInput)
         {
             _logger.LogInformation("UpdateSMSProvider interactor method.");

@@ -443,6 +443,32 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        [HttpGet("{templateID}")]
+        public ActionResult GetSMSTemplateByID(string templateID)
+        {
+            _logger.LogInformation("GetSMSTemplateByID action method.");
+            _logger.LogDebug("Template ID: " + templateID);
+            try
+            {
+                var templateResponse = _smsManagementInteractor.GetSMSTemplate(templateID);
+                if (templateResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                    return Ok(templateResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, templateResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while getting sms templates by id: " + ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
         [HttpPost]
         public ActionResult AddSMSTemplate(SMSTemplateDto templateInput)
         {
