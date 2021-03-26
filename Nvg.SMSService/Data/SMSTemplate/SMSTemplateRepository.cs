@@ -132,16 +132,9 @@ namespace Nvg.SMSService.Data.SMSTemplate
                                       join p in _context.SMSPools on t.SMSPoolID equals p.ID
                                       where p.ID.ToLower().Equals(poolID.ToLower())
                                       select t).ToList();
-                if (smsTemplates.Count > 0)
-                {
-                    response.Status = true;
-                    response.Message = $"Obtained {smsTemplates.Count} records";
-                }
-                else
-                {
-                    response.Status = false;
-                    response.Message = $"Found no record";
-                }
+                  
+                response.Message = $"Obtained {smsTemplates.Count} records";                
+                response.Status = true;
                 response.Result = smsTemplates;
                 return response;
             }

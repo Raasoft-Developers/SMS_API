@@ -382,7 +382,7 @@ namespace Nvg.SMSService.SMS
                 }
                 else
                 {
-                    templateResponse.Status = false;
+                    templateResponse.Status = true;
                     templateResponse.Message = "Template not found";
                 }
                 _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);

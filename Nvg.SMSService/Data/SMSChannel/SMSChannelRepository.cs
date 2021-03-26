@@ -124,15 +124,14 @@ namespace Nvg.SMSService.Data.SMSChannel
             {
                 var smsChannel = _context.SMSChannels.FirstOrDefault(sp => sp.ID.ToLower().Equals(channelID.ToLower()));
                 if (smsChannel != null)
-                {
-                    response.Status = true;
+                {                    
                     response.Message = $"Retrieved SMS channel data";
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = $"SMS Channel Data Unavailable";
+                    response.Message = $"SMS Channel Data not found";
                 }
+                response.Status = true;
                 response.Result = smsChannel;
                 return response;
             }
@@ -161,16 +160,9 @@ namespace Nvg.SMSService.Data.SMSChannel
                                      SMSPoolName=p.Name,
                                      SMSProviderName=pr.Name
                                      }).ToList();
-                if (smsChannels.Count > 0)
-                {
-                    response.Status = true;
-                    response.Message = $"Retrieved SMS channel data";
-                }
-                else
-                {
-                    response.Status = false;
-                    response.Message = $"SMS Channel Data Unavailable";
-                }
+                
+                response.Message = $"Retrieved {smsChannels.Count} SMS channel data";                
+                response.Status = true;
                 response.Result = smsChannels;
                 return response;
             }
@@ -223,16 +215,9 @@ namespace Nvg.SMSService.Data.SMSChannel
             try
             {
                 var smsChannelKeys = _context.SMSChannels.Select(o => new SMSChannelTable { Key = o.Key, ID = o.ID }).ToList();
-                if (smsChannelKeys.Count > 0)
-                {
-                    response.Status = true;
-                    response.Message = $"Retrieved {smsChannelKeys.Count} keys";
-                }
-                else
-                {
-                    response.Status = false;
-                    response.Message = $"No keys found";
-                }
+                
+                response.Message = $"Retrieved {smsChannelKeys.Count} keys";                
+                response.Status = true;
                 response.Result = smsChannelKeys;
                 return response;
             }

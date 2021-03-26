@@ -130,14 +130,13 @@ namespace Nvg.SMSService.Data.SMSProvider
                                    select p).FirstOrDefault();
                 if (smsProvider != null)
                 {
-                    response.Status = true;
                     response.Message = $"Retrieved SMS provider data for channel {channelKey}";
                 }
                 else
                 {
-                    response.Status = false;
                     response.Message = $"SMS provider data for channel {channelKey} is not available.";
                 }
+                response.Status = true;
                 response.Result = smsProvider;
                 return response;
             }
@@ -188,12 +187,9 @@ namespace Nvg.SMSService.Data.SMSProvider
                                       where sp.ID.ToLower().Equals(poolID.ToLower())
                                       select p).ToList();
 
-                if (smsProviders.Count > 0)
-                {
-                    response.Status = true;
-                }
-                else
-                    response.Status = false;
+             
+                response.Status = true;
+                
 
                 response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool";
                 response.Result = smsProviders;
@@ -217,12 +213,9 @@ namespace Nvg.SMSService.Data.SMSProvider
                                       where sp.ID.ToLower().Equals(poolID.ToLower())
                                       select p).ToList();
 
-                if (smsProviders.Count > 0)
-                {
-                    response.Status = true;
-                }
-                else
-                    response.Status = false;
+               
+                response.Status = true;
+                
 
                 response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool";
                 response.Result = smsProviders;

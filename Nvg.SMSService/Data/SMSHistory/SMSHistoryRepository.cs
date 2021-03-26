@@ -71,10 +71,9 @@ namespace Nvg.SMSService.Data.SMSHistory
                                     ChannelKey=c.Key,
                                     ProviderName=pr.Name
                                     }).ToList();
-                if (smsHistories.Count != 0)
-                    response.Status = true;
-                else
-                    response.Status = false;
+                
+                response.Status = true;
+                
                 response.Message = $"Retrieved {smsHistories.Count} SMS histories data for pool";
                 response.Result = smsHistories;
                 return response;

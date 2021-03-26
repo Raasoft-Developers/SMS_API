@@ -89,15 +89,14 @@ namespace Nvg.SMSService.Data.SMSPool
             {
                 var smsPools = _context.SMSPools.ToList();
                 if (smsPools.Count > 0)
-                {
-                    response.Status = true;
+                {                    
                     response.Message = $"Retrieved SMS pool data";
                 }
                 else
                 {
-                    response.Status = false;
                     response.Message = $"SMS pool data is not available";
                 }
+                response.Status = true;
                 response.Result = smsPools;
                 return response;
             }
@@ -116,15 +115,14 @@ namespace Nvg.SMSService.Data.SMSPool
             {
                 var smsPools = _context.SMSPools.ToList();
                 if (smsPools.Count > 0)
-                {
-                    response.Status = true;
+                {                    
                     response.Message = $"Retrieved SMS pool data";
                 }
                 else
                 {
-                    response.Status = false;
                     response.Message = $"SMS pool data is not available";
                 }
+                response.Status = true;
                 response.Result = smsPools;
                 return response;
             }
