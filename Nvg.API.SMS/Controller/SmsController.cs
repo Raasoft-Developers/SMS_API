@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Nvg.SMSService.Data;
 using Nvg.SMSService.Data.Entities;
@@ -20,10 +21,12 @@ namespace Nvg.API.SMS.Controller
     {
         private readonly ISMSInteractor _smsInteractor;
         private readonly ILogger<SmsController> _logger;
+        private IConfiguration _config;
 
-        public SmsController(ISMSInteractor smsInteractor, ILogger<SmsController> logger)
+        public SmsController(ISMSInteractor smsInteractor, ILogger<SmsController> logger, IConfiguration config)
         {
             _smsInteractor = smsInteractor;
+            _config = config;
             _logger = logger;
         }
 
@@ -236,21 +239,14 @@ namespace Nvg.API.SMS.Controller
         }
 
         [HttpGet]
-        public IActionResult DownloadApiDocument()
+        public IActionResult GetApiDocumentUrl()
         {
-            _logger.LogInformation("DownloadApiDocument action method.");
-            var path = Path.Combine(
-                           Directory.GetCurrentDirectory(),
-                           "wwwroot", "SMS.docx");
-
-            var memory = new MemoryStream();
-            using (var stream = new FileStream(path, FileMode.Open))
-            {
-                stream.CopyTo(memory);
-            }
-            memory.Position = 0;
-            _logger.LogInformation("Download success.");
-            return File(memory, "application/octet-stream", Path.GetFileName(path));
+            CustomResponse<string> response = new CustomResponse<string>();
+            string url = _config.GetSection("apiDocumentDownloadUrl").Value;
+            response.Status = true;
+            response.Message = "retrieved URl";
+            response.Result = url;
+            return Ok(response);
         }
     }
 }
