@@ -79,18 +79,29 @@ namespace Nvg.API.SMS.Controller
         public ActionResult UpdateSMSPool(SMSPoolDto poolInput)
         {
             _logger.LogInformation("UpdateSMSPool action method.");
+            SMSResponseDto<SMSPoolDto> poolResponse = new SMSResponseDto<SMSPoolDto>();
             try
             {
-                var poolResponse = _smsManagementInteractor.UpdateSMSPool(poolInput);
-                if (poolResponse.Status)
+                if (!string.IsNullOrWhiteSpace(poolInput.Name))
                 {
-                    _logger.LogDebug("Status: " + poolResponse.Status + ", " + poolResponse.Message);
-                    return Ok(poolResponse);
+                    poolResponse = _smsManagementInteractor.UpdateSMSPool(poolInput);
+                    if (poolResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + poolResponse.Status + ", " + poolResponse.Message);
+                        return Ok(poolResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + poolResponse.Status + ", " + poolResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, poolResponse);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Status: " + poolResponse.Status + ", " + poolResponse.Message);
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed, poolResponse);
+                    poolResponse.Status = false;
+                    poolResponse.Message = "Pool Name cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
+                    return StatusCode(412, poolResponse);
                 }
             }
             catch (Exception ex)
@@ -105,18 +116,29 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("DeleteSMSPool action method.");
             _logger.LogDebug("Pool ID: " + poolID);
+            SMSResponseDto<string> poolResponse = new SMSResponseDto<string>();
             try
             {
-                var poolResponse = _smsManagementInteractor.DeleteSMSPool(poolID);
-                if (poolResponse.Status)
+                if (!string.IsNullOrWhiteSpace(poolID))
                 {
-                    _logger.LogDebug("Status: " + poolResponse.Status + ", " + poolResponse.Message);
-                    return Ok(poolResponse);
+                    poolResponse = _smsManagementInteractor.DeleteSMSPool(poolID);
+                    if (poolResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + poolResponse.Status + ", " + poolResponse.Message);
+                        return Ok(poolResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + poolResponse.Status + ", " + poolResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, poolResponse);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Status: " + poolResponse.Status + ", " + poolResponse.Message);
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed, poolResponse);
+                    poolResponse.Status = false;
+                    poolResponse.Message = "Pool ID cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
+                    return StatusCode(412, poolResponse);
                 }
             }
             catch (Exception ex)
@@ -185,18 +207,29 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("AddSMSProvider action method.");
             _logger.LogDebug("Pool Name: " + providerInput.SMSPoolName);
+            SMSResponseDto<SMSProviderSettingsDto> providerResponse = new SMSResponseDto<SMSProviderSettingsDto>();
             try
             {
-                var providerResponse = _smsManagementInteractor.AddUpdateSMSProvider(providerInput);
-                if (providerResponse.Status)
+                if (!string.IsNullOrWhiteSpace(providerInput.Name) && !string.IsNullOrWhiteSpace(providerInput.Type) && !string.IsNullOrWhiteSpace(providerInput.Configuration))
                 {
-                    _logger.LogDebug("Status: " + providerResponse.Status + ", " + providerResponse.Message);
-                    return Ok(providerResponse);
+                    providerResponse = _smsManagementInteractor.AddUpdateSMSProvider(providerInput);
+                    if (providerResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + providerResponse.Status + ", " + providerResponse.Message);
+                        return Ok(providerResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + providerResponse.Status + ", " + providerResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, providerResponse);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Status: " + providerResponse.Status + ", " + providerResponse.Message);
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed, providerResponse);
+                    providerResponse.Status = false;
+                    providerResponse.Message = "Provider Name, Type and Configuration cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
+                    return StatusCode(412, providerResponse);
                 }
             }
             catch (Exception ex)
@@ -211,18 +244,29 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("UpdateSMSProvider action method.");
             _logger.LogDebug("Pool Name: " + providerInput.SMSPoolName);
+            SMSResponseDto<SMSProviderSettingsDto> providerResponse = new SMSResponseDto<SMSProviderSettingsDto>();
             try
             {
-                var providerResponse = _smsManagementInteractor.AddUpdateSMSProvider(providerInput);
-                if (providerResponse.Status)
+                if (!string.IsNullOrWhiteSpace(providerInput.Name) && !string.IsNullOrWhiteSpace(providerInput.Type) && !string.IsNullOrWhiteSpace(providerInput.Configuration))
                 {
-                    _logger.LogDebug("Status: " + providerResponse.Status + ", " + providerResponse.Message);
-                    return Ok(providerResponse);
+                    providerResponse = _smsManagementInteractor.AddUpdateSMSProvider(providerInput);
+                    if (providerResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + providerResponse.Status + ", " + providerResponse.Message);
+                        return Ok(providerResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + providerResponse.Status + ", " + providerResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, providerResponse);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Status: " + providerResponse.Status + ", " + providerResponse.Message);
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed, providerResponse);
+                    providerResponse.Status = false;
+                    providerResponse.Message = "Provider Name, Type and Configuration cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
+                    return StatusCode(412, providerResponse);
                 }
             }
             catch (Exception ex)
@@ -237,19 +281,31 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("DeleteSMSProvider action method.");
             _logger.LogDebug("Provider ID: " + providerID);
+            SMSResponseDto<string> providerResponse = new SMSResponseDto<string>();
             try
             {
-                var providerResponse = _smsManagementInteractor.DeleteSMSProvider(providerID);
-                if (providerResponse.Status)
+                if (!string.IsNullOrWhiteSpace(providerID))
                 {
-                    _logger.LogDebug("Status: " + providerResponse.Status + ", " + providerResponse.Message);
-                    return Ok(providerResponse);
+                    providerResponse = _smsManagementInteractor.DeleteSMSProvider(providerID);
+                    if (providerResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + providerResponse.Status + ", " + providerResponse.Message);
+                        return Ok(providerResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + providerResponse.Status + ", " + providerResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, providerResponse);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Status: " + providerResponse.Status + ", " + providerResponse.Message);
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed, providerResponse);
+                    providerResponse.Status = false;
+                    providerResponse.Message = "ProviderID cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
+                    return StatusCode(412, providerResponse);
                 }
+
             }
             catch (Exception ex)
             {
@@ -342,18 +398,29 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("AddSMSChannel action method.");
             _logger.LogDebug("Pool Name: " + channelInput.SMSPoolName);
+            SMSResponseDto<SMSChannelDto> channelResponse = new SMSResponseDto<SMSChannelDto>();
             try
             {
-                var channelResponse = _smsManagementInteractor.AddUpdateSMSChannel(channelInput);
-                if (channelResponse.Status)
+                if (!string.IsNullOrWhiteSpace(channelInput.Key))
                 {
-                    _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
-                    return Ok(channelResponse);
+                    channelResponse = _smsManagementInteractor.AddUpdateSMSChannel(channelInput);
+                    if (channelResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return Ok(channelResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                    channelResponse.Status = false;
+                    channelResponse.Message = "Key cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                    return StatusCode(412, channelResponse);
                 }
             }
             catch (Exception ex)
@@ -368,18 +435,29 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("UpdateSMSChannel action method.");
             _logger.LogDebug("Pool Name: " + channelInput.SMSPoolName);
+            SMSResponseDto<SMSChannelDto> channelResponse = new SMSResponseDto<SMSChannelDto>();
             try
             {
-                var channelResponse = _smsManagementInteractor.AddUpdateSMSChannel(channelInput);
-                if (channelResponse.Status)
+                if (!string.IsNullOrWhiteSpace(channelInput.Key))
                 {
-                    _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
-                    return Ok(channelResponse);
+                    channelResponse = _smsManagementInteractor.AddUpdateSMSChannel(channelInput);
+                    if (channelResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return Ok(channelResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                    channelResponse.Status = false;
+                    channelResponse.Message = "Key cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                    return StatusCode(412, channelResponse);
                 }
             }
             catch (Exception ex)
@@ -394,18 +472,29 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("DeleteSMSChannel action method.");
             _logger.LogDebug("Channel ID: " + channelID);
+            SMSResponseDto<string> channelResponse = new SMSResponseDto<string>();
             try
             {
-                var channelResponse = _smsManagementInteractor.DeleteSMSChannel(channelID);
-                if (channelResponse.Status)
+                if (!string.IsNullOrWhiteSpace(channelID))
                 {
-                    _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
-                    return Ok(channelResponse);
+                    channelResponse = _smsManagementInteractor.DeleteSMSChannel(channelID);
+                    if (channelResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return Ok(channelResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                    channelResponse.Status = false;
+                    channelResponse.Message = "Channel ID cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                    return StatusCode(412, channelResponse);
                 }
             }
             catch (Exception ex)
@@ -474,18 +563,29 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("AddSMSTemplate action method.");
             _logger.LogDebug("Pool ID: " + templateInput.SMSPoolID);
+            SMSResponseDto<SMSTemplateDto> templateResponse = new SMSResponseDto<SMSTemplateDto>();
             try
             {
-                var templateResponse = _smsManagementInteractor.AddUpdateSMSTemplate(templateInput);
-                if (templateResponse.Status)
+                if (!string.IsNullOrWhiteSpace(templateInput.MessageTemplate) && !string.IsNullOrWhiteSpace(templateInput.Name))
                 {
-                    _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
-                    return Ok(templateResponse);
+                    templateResponse = _smsManagementInteractor.AddUpdateSMSTemplate(templateInput);
+                    if (templateResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                        return Ok(templateResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, templateResponse);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Status: " + templateResponse.Status + ", " + templateResponse.Message);
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed, templateResponse);
+                    templateResponse.Status = false;
+                    templateResponse.Message = "Name and Message Template cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
+                    return StatusCode(412, templateResponse);
                 }
             }
             catch (Exception ex)
@@ -500,18 +600,29 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("UpdateSMSTemplate action method.");
             _logger.LogDebug("Pool ID: " + templateInput.SMSPoolID);
+            SMSResponseDto<SMSTemplateDto> templateResponse = new SMSResponseDto<SMSTemplateDto>();
             try
             {
-                var templateResponse = _smsManagementInteractor.AddUpdateSMSTemplate(templateInput);
-                if (templateResponse.Status)
+                if (!string.IsNullOrWhiteSpace(templateInput.MessageTemplate) && !string.IsNullOrWhiteSpace(templateInput.Name))
                 {
-                    _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
-                    return Ok(templateResponse);
+                    templateResponse = _smsManagementInteractor.AddUpdateSMSTemplate(templateInput);
+                    if (templateResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                        return Ok(templateResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, templateResponse);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Status: " + templateResponse.Status + ", " + templateResponse.Message);
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed, templateResponse);
+                    templateResponse.Status = false;
+                    templateResponse.Message = "Name and Message Template cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
+                    return StatusCode(412, templateResponse);
                 }
             }
             catch (Exception ex)
@@ -526,18 +637,29 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("DeleteSMSTemplate action method.");
             _logger.LogDebug("Tempalte ID: " + templateID);
+            SMSResponseDto<string> templateResponse = new SMSResponseDto<string>();
             try
             {
-                var templateResponse = _smsManagementInteractor.DeleteSMSTemplate(templateID);
-                if (templateResponse.Status)
+                if (!string.IsNullOrWhiteSpace(templateID))
                 {
-                    _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
-                    return Ok(templateResponse);
+                    templateResponse = _smsManagementInteractor.DeleteSMSTemplate(templateID);
+                    if (templateResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                        return Ok(templateResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + templateResponse.Status + ", " + templateResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, templateResponse);
+                    }
                 }
                 else
                 {
-                    _logger.LogError("Status: " + templateResponse.Status + ", " + templateResponse.Message);
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed, templateResponse);
+                    templateResponse.Status = false;
+                    templateResponse.Message = "Template ID cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
+                    return StatusCode(412, templateResponse);
                 }
             }
             catch (Exception ex)

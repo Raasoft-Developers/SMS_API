@@ -35,16 +35,27 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("AddSMSPool action method.");
             _logger.LogInformation($"SMSPoolName: {poolInput.Name}.");
+            SMSResponseDto<SMSPoolDto> poolResponse = new SMSResponseDto<SMSPoolDto>();
             try
             {
-                var poolResponse = _smsInteractor.AddSMSPool(poolInput);
-                if (poolResponse.Status)
+                if (!string.IsNullOrWhiteSpace(poolInput.Name))
                 {
-                    _logger.LogDebug("Status: "+poolResponse.Status+", Message:" + poolResponse.Message);
-                    return Ok(poolResponse);
+                    poolResponse = _smsInteractor.AddSMSPool(poolInput);
+                    if (poolResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
+                        return Ok(poolResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
+                        return StatusCode(412, poolResponse);
+                    }
                 }
                 else
                 {
+                    poolResponse.Status = false;
+                    poolResponse.Message = "Pool Name cannot be empty or whitespace.";
                     _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
                     return StatusCode(412, poolResponse);
                 }
@@ -61,16 +72,27 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("AddSMSProvider action method.");
             _logger.LogInformation($"SMSPoolName: {providerInput.SMSPoolName}, ProviderName: {providerInput.Name}, Configuration: {providerInput.Configuration}.");
+            SMSResponseDto<SMSProviderSettingsDto> providerResponse = new SMSResponseDto<SMSProviderSettingsDto>();
             try
             {
-                var providerResponse = _smsInteractor.AddSMSProvider(providerInput);
-                if (providerResponse.Status)
+                if (!string.IsNullOrWhiteSpace(providerInput.Name) && !string.IsNullOrWhiteSpace(providerInput.Type) && !string.IsNullOrWhiteSpace(providerInput.Configuration))
                 {
-                    _logger.LogDebug("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
-                    return Ok(providerResponse);
+                    providerResponse = _smsInteractor.AddSMSProvider(providerInput);
+                    if (providerResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
+                        return Ok(providerResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
+                        return StatusCode(412, providerResponse);
+                    }
                 }
                 else
                 {
+                    providerResponse.Status = false;
+                    providerResponse.Message = "Provider Name, Type and Configuration cannot be empty or whitespace.";
                     _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
                     return StatusCode(412, providerResponse);
                 }
@@ -87,16 +109,27 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("AddSMSChannel action method.");
             _logger.LogInformation($"SMSPoolName: {channelInput.SMSPoolName}, ProviderName: {channelInput.SMSProviderName}.");
+            SMSResponseDto<SMSChannelDto> channelResponse = new SMSResponseDto<SMSChannelDto>();
             try
             {
-                var channelResponse = _smsInteractor.AddSMSChannel(channelInput);
-                if (channelResponse.Status)
+                if (!string.IsNullOrWhiteSpace(channelInput.Key))
                 {
-                    _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
-                    return Ok(channelResponse);
+                    channelResponse = _smsInteractor.AddSMSChannel(channelInput);
+                    if (channelResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                        return Ok(channelResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                        return StatusCode(412, channelResponse);
+                    }
                 }
                 else
                 {
+                    channelResponse.Status = false;
+                    channelResponse.Message = "Key cannot be empty or whitespace.";
                     _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
                     return StatusCode(412, channelResponse);
                 }
@@ -113,16 +146,27 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("AddSMSTemplate action method.");
             _logger.LogInformation($"SMSPoolName: {templateInput.SMSPoolName}, MessageTemplate: {templateInput.MessageTemplate}, Variant: {templateInput.Variant}.");
+            SMSResponseDto<SMSTemplateDto> templateResponse = new SMSResponseDto<SMSTemplateDto>();
             try
             {
-                var templateResponse = _smsInteractor.AddSMSTemplate(templateInput);
-                if (templateResponse.Status)
+                if (!string.IsNullOrWhiteSpace(templateInput.MessageTemplate) && !string.IsNullOrWhiteSpace(templateInput.Name))
                 {
-                    _logger.LogDebug("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
-                    return Ok(templateResponse);
+                    templateResponse = _smsInteractor.AddSMSTemplate(templateInput);
+                    if (templateResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
+                        return Ok(templateResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
+                        return StatusCode(412, templateResponse);
+                    }
                 }
                 else
                 {
+                    templateResponse.Status = false;
+                    templateResponse.Message = "Name and Message Template cannot be empty or whitespace.";
                     _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
                     return StatusCode(412, templateResponse);
                 }
