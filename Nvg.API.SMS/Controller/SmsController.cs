@@ -129,7 +129,7 @@ namespace Nvg.API.SMS.Controller
                 else
                 {
                     channelResponse.Status = false;
-                    channelResponse.Message = "Key cannot be empty or whitespace.";
+                    channelResponse.Message = "Channel Key cannot be empty or whitespace.";
                     _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
                     return StatusCode(412, channelResponse);
                 }
