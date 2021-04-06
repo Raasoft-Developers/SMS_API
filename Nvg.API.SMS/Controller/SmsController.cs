@@ -130,6 +130,32 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        [HttpPost]
+        public ActionResult UpdateSMSTemplate(SMSTemplateDto templateInput)
+        {
+            _logger.LogInformation("UpdateSMSTemplate action method.");
+            _logger.LogInformation($"SMSPoolName: {templateInput.SMSPoolName}, MessageTemplate: {templateInput.MessageTemplate}, Variant: {templateInput.Variant}.");
+            try
+            {
+                var templateResponse = _smsInteractor.UpdateSMSTemplate(templateInput);
+                if (templateResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
+                    return Ok(templateResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
+                    return StatusCode(412, templateResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while updating SMS template: " + ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
         [HttpGet("{channelKey}")]
         public ActionResult GetSMSChannelByKey(string channelKey)
         {

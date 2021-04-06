@@ -112,6 +112,25 @@ namespace Nvg.SMSService.SMS
             }
         }
 
+        public SMSResponseDto<SMSTemplateDto> UpdateSMSTemplate(SMSTemplateDto templateInput)
+        {
+            _logger.LogInformation("UpdateSMSTemplate interactor method.");
+            SMSResponseDto<SMSTemplateDto> templateResponse = new SMSResponseDto<SMSTemplateDto>();
+            try
+            {
+                templateResponse = _smsTemplateInteractor.UpdateSMSTemplate(templateInput);
+                _logger.LogDebug("Status: " + templateResponse.Status + ",Message: " + templateResponse.Message);
+                return templateResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error occurred in SMS Interactor while updating SMS template: ", ex.Message);
+                templateResponse.Message = "Error occurred while updating SMS template: " + ex.Message;
+                templateResponse.Status = false;
+                return templateResponse;
+            }
+        }
+
         public SMSResponseDto<SMSChannelDto> GetSMSChannelByKey(string channelKey)
         {
             _logger.LogInformation("GetSMSChannelByKey interactor method.");

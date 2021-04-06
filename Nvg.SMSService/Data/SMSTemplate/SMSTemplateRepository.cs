@@ -76,6 +76,46 @@ namespace Nvg.SMSService.Data.SMSTemplate
             }
         }
 
+        public SMSResponseDto<SMSTemplateTable> UpdateSMSTemplate(SMSTemplateTable templateInput)
+        {
+            var response = new SMSResponseDto<SMSTemplateTable>();
+            try
+            {
+                var template = _context.SMSTemplates.FirstOrDefault(st => st.Name.ToLower().Equals(templateInput.Name.ToLower()) && st.SMSPoolID.Equals(templateInput.SMSPoolID) && (string.IsNullOrEmpty(templateInput.Variant) || st.Variant == templateInput.Variant));
+                if (template != null)
+                {
+                    template.MessageTemplate = templateInput.MessageTemplate;
+                    template.Sender = templateInput.Sender;
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Updated";
+                        response.Result = templateInput;
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Failed To Update";
+                        response.Result = templateInput;
+                    }
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"Cannot find template with Name {templateInput.Name}.";
+                    response.Result = templateInput;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
         public SMSResponseDto<bool> CheckIfTemplateExist(string channelKey, string templateName)
         {
             var response = new SMSResponseDto<bool>();
