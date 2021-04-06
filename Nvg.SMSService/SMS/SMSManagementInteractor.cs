@@ -221,8 +221,8 @@ namespace Nvg.SMSService.SMS
         #region SMS Channel
         public SMSResponseDto<List<SMSChannelDto>> GetSMSChannelsByPool(string poolID)
         {
-            _logger.LogInformation("GetSMSChannels interactor method.");
-            _logger.LogDebug("Pool Name:" + poolID);
+            _logger.LogInformation("GetSMSChannelsByPool interactor method.");
+            _logger.LogDebug("Pool ID:" + poolID);
             SMSResponseDto<List<SMSChannelDto>> channelResponse = new SMSResponseDto<List<SMSChannelDto>>();
             try
             {
@@ -244,11 +244,11 @@ namespace Nvg.SMSService.SMS
 
         public SMSResponseDto<SMSChannelDto> AddUpdateSMSChannel(SMSChannelDto channelInput)
         {
-            _logger.LogInformation("UpdateSMSProvider interactor method.");
+            _logger.LogInformation("AddUpdateSMSChannel interactor method.");
             SMSResponseDto<SMSChannelDto> channelResponse = new SMSResponseDto<SMSChannelDto>();
             try
             {
-                _logger.LogInformation("Trying to add SMSProvider.");
+                _logger.LogInformation("Trying to add/update SMSChannel.");
                 var mappedSMSInput = _mapper.Map<SMSChannelTable>(channelInput);
                 var response = _smsChannelRepository.AddUpdateSMSChannel(mappedSMSInput);
                 channelResponse = _mapper.Map<SMSResponseDto<SMSChannelDto>>(response);
@@ -257,7 +257,7 @@ namespace Nvg.SMSService.SMS
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error occurred in SMS Interactor while updating SMS channel: ", ex.Message);
+                _logger.LogError("Error occurred in SMS Interactor while adding/updating SMS channel: ", ex.Message);
                 channelResponse.Message = "Error occurred while updating SMS channel: " + ex.Message;
                 channelResponse.Status = false;
                 return channelResponse;
@@ -400,11 +400,11 @@ namespace Nvg.SMSService.SMS
 
         public SMSResponseDto<SMSTemplateDto> AddUpdateSMSTemplate(SMSTemplateDto templateInput)
         {
-            _logger.LogInformation("UpdateSMSProvider interactor method.");
+            _logger.LogInformation("AddUpdateSMSTemplate interactor method.");
             SMSResponseDto<SMSTemplateDto> templateResponse = new SMSResponseDto<SMSTemplateDto>();
             try
             {
-                _logger.LogInformation("Trying to add SMSProvider.");
+                _logger.LogInformation("Trying to add/update SMSTemplate.");
                 var mappedSMSInput = _mapper.Map<SMSTemplateTable>(templateInput);
                 var response = _smsTemplateRepository.AddUpdateSMSTemplate(mappedSMSInput);
                 templateResponse = _mapper.Map<SMSResponseDto<SMSTemplateDto>>(response);
@@ -413,7 +413,7 @@ namespace Nvg.SMSService.SMS
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error occurred in SMS Interactor while updating SMS channel: ", ex.Message);
+                _logger.LogError("Error occurred in SMS Interactor while adding/updating SMS Templates: ", ex.Message);
                 templateResponse.Message = "Error occurred while updating SMS channel: " + ex.Message;
                 templateResponse.Status = false;
                 return templateResponse;
