@@ -29,6 +29,7 @@ namespace Nvg.SMSService.Data.SMSTemplate
                 var template = _context.SMSTemplates.FirstOrDefault(st => st.Name.ToLower().Equals(templateInput.Name.ToLower()) && st.SMSPoolID.Equals(templateInput.SMSPoolID) && st.Variant==templateInput.Variant);
                 if (template != null)
                 {
+                    /*
                     template.MessageTemplate = templateInput.MessageTemplate;
                     template.Sender = templateInput.Sender;
                     if (_context.SaveChanges() == 1)
@@ -42,7 +43,10 @@ namespace Nvg.SMSService.Data.SMSTemplate
                         response.Status = false;
                         response.Message = "Failed To Update";
                         response.Result = templateInput;
-                    }
+                    }*/
+                    response.Status = false;
+                    response.Message = "This template is already used.";
+                    response.Result = templateInput;
                 }
                 else
                 {
