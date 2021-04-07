@@ -155,7 +155,7 @@ namespace Nvg.SMSService.Data.SMSChannel
                 else
                 {
                     response.Status = false;
-                    response.Message = $"SMS Channel data for is not available";
+                    response.Message = $"SMS Channel data is not available";
                     response.Result = "Invalid SMS Channel.";
                 }
                 return response;

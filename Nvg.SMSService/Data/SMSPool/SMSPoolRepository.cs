@@ -97,7 +97,7 @@ namespace Nvg.SMSService.Data.SMSPool
                 else
                 {
                     response.Status = false;
-                    response.Message = $"SMS pool data for is not available";
+                    response.Message = $"SMS pool data is not available";
                     response.Result = "Invalid SMS Pool.";
                 }
                 return response;

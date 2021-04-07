@@ -221,7 +221,7 @@ namespace Nvg.SMSService.Data.SMSProvider
                 else
                 {
                     response.Status = false;
-                    response.Message = $"SMS Provider data for is not available";
+                    response.Message = $"SMS Provider data is not available";
                     response.Result = "Invalid SMS Provider.";
                 }
                 return response;
