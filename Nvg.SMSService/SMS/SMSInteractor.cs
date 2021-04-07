@@ -74,6 +74,25 @@ namespace Nvg.SMSService.SMS
             }
         }
 
+        public SMSResponseDto<SMSProviderSettingsDto> UpdateSMSProvider(SMSProviderSettingsDto providerInput)
+        {
+            _logger.LogInformation("UpdateSMSProvider interactor method.");
+            SMSResponseDto<SMSProviderSettingsDto> providerResponse = new SMSResponseDto<SMSProviderSettingsDto>();
+            try
+            {
+                providerResponse = _smsProviderInteractor.UpdateSMSProvider(providerInput);
+                _logger.LogDebug("Status: " + providerResponse.Status + ",Message: " + providerResponse.Message);
+                return providerResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error occurred in SMS Interactor while updating SMS provider: ", ex.Message);
+                providerResponse.Message = "Error occurred while adding SMS provider: " + ex.Message;
+                providerResponse.Status = false;
+                return providerResponse;
+            }
+        }
+
         public SMSResponseDto<SMSChannelDto> AddSMSChannel(SMSChannelDto channelInput)
         {
             _logger.LogInformation("AddSMSChannel interactor method.");
@@ -87,7 +106,26 @@ namespace Nvg.SMSService.SMS
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred in SMS Interactor while adding SMS channel: ", ex.Message);
-                channelResponse.Message = "Error occurred while adding SMS channel: " + ex.Message;
+                channelResponse.Message = "Error occurred while updating SMS channel: " + ex.Message;
+                channelResponse.Status = false;
+                return channelResponse;
+            }
+        }
+
+        public SMSResponseDto<SMSChannelDto> UpdateSMSChannel(SMSChannelDto channelInput)
+        {
+            _logger.LogInformation("UpdateSMSChannel interactor method.");
+            SMSResponseDto<SMSChannelDto> channelResponse = new SMSResponseDto<SMSChannelDto>();
+            try
+            {
+                channelResponse = _smsChannelInteractor.UpdateSMSChannel(channelInput);
+                _logger.LogDebug("Status: " + channelResponse.Status + ",Message: " + channelResponse.Message);
+                return channelResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error occurred in SMS Interactor while updating SMS channel: ", ex.Message);
+                channelResponse.Message = "Error occurred while updating SMS channel: " + ex.Message;
                 channelResponse.Status = false;
                 return channelResponse;
             }

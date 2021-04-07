@@ -26,24 +26,9 @@ namespace Nvg.SMSService.Data.SMSTemplate
             var response = new SMSResponseDto<SMSTemplateTable>();
             try
             {
-                var template = _context.SMSTemplates.FirstOrDefault(st => st.Name.ToLower().Equals(templateInput.Name.ToLower()) && st.SMSPoolID.Equals(templateInput.SMSPoolID) && st.Variant==templateInput.Variant);
+                var template = _context.SMSTemplates.FirstOrDefault(st => st.Name.ToLower().Equals(templateInput.Name.ToLower()) && st.SMSPoolID.Equals(templateInput.SMSPoolID) && (string.IsNullOrEmpty(templateInput.Variant) || st.Variant.ToLower().Equals(templateInput.Variant.ToLower())));
                 if (template != null)
                 {
-                    /*
-                    template.MessageTemplate = templateInput.MessageTemplate;
-                    template.Sender = templateInput.Sender;
-                    if (_context.SaveChanges() == 1)
-                    {
-                        response.Status = true;
-                        response.Message = "Updated";
-                        response.Result = templateInput;
-                    }
-                    else
-                    {
-                        response.Status = false;
-                        response.Message = "Failed To Update";
-                        response.Result = templateInput;
-                    }*/
                     response.Status = false;
                     response.Message = "This template is already used.";
                     response.Result = templateInput;
@@ -81,7 +66,7 @@ namespace Nvg.SMSService.Data.SMSTemplate
             var response = new SMSResponseDto<SMSTemplateTable>();
             try
             {
-                var template = _context.SMSTemplates.FirstOrDefault(st => st.Name.ToLower().Equals(templateInput.Name.ToLower()) && st.SMSPoolID.Equals(templateInput.SMSPoolID) && (string.IsNullOrEmpty(templateInput.Variant) || st.Variant == templateInput.Variant));
+                var template = _context.SMSTemplates.FirstOrDefault(st => st.Name.ToLower().Equals(templateInput.Name.ToLower()) && st.SMSPoolID.Equals(templateInput.SMSPoolID) && (string.IsNullOrEmpty(templateInput.Variant) || st.Variant.ToLower().Equals(templateInput.Variant.ToLower())));
                 if (template != null)
                 {
                     template.MessageTemplate = templateInput.MessageTemplate;

@@ -79,6 +79,32 @@ namespace Nvg.API.SMS.Controller
         }
 
         [HttpPost]
+        public ActionResult UpdateSMSProvider(SMSProviderSettingsDto providerInput)
+        {
+            _logger.LogInformation("UpdateSMSProvider action method.");
+            _logger.LogInformation($"SMSPoolName: {providerInput.SMSPoolName}, ProviderName: {providerInput.Name}, Configuration: {providerInput.Configuration}.");
+            try
+            {
+                var providerResponse = _smsInteractor.UpdateSMSProvider(providerInput);
+                if (providerResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
+                    return Ok(providerResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
+                    return StatusCode(412, providerResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while updating SMS provider: " + ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpPost]
         public ActionResult AddSMSChannel(SMSChannelDto channelInput)
         {
             _logger.LogInformation("AddSMSChannel action method.");
@@ -100,6 +126,32 @@ namespace Nvg.API.SMS.Controller
             catch (Exception ex)
             {
                 _logger.LogError("Internal server error: Error occurred while adding SMS channel: " + ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult UpdateSMSChannel(SMSChannelDto channelInput)
+        {
+            _logger.LogInformation("UpdateSMSChannel action method.");
+            _logger.LogInformation($"SMSPoolName: {channelInput.SMSPoolName}, ProviderName: {channelInput.SMSProviderName}.");
+            try
+            {
+                var channelResponse = _smsInteractor.UpdateSMSChannel(channelInput);
+                if (channelResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                    return Ok(channelResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                    return StatusCode(412, channelResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while updating SMS channel: " + ex.Message);
                 return StatusCode(500, ex);
             }
         }

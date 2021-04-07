@@ -41,6 +41,17 @@ namespace Nvg.SMSService.SMSProvider
                     }
                 }
             }
+            else if (!string.IsNullOrEmpty(providerInput.SMSPoolID))
+            {
+                var smsPool = _smsPoolRepository.CheckIfSmsPoolIDIsValid(providerInput.SMSPoolID);
+                if (!smsPool.Status)
+                {
+                    response.Status = false;
+                    response.Message = "Invalid SMS Pool ID.";
+                    response.Result = providerInput;
+                    return response;
+                }
+            }
             else
             {
                 response.Status = false;
@@ -50,6 +61,49 @@ namespace Nvg.SMSService.SMSProvider
             }
             var mappedSMSInput = _mapper.Map<SMSProviderSettingsTable>(providerInput);
             var mappedResponse = _smsProviderRepository.AddSMSProvider(mappedSMSInput);
+            response = _mapper.Map<SMSResponseDto<SMSProviderSettingsDto>>(mappedResponse);
+            return response;
+        }
+
+        public SMSResponseDto<SMSProviderSettingsDto> UpdateSMSProvider(SMSProviderSettingsDto providerInput)
+        {
+            var response = new SMSResponseDto<SMSProviderSettingsDto>();
+            if (!string.IsNullOrEmpty(providerInput.SMSPoolName))
+            {
+                if (string.IsNullOrEmpty(providerInput.SMSPoolID))
+                {
+                    var smsPool = _smsPoolRepository.GetSMSPoolByName(providerInput.SMSPoolName)?.Result;
+                    if (smsPool != null)
+                        providerInput.SMSPoolID = smsPool.ID;
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Invalid SMS pool.";
+                        response.Result = providerInput;
+                        return response;
+                    }
+                }
+            }
+            else if (!string.IsNullOrEmpty(providerInput.SMSPoolID))
+            {
+                var smsPool = _smsPoolRepository.CheckIfSmsPoolIDIsValid(providerInput.SMSPoolID);
+                if (!smsPool.Status)
+                {
+                    response.Status = false;
+                    response.Message = "Invalid SMS Pool ID.";
+                    response.Result = providerInput;
+                    return response;
+                }
+            }
+            else
+            {
+                response.Status = false;
+                response.Message = "SMS pool cannot be blank.";
+                response.Result = providerInput;
+                return response;
+            }
+            var mappedSMSInput = _mapper.Map<SMSProviderSettingsTable>(providerInput);
+            var mappedResponse = _smsProviderRepository.UpdateSMSProvider(mappedSMSInput);
             response = _mapper.Map<SMSResponseDto<SMSProviderSettingsDto>>(mappedResponse);
             return response;
         }
