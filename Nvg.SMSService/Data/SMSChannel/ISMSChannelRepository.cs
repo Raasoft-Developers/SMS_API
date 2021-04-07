@@ -13,6 +13,6 @@ namespace Nvg.SMSService.Data.SMSChannel
         SMSResponseDto<SMSChannelTable> GetSMSChannelByKey(string channelKey);
         SMSResponseDto<bool> CheckIfChannelExist(string channelKey);
         SMSResponseDto<string> CheckIfSmsChannelIDIsValid(string channelID);
-        SMSResponseDto<string> CheckIfSmsChannelIDKeyMatch(string channelID, string channelKey);
+        SMSResponseDto<string> CheckIfSmsChannelIDKeyValid(string channelID, string channelKey);
     }
 }

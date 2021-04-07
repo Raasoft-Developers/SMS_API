@@ -47,7 +47,7 @@ namespace Nvg.SMSService.SMSChannel
                 }
                 else
                 {
-                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameMatch(channelInput.SMSPoolID,channelInput.SMSPoolName);
+                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameValid(channelInput.SMSPoolID,channelInput.SMSPoolName);
                     if (!smsPool.Status)
                     {
                         response.Status = false;
@@ -93,7 +93,7 @@ namespace Nvg.SMSService.SMSChannel
                 }
                 else
                 {
-                    var smsProvider = _smsProviderRepository.CheckIfSmsProviderIDNameMatch(channelInput.SMSProviderID, channelInput.SMSProviderName);
+                    var smsProvider = _smsProviderRepository.CheckIfSmsProviderIDNameValid(channelInput.SMSProviderID, channelInput.SMSProviderName);
                     if (!smsProvider.Status)
                     {
                         response.Status = false;
@@ -143,7 +143,7 @@ namespace Nvg.SMSService.SMSChannel
                 }
                 else
                 {
-                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameMatch(channelInput.SMSPoolID, channelInput.SMSPoolName);
+                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameValid(channelInput.SMSPoolID, channelInput.SMSPoolName);
                     if (!smsPool.Status)
                     {
                         response.Status = false;
@@ -189,7 +189,7 @@ namespace Nvg.SMSService.SMSChannel
                 }
                 else
                 {
-                    var smsProvider = _smsProviderRepository.CheckIfSmsProviderIDNameMatch(channelInput.SMSProviderID, channelInput.SMSProviderName);
+                    var smsProvider = _smsProviderRepository.CheckIfSmsProviderIDNameValid(channelInput.SMSProviderID, channelInput.SMSProviderName);
                     if (!smsProvider.Status)
                     {
                         response.Status = false;

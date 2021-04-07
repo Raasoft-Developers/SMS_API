@@ -91,13 +91,13 @@ namespace Nvg.SMSService.Data.SMSPool
                 if (smsPool)
                 {
                     response.Status = true;
-                    response.Message = $"SMS Pool ID {poolID} is valid.";
+                    response.Message = $"SMS Pool ID is valid.";
                     response.Result = "Valid SMS Pool.";
                 }
                 else
                 {
                     response.Status = false;
-                    response.Message = $"SMS pool data for {poolID} is not available";
+                    response.Message = $"SMS pool data for is not available";
                     response.Result = "Invalid SMS Pool.";
                 }
                 return response;
@@ -110,7 +110,7 @@ namespace Nvg.SMSService.Data.SMSPool
             }
         }
 
-        public SMSResponseDto<string> CheckIfSmsPoolIDNameMatch(string poolID, string poolName)
+        public SMSResponseDto<string> CheckIfSmsPoolIDNameValid(string poolID, string poolName)
         {
             var response = new SMSResponseDto<string>();
             try
@@ -119,14 +119,14 @@ namespace Nvg.SMSService.Data.SMSPool
                 if (smsPool)
                 {
                     response.Status = true;
-                    response.Message = $"Matched Pool ID {poolID} and Pool Name {poolName}.";
-                    response.Result = "SMS Pool match.";
+                    response.Message = $"Valid Pool ID and Pool Name {poolName}.";
+                    response.Result = "SMS Pool Valid.";
                 }
                 else
                 {
                     response.Status = false;
-                    response.Message = $"No match found for Pool ID {poolID} and Pool Name {poolName}";
-                    response.Result = "SMS Pool does not match.";
+                    response.Message = $"Invalid Pool ID and Pool Name {poolName}";
+                    response.Result = "SMS Pool Invalid.";
                 }
                 return response;
             }

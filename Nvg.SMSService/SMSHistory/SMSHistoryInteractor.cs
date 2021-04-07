@@ -52,7 +52,7 @@ namespace Nvg.SMSService.SMSHistory
                     }
                     else
                     {
-                        var smsProvider = _smsProviderRepository.CheckIfSmsProviderIDNameMatch(historyInput.SMSProviderID, historyInput.ProviderName);
+                        var smsProvider = _smsProviderRepository.CheckIfSmsProviderIDNameValid(historyInput.SMSProviderID, historyInput.ProviderName);
                         if (!smsProvider.Status)
                         {
                             response.Status = false;
@@ -101,7 +101,7 @@ namespace Nvg.SMSService.SMSHistory
                     }
                     else
                     {
-                        var smsChannel = _smsChannelRepository.CheckIfSmsChannelIDKeyMatch(historyInput.SMSChannelID, historyInput.ChannelKey);
+                        var smsChannel = _smsChannelRepository.CheckIfSmsChannelIDKeyValid(historyInput.SMSChannelID, historyInput.ChannelKey);
                         if (!smsChannel.Status)
                         {
                             _logger.LogError($"{smsChannel.Message}");

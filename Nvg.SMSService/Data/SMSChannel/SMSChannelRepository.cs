@@ -149,13 +149,13 @@ namespace Nvg.SMSService.Data.SMSChannel
                 if (smsPool)
                 {
                     response.Status = true;
-                    response.Message = $"SMS Channel ID {channelID} is valid.";
+                    response.Message = $"SMS Channel ID is valid.";
                     response.Result = "Valid SMS Channel.";
                 }
                 else
                 {
                     response.Status = false;
-                    response.Message = $"SMS Channel data for {channelID} is not available";
+                    response.Message = $"SMS Channel data for is not available";
                     response.Result = "Invalid SMS Channel.";
                 }
                 return response;
@@ -168,7 +168,7 @@ namespace Nvg.SMSService.Data.SMSChannel
             }
         }
 
-        public SMSResponseDto<string> CheckIfSmsChannelIDKeyMatch(string channelID, string channelKey)
+        public SMSResponseDto<string> CheckIfSmsChannelIDKeyValid(string channelID, string channelKey)
         {
             var response = new SMSResponseDto<string>();
             try
@@ -177,14 +177,14 @@ namespace Nvg.SMSService.Data.SMSChannel
                 if (smsPool)
                 {
                     response.Status = true;
-                    response.Message = $"Matched Channel ID {channelID} and Channel Key {channelKey}.";
-                    response.Result = "SMS Channel match.";
+                    response.Message = $"Valid Channel ID and Channel Key {channelKey}.";
+                    response.Result = "SMS Channel Valid.";
                 }
                 else
                 {
                     response.Status = false;
-                    response.Message = $"No match found for Channel ID {channelID} and Channel Key {channelKey}";
-                    response.Result = "SMS Channel does not match.";
+                    response.Message = $"No data found for Channel ID and Channel Key {channelKey}";
+                    response.Result = "SMS Channel InValid.";
                 }
                 return response;
             }

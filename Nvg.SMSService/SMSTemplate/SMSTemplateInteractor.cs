@@ -43,7 +43,7 @@ namespace Nvg.SMSService
                 }
                 else
                 {
-                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameMatch(templateInput.SMSPoolID, templateInput.SMSPoolName);
+                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameValid(templateInput.SMSPoolID, templateInput.SMSPoolName);
                     if (!smsPool.Status)
                     {
                         response.Status = false;
@@ -97,7 +97,7 @@ namespace Nvg.SMSService
                 }
                 else
                 {
-                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameMatch(templateInput.SMSPoolID, templateInput.SMSPoolName);
+                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameValid(templateInput.SMSPoolID, templateInput.SMSPoolName);
                     if (!smsPool.Status)
                     {
                         response.Status = false;

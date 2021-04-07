@@ -11,6 +11,6 @@ namespace Nvg.SMSService.Data.SMSPool
         SMSResponseDto<SMSPoolTable> AddSMSPool(SMSPoolTable smsPoolInput);
         SMSResponseDto<SMSPoolTable> GetSMSPoolByName(string poolName);
         SMSResponseDto<string> CheckIfSmsPoolIDIsValid(string poolID);
-        SMSResponseDto<string> CheckIfSmsPoolIDNameMatch(string poolID, string poolName);
+        SMSResponseDto<string> CheckIfSmsPoolIDNameValid(string poolID, string poolName);
     }
 }

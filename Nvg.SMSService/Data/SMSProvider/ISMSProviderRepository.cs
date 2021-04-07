@@ -15,6 +15,6 @@ namespace Nvg.SMSService.Data.SMSProvider
         SMSResponseDto<List<SMSProviderSettingsTable>> GetSMSProvidersByPool(string poolName, string providerName);
         SMSResponseDto<SMSProviderSettingsTable> GetDefaultSMSProvider();
         SMSResponseDto<string> CheckIfSmsProviderIDIsValid(string providerID);
-        SMSResponseDto<string> CheckIfSmsProviderIDNameMatch(string providerID, string providerName);
+        SMSResponseDto<string> CheckIfSmsProviderIDNameValid(string providerID, string providerName);
     }
 }

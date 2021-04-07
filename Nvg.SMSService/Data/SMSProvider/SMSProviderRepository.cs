@@ -215,13 +215,13 @@ namespace Nvg.SMSService.Data.SMSProvider
                 if (smsPool)
                 {
                     response.Status = true;
-                    response.Message = $"SMS Provider ID {providerID} is valid.";
+                    response.Message = $"SMS Provider ID is valid.";
                     response.Result = "Valid SMS Provider.";
                 }
                 else
                 {
                     response.Status = false;
-                    response.Message = $"SMS Provider data for {providerID} is not available";
+                    response.Message = $"SMS Provider data for is not available";
                     response.Result = "Invalid SMS Provider.";
                 }
                 return response;
@@ -234,7 +234,7 @@ namespace Nvg.SMSService.Data.SMSProvider
             }
         }
 
-        public SMSResponseDto<string> CheckIfSmsProviderIDNameMatch(string providerID, string providerName)
+        public SMSResponseDto<string> CheckIfSmsProviderIDNameValid(string providerID, string providerName)
         {
             var response = new SMSResponseDto<string>();
             try
@@ -243,14 +243,14 @@ namespace Nvg.SMSService.Data.SMSProvider
                 if (smsPool)
                 {
                     response.Status = true;
-                    response.Message = $"Matched Provider ID {providerID} and Provider Name {providerName}.";
-                    response.Result = "SMS Provider match.";
+                    response.Message = $"Valid Provider ID and Provider Name {providerName}.";
+                    response.Result = "SMS Provider Valid.";
                 }
                 else
                 {
                     response.Status = false;
-                    response.Message = $"No match found for Provider ID {providerID} and Provider Name {providerName}";
-                    response.Result = "SMS Provider does not match.";
+                    response.Message = $"Invalid Provider ID and Provider Name {providerName}";
+                    response.Result = "SMS Provider Invalid.";
                 }
                 return response;
             }
