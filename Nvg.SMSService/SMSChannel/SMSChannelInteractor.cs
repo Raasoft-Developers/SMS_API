@@ -105,7 +105,7 @@ namespace Nvg.SMSService.SMSChannel
             }
             else if (!string.IsNullOrEmpty(channelInput.SMSProviderID))
             {
-                var smsProvider = _smsProviderRepository.CheckIfSmsProviderIDIsValid(channelInput.SMSPoolID);
+                var smsProvider = _smsProviderRepository.CheckIfSmsProviderIDIsValid(channelInput.SMSProviderID);
                 if (!smsProvider.Status)
                 {
                     response.Status = false;

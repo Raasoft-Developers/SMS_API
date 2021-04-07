@@ -40,6 +40,17 @@ namespace Nvg.SMSService.SMSProvider
                         return response;
                     }
                 }
+                else
+                {
+                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameValid(providerInput.SMSPoolID, providerInput.SMSPoolName);
+                    if (!smsPool.Status)
+                    {
+                        response.Status = false;
+                        response.Message = "SMS Pool ID and Name do not match.";
+                        response.Result = providerInput;
+                        return response;
+                    }
+                }
             }
             else if (!string.IsNullOrEmpty(providerInput.SMSPoolID))
             {
@@ -79,6 +90,17 @@ namespace Nvg.SMSService.SMSProvider
                     {
                         response.Status = false;
                         response.Message = "Invalid SMS pool.";
+                        response.Result = providerInput;
+                        return response;
+                    }
+                }
+                else
+                {
+                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameValid(providerInput.SMSPoolID, providerInput.SMSPoolName);
+                    if (!smsPool.Status)
+                    {
+                        response.Status = false;
+                        response.Message = "Invalid SMS Pool ID and Name.";
                         response.Result = providerInput;
                         return response;
                     }
