@@ -252,7 +252,7 @@ namespace Nvg.API.SMS.Controller
             {
                 if (!string.IsNullOrWhiteSpace(providerInput.Name) && !string.IsNullOrWhiteSpace(providerInput.Type) && !string.IsNullOrWhiteSpace(providerInput.Configuration))
                 {
-                    providerResponse = _smsManagementInteractor.AddSMSProvider(providerInput);
+                    providerResponse = _smsManagementInteractor.UpdateSMSProvider(providerInput);
                     if (providerResponse.Status)
                     {
                         _logger.LogDebug("Status: " + providerResponse.Status + ", " + providerResponse.Message);
@@ -443,7 +443,7 @@ namespace Nvg.API.SMS.Controller
             {
                 if (!string.IsNullOrWhiteSpace(channelInput.Key))
                 {
-                    channelResponse = _smsManagementInteractor.AddSMSChannel(channelInput);
+                    channelResponse = _smsManagementInteractor.UpdateSMSChannel(channelInput);
                     if (channelResponse.Status)
                     {
                         _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
@@ -608,7 +608,7 @@ namespace Nvg.API.SMS.Controller
             {
                 if (!string.IsNullOrWhiteSpace(templateInput.MessageTemplate) && !string.IsNullOrWhiteSpace(templateInput.Name))
                 {
-                    templateResponse = _smsManagementInteractor.AddSMSTemplate(templateInput);
+                    templateResponse = _smsManagementInteractor.UpdateSMSTemplate(templateInput);
                     if (templateResponse.Status)
                     {
                         _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
