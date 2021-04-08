@@ -25,6 +25,7 @@ namespace Nvg.API.SMS.Controller
         private readonly ISMSInteractor _smsInteractor;
         private readonly ILogger<SmsController> _logger;
         private IConfiguration _config;
+        private readonly string defaultChannelKey = "MasterSMSChannel";
 
         public SmsController(ISMSInteractor smsInteractor, ILogger<SmsController> logger, IConfiguration config)
         {
@@ -108,6 +109,32 @@ namespace Nvg.API.SMS.Controller
         }
 
         [HttpPost]
+        public ActionResult UpdateSMSProvider(SMSProviderSettingsDto providerInput)
+        {
+            _logger.LogInformation("UpdateSMSProvider action method.");
+            _logger.LogInformation($"SMSPoolName: {providerInput.SMSPoolName}, ProviderName: {providerInput.Name}, Configuration: {providerInput.Configuration}.");
+            try
+            {
+                var providerResponse = _smsInteractor.UpdateSMSProvider(providerInput);
+                if (providerResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
+                    return Ok(providerResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
+                    return StatusCode(412, providerResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while updating SMS provider: " + ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpPost]
         public ActionResult AddSMSChannel(SMSChannelDto channelInput)
         {
             _logger.LogInformation("AddSMSChannel action method.");
@@ -140,6 +167,32 @@ namespace Nvg.API.SMS.Controller
             catch (Exception ex)
             {
                 _logger.LogError("Internal server error: Error occurred while adding SMS channel: " + ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult UpdateSMSChannel(SMSChannelDto channelInput)
+        {
+            _logger.LogInformation("UpdateSMSChannel action method.");
+            _logger.LogInformation($"SMSPoolName: {channelInput.SMSPoolName}, ProviderName: {channelInput.SMSProviderName}.");
+            try
+            {
+                var channelResponse = _smsInteractor.UpdateSMSChannel(channelInput);
+                if (channelResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                    return Ok(channelResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                    return StatusCode(412, channelResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while updating SMS channel: " + ex.Message);
                 return StatusCode(500, ex);
             }
         }
@@ -181,6 +234,32 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        [HttpPost]
+        public ActionResult UpdateSMSTemplate(SMSTemplateDto templateInput)
+        {
+            _logger.LogInformation("UpdateSMSTemplate action method.");
+            _logger.LogInformation($"SMSPoolName: {templateInput.SMSPoolName}, MessageTemplate: {templateInput.MessageTemplate}, Variant: {templateInput.Variant}.");
+            try
+            {
+                var templateResponse = _smsInteractor.UpdateSMSTemplate(templateInput);
+                if (templateResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
+                    return Ok(templateResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
+                    return StatusCode(412, templateResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while updating SMS template: " + ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
         [HttpGet("{channelKey}")]
         public ActionResult GetSMSChannelByKey(string channelKey)
         {
@@ -189,6 +268,31 @@ namespace Nvg.API.SMS.Controller
             try
             {
                 var channelResponse = _smsInteractor.GetSMSChannelByKey(channelKey);
+                if (channelResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                    return Ok(channelResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                    return StatusCode(412, channelResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while getting SMS channel by key: " + ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetDefaultChannelKey()
+        {
+            _logger.LogInformation("GetSMSChannelByKey action method.");
+            try
+            {
+                var channelResponse = _smsInteractor.GetSMSChannelByKey(defaultChannelKey);
                 if (channelResponse.Status)
                 {
                     _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);

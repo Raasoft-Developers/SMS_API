@@ -8,7 +8,8 @@ namespace Nvg.SMSService.Data.SMSChannel
 {
     public interface ISMSChannelRepository
     {
-        SMSResponseDto<SMSChannelTable> AddUpdateSMSChannel(SMSChannelTable channelInput);
+        SMSResponseDto<SMSChannelTable> AddSMSChannel(SMSChannelTable channelInput);
+        SMSResponseDto<SMSChannelTable> UpdateSMSChannel(SMSChannelTable channelInput);
         SMSResponseDto<SMSChannelTable> GetSMSChannelByKey(string channelKey);
         SMSResponseDto<bool> CheckIfChannelExist(string channelKey);
         /// <summary>
@@ -33,5 +34,7 @@ namespace Nvg.SMSService.Data.SMSChannel
 
         SMSResponseDto<SMSChannelTable> GetSMSChannelByID(string channelID);
 
+        SMSResponseDto<string> CheckIfSmsChannelIDIsValid(string channelID);
+        SMSResponseDto<string> CheckIfSmsChannelIDKeyValid(string channelID, string channelKey);
     }
 }

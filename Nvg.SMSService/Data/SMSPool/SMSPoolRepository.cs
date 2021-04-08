@@ -206,5 +206,61 @@ namespace Nvg.SMSService.Data.SMSPool
                 return response;
             }
         }
+
+        public SMSResponseDto<string> CheckIfSmsPoolIDIsValid(string poolID)
+        {
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                var smsPool = _context.SMSPools.Any(sp => sp.ID.ToLower().Equals(poolID.ToLower()));
+                if (smsPool)
+                {
+                    response.Status = true;
+                    response.Message = $"SMS Pool ID is valid.";
+                    response.Result = "Valid SMS Pool.";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"SMS pool data is not available";
+                    response.Result = "Invalid SMS Pool.";
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<string> CheckIfSmsPoolIDNameValid(string poolID, string poolName)
+        {
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                var smsPool = _context.SMSPools.Any(sp => sp.ID.ToLower().Equals(poolID.ToLower()) && sp.Name.ToLower().Equals(poolName.ToLower()));
+                if (smsPool)
+                {
+                    response.Status = true;
+                    response.Message = $"Valid Pool ID and Pool Name {poolName}.";
+                    response.Result = "SMS Pool Valid.";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"Invalid Pool ID and Pool Name {poolName}";
+                    response.Result = "SMS Pool Invalid.";
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
     }
 }

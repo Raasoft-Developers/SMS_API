@@ -36,5 +36,7 @@ namespace Nvg.SMSService.Data.SMSPool
         /// </summary>
         /// <returns><see cref="SMSResponseDto{T}"/></returns>
         SMSResponseDto<List<SMSPoolTable>> GetSMSPoolNames();
+        SMSResponseDto<string> CheckIfSmsPoolIDIsValid(string poolID);
+        SMSResponseDto<string> CheckIfSmsPoolIDNameValid(string poolID, string poolName);
     }
 }

@@ -41,6 +41,28 @@ namespace Nvg.SMSService
                         return response;
                     }
                 }
+                else
+                {
+                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameValid(templateInput.SMSPoolID, templateInput.SMSPoolName);
+                    if (!smsPool.Status)
+                    {
+                        response.Status = false;
+                        response.Message = "SMS Pool ID and Pool Name do not match.";
+                        response.Result = templateInput;
+                        return response;
+                    }
+                }
+            }
+            else if (!string.IsNullOrEmpty(templateInput.SMSPoolID))
+            {
+                var smsPool = _smsPoolRepository.CheckIfSmsPoolIDIsValid(templateInput.SMSPoolID);
+                if (!smsPool.Status)
+                {
+                    response.Status = false;
+                    response.Message = "Invalid SMS Pool ID.";
+                    response.Result = templateInput;
+                    return response;
+                }
             }
             else
             {
@@ -51,6 +73,60 @@ namespace Nvg.SMSService
             }
             var mappedInput = _mapper.Map<SMSTemplateTable>(templateInput);
             var mappedResponse = _smsTemplateRepository.AddUpdateSMSTemplate(mappedInput);
+            response = _mapper.Map<SMSResponseDto<SMSTemplateDto>>(mappedResponse);
+            return response;
+        }
+
+        public SMSResponseDto<SMSTemplateDto> UpdateSMSTemplate(SMSTemplateDto templateInput)
+        {
+            var response = new SMSResponseDto<SMSTemplateDto>();
+            if (!string.IsNullOrEmpty(templateInput.SMSPoolName))
+            {
+                if (string.IsNullOrEmpty(templateInput.SMSPoolID))
+                {
+                    var smsPool = _smsPoolRepository.GetSMSPoolByName(templateInput.SMSPoolName)?.Result;
+                    if (smsPool != null)
+                        templateInput.SMSPoolID = smsPool.ID;
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Invalid SMS pool.";
+                        response.Result = templateInput;
+                        return response;
+                    }
+                }
+                else
+                {
+                    var smsPool = _smsPoolRepository.CheckIfSmsPoolIDNameValid(templateInput.SMSPoolID, templateInput.SMSPoolName);
+                    if (!smsPool.Status)
+                    {
+                        response.Status = false;
+                        response.Message = "SMS Pool ID and Pool Name do not match.";
+                        response.Result = templateInput;
+                        return response;
+                    }
+                }
+            }
+            else if (!string.IsNullOrEmpty(templateInput.SMSPoolID))
+            {
+                var smsPool = _smsPoolRepository.CheckIfSmsPoolIDIsValid(templateInput.SMSPoolID);
+                if (!smsPool.Status)
+                {
+                    response.Status = false;
+                    response.Message = "Invalid SMS Pool ID.";
+                    response.Result = templateInput;
+                    return response;
+                }
+            }
+            else
+            {
+                response.Status = false;
+                response.Message = "SMS pool cannot be blank.";
+                response.Result = templateInput;
+                return response;
+            }
+            var mappedInput = _mapper.Map<SMSTemplateTable>(templateInput);
+            var mappedResponse = _smsTemplateRepository.UpdateSMSTemplate(mappedInput);
             response = _mapper.Map<SMSResponseDto<SMSTemplateDto>>(mappedResponse);
             return response;
         }

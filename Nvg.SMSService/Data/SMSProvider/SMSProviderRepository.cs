@@ -16,12 +16,51 @@ namespace Nvg.SMSService.Data.SMSProvider
             _context = context;
         }
 
-        public SMSResponseDto<SMSProviderSettingsTable> AddUpdateSMSProvider(SMSProviderSettingsTable providerInput)
+        public SMSResponseDto<SMSProviderSettingsTable> AddSMSProvider(SMSProviderSettingsTable providerInput)
         {
             var response = new SMSResponseDto<SMSProviderSettingsTable>();
             try
             {
                 var provider = _context.SMSProviderSettings.FirstOrDefault(sp => sp.Name.Equals(providerInput.Name) && sp.SMSPoolID.Equals(providerInput.SMSPoolID)&& sp.Type.Equals(providerInput.Type));
+                if (provider != null)
+                {
+                    response.Status = false;
+                    response.Message = "This Provider is already used.";
+                    response.Result = providerInput;
+                }
+                else
+                {
+                    providerInput.ID = Guid.NewGuid().ToString();
+                    _context.SMSProviderSettings.Add(providerInput);
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Added";
+                        response.Result = providerInput;
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Not Added";
+                        response.Result = providerInput;
+                    }
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<SMSProviderSettingsTable> UpdateSMSProvider(SMSProviderSettingsTable providerInput)
+        {
+            var response = new SMSResponseDto<SMSProviderSettingsTable>();
+            try
+            {
+                var provider = _context.SMSProviderSettings.FirstOrDefault(sp => sp.Name.Equals(providerInput.Name) && sp.SMSPoolID.Equals(providerInput.SMSPoolID) && sp.Type.Equals(providerInput.Type));
                 if (provider != null)
                 {
                     provider.Configuration = providerInput.Configuration;
@@ -40,20 +79,9 @@ namespace Nvg.SMSService.Data.SMSProvider
                 }
                 else
                 {
-                    providerInput.ID = Guid.NewGuid().ToString();
-                    _context.SMSProviderSettings.Add(providerInput);
-                    if (_context.SaveChanges() == 1)
-                    {
-                        response.Status = true;
-                        response.Message = "Added";
-                        response.Result = providerInput;
-                    }
-                    else
-                    {
-                        response.Status = false;
-                        response.Message = "Not Added";
-                        response.Result = providerInput;
-                    }
+                    response.Status = false;
+                    response.Message = $"Cannot find Provider with Name {providerInput.Name}";
+                    response.Result = providerInput;
                 }
                 return response;
             }
@@ -254,6 +282,62 @@ namespace Nvg.SMSService.Data.SMSProvider
                 {
                     response.Message = "No record found.";
                     response.Status = false;
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<string> CheckIfSmsProviderIDIsValid(string providerID)
+        {
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                var smsPool = _context.SMSProviderSettings.Any(sp => sp.ID.ToLower().Equals(providerID.ToLower()));
+                if (smsPool)
+                {
+                    response.Status = true;
+                    response.Message = $"SMS Provider ID is valid.";
+                    response.Result = "Valid SMS Provider.";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"SMS Provider data is not available";
+                    response.Result = "Invalid SMS Provider.";
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<string> CheckIfSmsProviderIDNameValid(string providerID, string providerName)
+        {
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                var smsPool = _context.SMSProviderSettings.Any(sp => sp.ID.ToLower().Equals(providerID.ToLower()) && sp.Name.ToLower().Equals(providerName.ToLower()));
+                if (smsPool)
+                {
+                    response.Status = true;
+                    response.Message = $"Valid Provider ID and Provider Name {providerName}.";
+                    response.Result = "SMS Provider Valid.";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"Invalid Provider ID and Provider Name {providerName}";
+                    response.Result = "SMS Provider Invalid.";
                 }
                 return response;
             }
