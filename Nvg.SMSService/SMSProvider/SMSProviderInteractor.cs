@@ -71,7 +71,7 @@ namespace Nvg.SMSService.SMSProvider
                 return response;
             }
             var mappedSMSInput = _mapper.Map<SMSProviderSettingsTable>(providerInput);
-            var mappedResponse = _smsProviderRepository.AddUpdateSMSProvider(mappedSMSInput);
+            var mappedResponse = _smsProviderRepository.AddSMSProvider(mappedSMSInput);
             response = _mapper.Map<SMSResponseDto<SMSProviderSettingsDto>>(mappedResponse);
             return response;
         }

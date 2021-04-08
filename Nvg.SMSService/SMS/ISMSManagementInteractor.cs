@@ -51,11 +51,18 @@ namespace Nvg.SMSService.SMS
         SMSResponseDto<List<SMSProviderSettingsDto>> GetSMSProviderNames(string poolName);
 
         /// <summary>
-        /// Add/Update the SMS provider to the database.
+        /// Add the SMS provider to the database.
         /// </summary>
         /// <param name="providerInput"><see cref="SMSProviderSettingsDto"/></param>
         /// <returns><see cref="SMSResponseDto{T}"/></returns>
-        SMSResponseDto<SMSProviderSettingsDto> AddUpdateSMSProvider(SMSProviderSettingsDto providerInput);
+        SMSResponseDto<SMSProviderSettingsDto> AddSMSProvider(SMSProviderSettingsDto providerInput);
+
+        /// <summary>
+        /// Update the SMS provider in the database.
+        /// </summary>
+        /// <param name="providerInput"><see cref="SMSProviderSettingsDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<SMSProviderSettingsDto> UpdateSMSProvider(SMSProviderSettingsDto providerInput);
 
         /// <summary>
         /// Delete the SMS Provider into the database.
@@ -82,11 +89,18 @@ namespace Nvg.SMSService.SMS
         /// <returns><see cref="SMSResponseDto{T}"/></returns>
         SMSResponseDto<string> DeleteSMSChannel(string channelID);
         /// <summary>
-        /// Add/Update the SMS provider to the database.
+        /// Add the SMS provider to the database.
         /// </summary>
         /// <param name="channelInput"><see cref="SMSChannelDto"/></param>
         /// <returns><see cref="SMSResponseDto{T}"/></returns>
-        SMSResponseDto<SMSChannelDto> AddUpdateSMSChannel(SMSChannelDto channelInput);
+        SMSResponseDto<SMSChannelDto> AddSMSChannel(SMSChannelDto channelInput);
+
+        /// <summary>
+        /// Update the SMS provider in the database.
+        /// </summary>
+        /// <param name="channelInput"><see cref="SMSChannelDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<SMSChannelDto> UpdateSMSChannel(SMSChannelDto channelInput);
 
         /// <summary>
         /// Gets the SMS Channel keys from the database.
@@ -111,11 +125,18 @@ namespace Nvg.SMSService.SMS
         SMSResponseDto<SMSTemplateDto> GetSMSTemplate(string templateID);
 
         /// <summary>
-        /// Add/Updates the SMS template
+        /// Updates the SMS template
         /// </summary>
         /// <param name="templateInput"><see cref="SMSTemplateDto"/></param>
         /// <returns><see cref="SMSResponseDto{T}"/></returns>
-        SMSResponseDto<SMSTemplateDto> AddUpdateSMSTemplate(SMSTemplateDto templateInput);
+        SMSResponseDto<SMSTemplateDto> UpdateSMSTemplate(SMSTemplateDto templateInput);
+
+        /// <summary>
+        /// Adds the SMS template
+        /// </summary>
+        /// <param name="templateInput"><see cref="SMSTemplateDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<SMSTemplateDto> AddSMSTemplate(SMSTemplateDto templateInput);
 
         /// <summary>
         /// Delete the SMS Template into the database.

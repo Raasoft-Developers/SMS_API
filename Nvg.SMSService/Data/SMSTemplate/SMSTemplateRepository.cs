@@ -21,7 +21,7 @@ namespace Nvg.SMSService.Data.SMSTemplate
             _logger = logger;
         }
 
-        public SMSResponseDto<SMSTemplateTable> AddUpdateSMSTemplate(SMSTemplateTable templateInput)
+        public SMSResponseDto<SMSTemplateTable> AddSMSTemplate(SMSTemplateTable templateInput)
         {
             var response = new SMSResponseDto<SMSTemplateTable>();
             try
