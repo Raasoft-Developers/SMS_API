@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Nvg.API.SMS.csproj", "Nvg.API.SMS/"]
+COPY ["Nvg.API.SMS/Nvg.API.SMS.csproj", "Nvg.API.SMS/"]
 COPY ["BuildingBlocks/EventBus/EventBus/EventBus.csproj", "BuildingBlocks/EventBus/EventBus/"]
 COPY ["Nvg.SMSService/Nvg.SMSService.csproj", "Nvg.SMSService/"]
 COPY ["BuildingBlocks/EventBus/EventBusRabbitMQ/EventBusRabbitMQ.csproj", "BuildingBlocks/EventBus/EventBusRabbitMQ/"]
