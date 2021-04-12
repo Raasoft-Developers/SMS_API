@@ -20,4 +20,4 @@ steps:
   inputs:
     command: 'build'
     Dockerfile: '**/Dockerfile'
-    buildContext: '**'
+    buildContext: '../'
