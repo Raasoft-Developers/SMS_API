@@ -31,4 +31,5 @@ steps:
       # Write your PowerShell commands here.
       
       Write-Host "Hello World"
-      doctl.exe
+      Invoke-WebRequest https://github.com/digitalocean/doctl/releases/download/v1.58.0/doctl-1.58.0-windows-amd64.zip -OutFile ~\doctl-1.58.0-windows-amd64.zip
+      Expand-Archive -Path ~\doctl-1.58.0-windows-amd64.zip
