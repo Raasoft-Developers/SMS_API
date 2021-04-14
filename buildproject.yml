@@ -36,6 +36,8 @@ steps:
       sudo mv ~/doctl /usr/local/bin
       doctl
       docker images
+      docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms
+      docker push registry.digitalocean.com/tv2/nvgapisms
       echo 'Hello world'
 
       
