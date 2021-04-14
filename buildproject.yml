@@ -23,7 +23,7 @@ steps:
     command: 'build'
     Dockerfile: '$(Build.SourcesDirectory)/Nvg.API.SMS/Dockerfile'
     buildContext: '$(Build.SourcesDirectory)'
-    tags: '$(Build.BuildId)'
+    tags: 'latest'
     repository: 'nvgapisms'
 - task: Bash@3
   inputs:
