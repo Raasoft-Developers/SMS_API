@@ -1,0 +1,35 @@
+# ASP.NET Core
+
+
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+- task: Docker@2
+  inputs:
+    command: 'build'
+    Dockerfile: '$(Build.SourcesDirectory)/Nvg.API.SMS/Dockerfile'
+    buildContext: '$(Build.SourcesDirectory)'
+    tags: '$(Build.BuildId)'
+    
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      
+      Write-Host "Hello World"
+      Invoke-WebRequest https://github.com/digitalocean/doctl/releases/download/v1.58.0/doctl-1.58.0-windows-amd64.zip -OutFile ~\doctl-1.58.0-windows-amd64.zip
+      Expand-Archive -Path ~\doctl-1.58.0-windows-amd64.zip
