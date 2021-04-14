@@ -1,6 +1,7 @@
 # ASP.NET Core
 
 
+
 # Build and test ASP.NET Core projects targeting .NET Core.
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
@@ -23,13 +24,15 @@ steps:
     Dockerfile: '$(Build.SourcesDirectory)/Nvg.API.SMS/Dockerfile'
     buildContext: '$(Build.SourcesDirectory)'
     tags: '$(Build.BuildId)'
-- task: PowerShell@2
+- task: Bash@3
   inputs:
     targetType: 'inline'
     script: |
-      # Write your PowerShell commands here.
-      doctl.exe
-      Write-Host "Hello World"
-    workingDirectory: '$(Build.SourcesDirectory)'
+      # Write your commands here
+      cd ~wget https://github.com/digitalocean/doctl/releases/download/v1.58.0/doctl-1.58.0-linux-amd64.tar.gz
+      tar xf ~/doctl-1.58.0-linux-amd64.tar.gz
+      sudo mv ~/doctl /usr/local/bin
+      doctl
+      echo 'Hello world'
 
       
