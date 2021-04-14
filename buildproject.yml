@@ -23,13 +23,13 @@ steps:
     Dockerfile: '$(Build.SourcesDirectory)/Nvg.API.SMS/Dockerfile'
     buildContext: '$(Build.SourcesDirectory)'
     tags: '$(Build.BuildId)'
-    
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
       # Write your PowerShell commands here.
-      
+      doctl.exe
       Write-Host "Hello World"
-      Invoke-WebRequest https://github.com/digitalocean/doctl/releases/download/v1.58.0/doctl-1.58.0-windows-amd64.zip -OutFile ~\doctl-1.58.0-windows-amd64.zip
-      Expand-Archive -Path ~\doctl-1.58.0-windows-amd64.zip
+    workingDirectory: '$(Build.SourcesDirectory)'
+
+      
