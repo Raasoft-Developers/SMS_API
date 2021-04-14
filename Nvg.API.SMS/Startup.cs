@@ -200,7 +200,7 @@ namespace Nvg.API.SMS
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/sms/swagger/v1/swagger.json", "FileUpload API V1"); //remote
+                c.SwaggerEndpoint("/sms/swagger/v1/swagger.json", "SMS API V1"); //remote
                 c.RoutePrefix = "sms/swagger";
             });
 
