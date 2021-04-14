@@ -10,8 +10,11 @@ namespace Nvg.SMSService.SMS
         SMSResponseDto<string> SendSMS(SMSDto smsInputs);
         SMSResponseDto<SMSPoolDto> AddSMSPool(SMSPoolDto poolInput);
         SMSResponseDto<SMSProviderSettingsDto> AddSMSProvider(SMSProviderSettingsDto providerInput);
+        SMSResponseDto<SMSProviderSettingsDto> UpdateSMSProvider(SMSProviderSettingsDto providerInput);
         SMSResponseDto<SMSChannelDto> AddSMSChannel(SMSChannelDto channelInput);
+        SMSResponseDto<SMSChannelDto> UpdateSMSChannel(SMSChannelDto channelInput);
         SMSResponseDto<SMSTemplateDto> AddSMSTemplate(SMSTemplateDto templateInput);
+        SMSResponseDto<SMSTemplateDto> UpdateSMSTemplate(SMSTemplateDto templateInput);
         SMSResponseDto<SMSChannelDto> GetSMSChannelByKey(string channelKey);
         SMSResponseDto<List<SMSProviderSettingsDto>> GetSMSProvidersByPool(string poolName, string providerName);
         SMSResponseDto<List<SMSHistoryDto>> GetSMSHistoriesByTag(string channelKey, string tag);
