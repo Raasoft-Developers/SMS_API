@@ -186,12 +186,22 @@ namespace Nvg.API.SMS
             }
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
+            //app.UseSwagger();
 
-            // specifying the Swagger JSON endpoint.
+            //// specifying the Swagger JSON endpoint.
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            //});
+
+            app.UseSwagger(c => {
+                c.RouteTemplate = "sms/swagger/{documentname}/swagger.json";
+            });
+
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/sms/swagger/v1/swagger.json", "FileUpload API V1"); //remote
+                c.RoutePrefix = "sms/swagger";
             });
 
             app.UseRouting();
