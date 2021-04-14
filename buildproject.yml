@@ -24,6 +24,7 @@ steps:
     Dockerfile: '$(Build.SourcesDirectory)/Nvg.API.SMS/Dockerfile'
     buildContext: '$(Build.SourcesDirectory)'
     tags: '$(Build.BuildId)'
+    repository: 'nvgapisms'
 - task: Bash@3
   inputs:
     targetType: 'inline'
