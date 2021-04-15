@@ -14,7 +14,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  git_commit: substring($(Build.SourceVersion):0:8)
+  git_commit: substring($(Build.SourceVersion),0,8)
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
