@@ -37,7 +37,8 @@ steps:
       sudo mv ~/doctl /usr/local/bin
       doctl
       docker images
-      $ver = $(git_commit[0,7])
+      $ver = $git_commit[0,7]
+      echo "$ver"
       docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms
       docker push registry.digitalocean.com/tv2/nvgapisms
       echo 'Hello world'
