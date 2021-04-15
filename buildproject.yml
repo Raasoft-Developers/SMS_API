@@ -14,7 +14,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  git_commit: $(Build.SourceVersion)
+  git_commit: substring($(Build.SourceVersion):0:8)
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
@@ -37,9 +37,8 @@ steps:
       sudo mv ~/doctl /usr/local/bin
       doctl
       docker images
-      $ver = $(git_commit)
-      $version = ${ver:0:8}
-      echo "$version"
+      $(git_commit)
+
       docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms
       docker push registry.digitalocean.com/tv2/nvgapisms
       echo 'Hello world'
