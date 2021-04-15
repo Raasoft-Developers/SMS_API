@@ -19,7 +19,6 @@ namespace Nvg.API.SMS.Controller
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SmsController : ControllerBase
     {
         private readonly ISMSInteractor _smsInteractor;
