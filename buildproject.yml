@@ -14,6 +14,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  git_commit: $(Build.SourceVersion)
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
@@ -36,7 +37,7 @@ steps:
       sudo mv ~/doctl /usr/local/bin
       doctl
       docker images
-      git rev-parse HEAD
+      echo $(git_commit)
       docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms
       docker push registry.digitalocean.com/tv2/nvgapisms
       echo 'Hello world'
