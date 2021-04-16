@@ -36,10 +36,10 @@ steps:
       tar xf ~/doctl-1.58.0-linux-amd64.tar.gz
       sudo mv ~/doctl /usr/local/bin
       doctl
-      version = '$(git_commit)' | cut -c1-8
-      echo '${version}'
-      docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms:'$(git_commit)' | cut -c1-8
-      docker push registry.digitalocean.com/tv2/nvgapisms:'$(git_commit)' | cut -c1-8
+      $version = '$('$(git_commit)' | cut -c1-8)'
+      echo '$(version)'
+      docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms
+      docker push registry.digitalocean.com/tv2/nvgapisms
       echo 'Hello world'
 
       
