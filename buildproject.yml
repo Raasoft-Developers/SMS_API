@@ -39,8 +39,8 @@ steps:
       word=$(git_commit)
       ver=$(echo $word | cut -c1-8)
       echo $ver
-      docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms
-      docker push registry.digitalocean.com/tv2/nvgapisms
+      docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms:$ver
+      docker push registry.digitalocean.com/tv2/nvgapisms:$ver
       echo 'Hello world'
 
       
