@@ -15,7 +15,7 @@ steps:
 - task: Docker@2
   inputs:
     command: 'build'
-    Dockerfile: '**/Dockerfile'
+    Dockerfile: '$(Build.SourcesDirectory)/Nvg.API.SMS/Dockerfile'
     buildContext: '$(Build.SourcesDirectory)'
     tags: 'latest'
     repository: '$(image_name)'
