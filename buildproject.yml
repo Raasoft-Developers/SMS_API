@@ -38,6 +38,7 @@ steps:
       doctl
       word=$(git_commit)
       ver=$(echo $word | cut -c1-8)
+      echo $ver
       docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms
       docker push registry.digitalocean.com/tv2/nvgapisms
       echo 'Hello world'
