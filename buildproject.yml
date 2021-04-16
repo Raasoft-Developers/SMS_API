@@ -38,8 +38,8 @@ steps:
       doctl
       set version = "$(echo '$(git_commit)' | cut -c1-8)"
       echo $version
-      docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms:$version
-      docker push registry.digitalocean.com/tv2/nvgapisms:$version
+      docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms:$(git_commit)
+      docker push registry.digitalocean.com/tv2/nvgapisms:$(git_commit)
       echo 'Hello world'
 
       
