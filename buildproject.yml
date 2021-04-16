@@ -23,7 +23,7 @@ steps:
 - task: Docker@2
   inputs:
     command: 'build'
-    Dockerfile: '$(Build.SourcesDirectory)/Nvg.API.SMS/Dockerfile'
+    Dockerfile: '**/Dockerfile'
     buildContext: '$(Build.SourcesDirectory)'
     tags: 'latest'
     repository: '$(image_name)'
@@ -41,7 +41,7 @@ steps:
       word=$(git_commit)
       ver=$(echo $word | cut -c1-8)
       echo $ver
-      docker tag $(image_name) registry.digitalocean.com/tv2/$(image_name):$ver
-      docker push registry.digitalocean.com/tv2/$(image_name):$ver
+      # docker tag $(image_name) registry.digitalocean.com/tv2/$(image_name):$ver
+      # docker push registry.digitalocean.com/tv2/$(image_name):$ver
 
       
