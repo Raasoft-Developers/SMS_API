@@ -37,7 +37,7 @@ steps:
       sudo mv ~/doctl /usr/local/bin
       doctl
       word=$(git_commit)
-      version =$(echo $word | cut -c1-8)
+      ver=$(echo $word | cut -c1-8)
       docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms
       docker push registry.digitalocean.com/tv2/nvgapisms
       echo 'Hello world'
