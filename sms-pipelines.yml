@@ -1,4 +1,5 @@
 trigger:
+
 - master
 
 pool:
@@ -21,4 +22,4 @@ steps:
     repository: '$(image_name)'
 - task: Bash@3
   inputs:
-    filePath: '/bashscript'
+    filePath: '(Build.SourcesDirectory)/bashscript'
