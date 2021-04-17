@@ -1,0 +1,24 @@
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: 'Release'
+  git_commit: $(Build.SourceVersion)
+  image_name: 'nvgapisms'
+
+steps:
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+- task: Docker@2
+  inputs:
+    command: 'build'
+    Dockerfile: '$(Build.SourcesDirectory)/Nvg.API.SMS/Dockerfile'
+    buildContext: '$(Build.SourcesDirectory)'
+    tags: 'latest'
+    repository: '$(image_name)'
+- task: Bash@3
+  inputs:
+    filePath: '/bashscript'
