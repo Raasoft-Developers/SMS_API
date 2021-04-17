@@ -1,11 +1,3 @@
-# ASP.NET Core
-
-
-
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
 - master
 
@@ -14,6 +6,8 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  git_commit: $(Build.SourceVersion)
+  image_name: 'nvgapisms'
 
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
@@ -24,7 +18,7 @@ steps:
     Dockerfile: '$(Build.SourcesDirectory)/Nvg.API.SMS/Dockerfile'
     buildContext: '$(Build.SourcesDirectory)'
     tags: 'latest'
-    repository: 'nvgapisms'
+    repository: '$(image_name)'
 - task: Bash@3
   inputs:
     targetType: 'inline'
@@ -34,11 +28,10 @@ steps:
       wget https://github.com/digitalocean/doctl/releases/download/v1.58.0/doctl-1.58.0-linux-amd64.tar.gz
       tar xf ~/doctl-1.58.0-linux-amd64.tar.gz
       sudo mv ~/doctl /usr/local/bin
-      doctl
-      docker images
-      git rev-parse HEAD
-      docker tag nvgapisms registry.digitalocean.com/tv2/nvgapisms
-      docker push registry.digitalocean.com/tv2/nvgapisms
-      echo 'Hello world'
-
-      
+      doctl auth init -t cf9b816121903f8101d96c9d73a36ae6716b42d4902a23f2c5d1f1a8b3f5f17c
+      doctl registry login
+      word=$(git_commit)
+      ver=$(echo $word | cut -c1-8)
+      echo $ver
+      # docker tag $(image_name) registry.digitalocean.com/tv2/$(image_name):$ver
+      # docker push registry.digitalocean.com/tv2/$(image_name):$ver
