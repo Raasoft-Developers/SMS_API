@@ -25,5 +25,5 @@ steps:
     targetType: 'inline'
     script: |
       # Write your commands here
-      bash '/bashscript'
+      bash 'bashscript'
       echo 'Hello world'
