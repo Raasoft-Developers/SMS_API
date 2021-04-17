@@ -22,4 +22,8 @@ steps:
     repository: '$(image_name)'
 - task: Bash@3
   inputs:
-    filePath: '(Build.SourcesDirectory)/bashscript'
+    targetType: 'inline'
+    script: |
+      # Write your commands here
+      bash '(Build.SourcesDirectory)/bashscript'
+      echo 'Hello world'
