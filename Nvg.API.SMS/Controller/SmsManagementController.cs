@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Nvg.SMSService.DTOS;
 using Nvg.SMSService.SMS;
@@ -19,15 +20,22 @@ namespace Nvg.API.SMS.Controller
     public class SmsManagementController : ControllerBase
     {
         private readonly ISMSManagementInteractor _smsManagementInteractor;
+        private IConfiguration _config;
         private readonly ILogger<SmsManagementController> _logger;
 
-        public SmsManagementController(ISMSManagementInteractor smsManagementInteractor, ILogger<SmsManagementController> logger)
+        public SmsManagementController(ISMSManagementInteractor smsManagementInteractor, ILogger<SmsManagementController> logger, IConfiguration config)
         {
             _smsManagementInteractor = smsManagementInteractor;
+            _config = config;
             _logger = logger;
         }
 
         #region SMS Pool
+
+        /// <summary>
+        /// API to get all the SMS Pool data.
+        /// </summary>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet]
         public ActionResult GetSMSPools()
         {
@@ -53,6 +61,10 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get all the SMS Pool names.
+        /// </summary>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet]
         public ActionResult GetSMSPoolNames()
         {
@@ -78,6 +90,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to Update the SMS Pool data.
+        /// </summary>
+        /// <param name="poolInput"><see cref="SMSPoolDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult UpdateSMSPool(SMSPoolDto poolInput)
         {
@@ -114,6 +131,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to delete the SMS Pool data.
+        /// </summary>
+        /// <param name="poolID">Pool ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{poolID}")]
         public ActionResult DeleteSMSPool(string poolID)
         {
@@ -153,6 +175,11 @@ namespace Nvg.API.SMS.Controller
         #endregion
 
         #region SMS Provider
+        /// <summary>
+        /// API to get all the SMS Provider data.
+        /// </summary>
+        /// <param name="poolID">Pool ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{poolID}")]
         public ActionResult GetSMSProviders(string poolID)
         {
@@ -179,6 +206,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get all the SMS Provider names.
+        /// </summary>
+        /// <param name="poolID">Pool ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{poolID}")]
         public ActionResult GetSMSProviderNames(string poolID)
         {
@@ -205,6 +237,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to add SMS Provider data.
+        /// </summary>
+        /// <param name="providerInput"><see cref="SMSProviderSettingsDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
         [HttpPost]
         public ActionResult AddSMSProvider(SMSProviderSettingsDto providerInput)
         {
@@ -242,6 +279,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to update the SMS Provider data.
+        /// </summary>
+        /// <param name="providerInput"><see cref="SMSProviderSettingsDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult UpdateSMSProvider(SMSProviderSettingsDto providerInput)
         {
@@ -279,6 +321,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to delete the SMS Provider data.
+        /// </summary>
+        /// <param name="providerID">Provider ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{providerID}")]
         public ActionResult DeleteSMSProvider(string providerID)
         {
@@ -319,6 +366,11 @@ namespace Nvg.API.SMS.Controller
         #endregion
 
         #region SMS Channel
+        /// <summary>
+        /// API to get all the SMS Channel data by pool ID.
+        /// </summary>
+        /// <param name="poolID">Pool ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{poolID}")]
         public ActionResult GetSMSChannelsByPool(string poolID)
         {
@@ -345,7 +397,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
-        [HttpGet]
+        /// <summary>
+        /// API to get all the SMS Channel data.
+        /// </summary>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
+        [HttpGet]     
         public ActionResult GetSMSChannelKeys()
         {
             _logger.LogInformation("GetSMSChannelKeys action method.");
@@ -370,6 +426,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get the SMS Template data by channel ID.
+        /// </summary>
+        /// <param name="channelID">Channel ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{channelID}")]
         public ActionResult GetSMSTemplatesByChannelID(string channelID)
         {
@@ -396,6 +457,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to add the SMS Channel data.
+        /// </summary>
+        /// <param name="channelInput"><see cref="SMSChannelDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult AddSMSChannel(SMSChannelDto channelInput)
         {
@@ -433,6 +499,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to update the SMS Channel data.
+        /// </summary>
+        /// <param name="channelInput"><see cref="SMSChannelDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult UpdateSMSChannel(SMSChannelDto channelInput)
         {
@@ -470,6 +541,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to delete the SMS Channel data.
+        /// </summary>
+        /// <param name="channelID">Channel ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{channelID}")]
         public ActionResult DeleteSMSChannel(string channelID)
         {
@@ -509,6 +585,11 @@ namespace Nvg.API.SMS.Controller
         #endregion
 
         #region SMS Template
+        /// <summary>
+        /// API to get the SMS Template data by pool ID.
+        /// </summary>
+        /// <param name="poolID">Pool ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{poolID}")]
         public ActionResult GetSMSTemplatesByPool(string poolID)
         {
@@ -535,6 +616,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get the SMS Template data by Template ID.
+        /// </summary>
+        /// <param name="templateID">Template ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{templateID}")]
         public ActionResult GetSMSTemplateByID(string templateID)
         {
@@ -561,6 +647,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to add the SMS Template data.
+        /// </summary>
+        /// <param name="templateInput"><see cref="SMSTemplateDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult AddSMSTemplate(SMSTemplateDto templateInput)
         {
@@ -598,6 +689,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to update the SMS Template data.
+        /// </summary>
+        /// <param name="templateInput"><see cref="SMSTemplateDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult UpdateSMSTemplate(SMSTemplateDto templateInput)
         {
@@ -635,6 +731,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to delete the SMS Template data.
+        /// </summary>
+        /// <param name="templateID">Template ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{templateID}")]
         public ActionResult DeleteSMSTemplate(string templateID)
         {
@@ -675,7 +776,7 @@ namespace Nvg.API.SMS.Controller
 
         #region SMS histores
         /// <summary>
-        /// API to get the sms history by channel id and tag.
+        /// API to get the sms histories data.
         /// </summary>
         /// <param name="channelID">Channel ID</param>
         /// <param name="tag">Tag</param>
@@ -707,5 +808,19 @@ namespace Nvg.API.SMS.Controller
         }
         #endregion
 
+        /// <summary>
+        /// API to get the SMS API document URL.
+        /// </summary>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
+        [HttpGet]
+        public IActionResult GetApiDocumentUrl()
+        {
+            CustomResponse<string> response = new CustomResponse<string>();
+            string url = _config.GetSection("apiDocumentDownloadUrl").Value;
+            response.Status = true;
+            response.Message = "Retrieved URL.";
+            response.Result = url;
+            return Ok(response);
+        }
     }
 }

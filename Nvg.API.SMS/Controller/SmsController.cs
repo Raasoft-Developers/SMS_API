@@ -23,16 +23,19 @@ namespace Nvg.API.SMS.Controller
     {
         private readonly ISMSInteractor _smsInteractor;
         private readonly ILogger<SmsController> _logger;
-        private IConfiguration _config;
         private readonly string defaultChannelKey = "MasterSMSChannel";
 
-        public SmsController(ISMSInteractor smsInteractor, ILogger<SmsController> logger, IConfiguration config)
+        public SmsController(ISMSInteractor smsInteractor, ILogger<SmsController> logger)
         {
             _smsInteractor = smsInteractor;
-            _config = config;
             _logger = logger;
         }
 
+        /// <summary>
+        /// API to add the SMS Pool data.
+        /// </summary>
+        /// <param name="poolInput"><see cref="SMSPoolDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult AddSMSPool(SMSPoolDto poolInput)
         {
@@ -70,6 +73,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to add the SMS Provider data.
+        /// </summary>
+        /// <param name="providerInput"><see cref="SMSProviderSettingsDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult AddSMSProvider(SMSProviderSettingsDto providerInput)
         {
@@ -107,6 +115,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to update the SMS Provider data.
+        /// </summary>
+        /// <param name="providerInput"><see cref="SMSProviderSettingsDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult UpdateSMSProvider(SMSProviderSettingsDto providerInput)
         {
@@ -133,6 +146,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to add the SMS Channel data.
+        /// </summary>
+        /// <param name="channelInput"><see cref="SMSChannelDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult AddSMSChannel(SMSChannelDto channelInput)
         {
@@ -170,6 +188,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to update the SMS Channel data.
+        /// </summary>
+        /// <param name="channelInput"><see cref="SMSChannelDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult UpdateSMSChannel(SMSChannelDto channelInput)
         {
@@ -196,6 +219,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to add the SMS Template data.
+        /// </summary>
+        /// <param name="templateInput"><see cref="SMSTemplateDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult AddSMSTemplate(SMSTemplateDto templateInput)
         {
@@ -233,6 +261,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to update the SMS Template data.
+        /// </summary>
+        /// <param name="templateInput"><see cref="SMSTemplateDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult UpdateSMSTemplate(SMSTemplateDto templateInput)
         {
@@ -259,6 +292,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get the SMS channel data by Channel Key.
+        /// </summary>
+        /// <param name="channelKey"><see cref="SMSChannelDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{channelKey}")]
         public ActionResult GetSMSChannelByKey(string channelKey)
         {
@@ -285,6 +323,10 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get the default Channel data.
+        /// </summary>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet]
         public ActionResult GetDefaultChannelKey()
         {
@@ -310,6 +352,12 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get the SMS Provider data for a pool name and provider name.
+        /// </summary>
+        /// <param name="poolName">Pool Name</param>
+        /// <param name="providerName">Provider Name</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{poolName}/{providerName}")]
         public ActionResult GetSMSProvidersByPool(string poolName, string providerName)
         {
@@ -336,6 +384,12 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get the SMS Histories data.
+        /// </summary>
+        /// <param name="channelKey">Channel Key</param>
+        /// <param name="tag">Tag</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{channelKey}/{tag?}")]
         public ActionResult GetSMSHistories(string channelKey, string tag = null)
         {
@@ -362,6 +416,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to send SMS.
+        /// </summary>
+        /// <param name="smsInputs"><see cref="SMSDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult SendSMS(SMSDto smsInputs)
         {
@@ -386,17 +445,6 @@ namespace Nvg.API.SMS.Controller
                 _logger.LogError("Internal server error: Error occurred while sending SMS: " + ex.Message);
                 return StatusCode(500, ex);
             }
-        }
-
-        [HttpGet]
-        public IActionResult GetApiDocumentUrl()
-        {
-            CustomResponse<string> response = new CustomResponse<string>();
-            string url = _config.GetSection("apiDocumentDownloadUrl").Value;
-            response.Status = true;
-            response.Message = "retrieved URl";
-            response.Result = url;
-            return Ok(response);
         }
     }
 }
