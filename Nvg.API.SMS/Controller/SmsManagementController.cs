@@ -815,7 +815,7 @@ namespace Nvg.API.SMS.Controller
         [HttpGet]
         public IActionResult GetApiDocumentUrl()
         {
-            CustomResponse<string> response = new CustomResponse<string>();
+            SMSResponseDto<string> response = new SMSResponseDto<string>();
             string url = _config.GetSection("apiDocumentDownloadUrl").Value;
             response.Status = true;
             response.Message = "Retrieved URL.";
