@@ -7,7 +7,7 @@ pool:
 variables:
   buildConfiguration: 'Release'
   git_commit: $(Build.SourceVersion)
-  image_name: 'nvgapisms'
+  image_name: 'nvgsmsbackgroundtask'
 
 steps:
 #- script: dotnet build --configuration $(buildConfiguration)
