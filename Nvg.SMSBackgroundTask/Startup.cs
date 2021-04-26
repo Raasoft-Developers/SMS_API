@@ -35,7 +35,7 @@ namespace Nvg.SMSBackgroundTask
                 .AddEventBus(Configuration);
 
             var container = new ContainerBuilder();
-            container.Populate(service);
+            container.Populate(services);
             container.RegisterModule(new ApplicationModule());
             return new AutofacServiceProvider(container.Build());
         }

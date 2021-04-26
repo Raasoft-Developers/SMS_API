@@ -93,12 +93,26 @@ namespace Nvg.SMSService.Data.SMSChannel
             }
         }
 
-        public SMSResponseDto<SMSChannelTable> GetSMSChannelByKey(string channelKey)
+        public SMSResponseDto<SMSChannelDto> GetSMSChannelByKey(string channelKey)
         {
-            var response = new SMSResponseDto<SMSChannelTable>();
+            var response = new SMSResponseDto<SMSChannelDto>();
             try
             {
-                var smsChannel = _context.SMSChannels.FirstOrDefault(sp => sp.Key.ToLower().Equals(channelKey.ToLower()));
+                var smsChannel = (from sc in _context.SMSChannels
+                                    from sq in _context.SMSQuotas.Where(quota => quota.SMSChannelID == sc.ID).DefaultIfEmpty()
+                                    select new SMSChannelDto
+                                    {
+                                        ID = sc.ID,
+                                        Key = sc.Key,
+                                        SMSPoolID = sc.SMSPoolID,
+                                        SMSProviderID = sc.SMSProviderID,
+                                        MonthlyQuota = sq.MonthlyQuota,
+                                        TotalQuota = sq.TotalQuota,
+                                        MonthlyConsumption = sq.MonthlyConsumption,
+                                        TotalConsumption = sq.TotalConsumption,
+                                        CurrentMonth = sq.CurrentMonth
+                                    }).FirstOrDefault();
+                //var smsChannel = _context.SMSChannels.FirstOrDefault(sp => sp.Key.ToLower().Equals(channelKey.ToLower()));
                 if (smsChannel != null)
                 {
                     response.Status = true;

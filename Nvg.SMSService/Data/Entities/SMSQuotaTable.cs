@@ -14,8 +14,10 @@ namespace Nvg.SMSService.Data.Entities
         public string SMSChannelID { get; set; }
         [ForeignKey("SMSChannelID")]
         public SMSChannelTable SMSChannel { get; set; }
+        public int MonthlyConsumption { get; set; }
         public int TotalConsumption { get; set; }
-        public int MonthylConsumption { get; set; }
+        public string CurrentMonth { get; set; }
         public int MonthlyQuota { get; set; }
+        public int TotalQuota { get; set; }
     }
 }

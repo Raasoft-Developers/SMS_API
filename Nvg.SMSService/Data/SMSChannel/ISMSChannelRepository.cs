@@ -10,7 +10,7 @@ namespace Nvg.SMSService.Data.SMSChannel
     {
         SMSResponseDto<SMSChannelTable> AddSMSChannel(SMSChannelTable channelInput);
         SMSResponseDto<SMSChannelTable> UpdateSMSChannel(SMSChannelTable channelInput);
-        SMSResponseDto<SMSChannelTable> GetSMSChannelByKey(string channelKey);
+        SMSResponseDto<SMSChannelDto> GetSMSChannelByKey(string channelKey);
         SMSResponseDto<bool> CheckIfChannelExist(string channelKey);
         SMSResponseDto<string> CheckIfSmsChannelIDIsValid(string channelID);
         SMSResponseDto<string> CheckIfSmsChannelIDKeyValid(string channelID, string channelKey);

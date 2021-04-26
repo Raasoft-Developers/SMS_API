@@ -46,9 +46,11 @@ namespace Nvg.SMSService.Data.SMSQuota
                 var smsQuota = _context.SMSQuotas.FirstOrDefault(q => q.SMSChannelID == channelID);
                 if (smsQuota != null)
                 {
-                    var countInt = Convert.ToInt32(smsQuota.TotalConsumption); // TODO Implement encryption 
-                    countInt += 1;
-                    smsQuota.TotalConsumption = countInt;
+                    var totalCountInt = Convert.ToInt32(smsQuota.TotalConsumption); // TODO Implement encryption 
+                    var monthCountInt = Convert.ToInt32(smsQuota.MonthlyConsumption); // TODO Implement encryption 
+                    totalCountInt += 1; monthCountInt += 1;
+                    smsQuota.TotalConsumption = totalCountInt;
+                    smsQuota.MonthlyConsumption = monthCountInt;
                     _context.SMSQuotas.Update(smsQuota);
                 }
                 else
@@ -56,9 +58,11 @@ namespace Nvg.SMSService.Data.SMSQuota
                     smsQuota = new SMSQuotaTable()
                     {
                         SMSChannelID = channelID,
-                        MonthlyQuota = 100,
-                        MonthylConsumption = 1,
-                        TotalConsumption = 1
+                        MonthlyQuota = -1,
+                        MonthlyConsumption = 1,
+                        TotalConsumption = 1,
+                        TotalQuota = -1,
+                        CurrentMonth = DateTime.Now.ToString("MMM").ToUpper()
                     };
                     _context.SMSQuotas.Add(smsQuota);
                 }
@@ -71,6 +75,78 @@ namespace Nvg.SMSService.Data.SMSQuota
                 return response;
             }
             catch(Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+        public SMSResponseDto<SMSQuotaTable> UpdateCurrentMonth(string channelKey, string currentMonth)
+        {
+            var response = new SMSResponseDto<SMSQuotaTable>();
+            try
+            {
+                var smsQuota = (from q in _context.SMSQuotas
+                                  join c in _context.SMSChannels on q.SMSChannelID equals c.ID
+                                  where c.Key.ToLower().Equals(channelKey.ToLower())
+                                  select q).FirstOrDefault();
+                smsQuota.CurrentMonth = currentMonth;
+                smsQuota.MonthlyConsumption = 0;
+                var updated = _context.SaveChanges();
+                if (updated > 0)
+                {
+                    response.Status = true;
+                    response.Message = $"Updated Channel Quota Current Month";
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"Failed to Update Channel Quota Current Month";
+                }
+                response.Result = smsQuota;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+        public SMSResponseDto<SMSQuotaTable> AddSMSQuota(SMSChannelDto smsChannel)
+        {
+            var response = new SMSResponseDto<SMSQuotaTable>();
+            try
+            {
+                var smsQuota = _context.SMSQuotas.FirstOrDefault(q => q.SMSChannelID == smsChannel.ID);
+                if (smsQuota == null)
+                {
+                    smsQuota = new SMSQuotaTable()
+                    {
+                        SMSChannelID = smsChannel.ID,
+                        MonthlyQuota = smsChannel.IsRestrictedByQuota ? smsChannel.MonthlyQuota : -1,
+                        MonthlyConsumption = 0,
+                        TotalConsumption = 0,
+                        TotalQuota = smsChannel.IsRestrictedByQuota ? smsChannel.TotalQuota : -1,
+                        CurrentMonth = DateTime.Now.ToString("MMM").ToUpper()
+                    };
+                    _context.SMSQuotas.Add(smsQuota);
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = "SMS Quota already exists";
+                    response.Result = smsQuota;
+                }
+                if (_context.SaveChanges() == 1)
+                {
+                    response.Status = true;
+                    response.Message = "SMS Quota is Added";
+                    response.Result = smsQuota;
+                }
+                return response;
+            }
+            catch (Exception ex)
             {
                 response.Status = false;
                 response.Message = ex.Message;

@@ -6,6 +6,7 @@ using Nvg.SMSService.SMSChannel;
 using Nvg.SMSService.SMSHistory;
 using Nvg.SMSService.SMSPool;
 using Nvg.SMSService.SMSProvider;
+using Nvg.SMSService.SMSQuota;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,12 +21,14 @@ namespace Nvg.SMSService.SMS
         private readonly ISMSChannelInteractor _smsChannelInteractor;
         private readonly ISMSTemplateInteractor _smsTemplateInteractor;
         private readonly ISMSHistoryInteractor _smsHistoryInteractor;
+        private readonly ISMSQuotaInteractor _smsQuotaInteractor;
         private readonly ILogger<SMSInteractor> _logger;
 
         public SMSInteractor(ISMSEventInteractor smsEventInteractor,
             ISMSPoolInteractor smsPoolInteractor, ISMSProviderInteractor smsProviderInteractor,
             ISMSChannelInteractor smsChannelInteractor, ISMSTemplateInteractor smsTemplateInteractor,
-            ISMSHistoryInteractor smsHistoryInteractor, ILogger<SMSInteractor> logger)
+            ISMSHistoryInteractor smsHistoryInteractor, ISMSQuotaInteractor smsQuotaInteractor,
+            ILogger<SMSInteractor> logger)
         {
             _smsEventInteractor = smsEventInteractor;
             _smsPoolInteractor = smsPoolInteractor;
@@ -33,6 +36,7 @@ namespace Nvg.SMSService.SMS
             _smsChannelInteractor = smsChannelInteractor;
             _smsTemplateInteractor = smsTemplateInteractor;
             _smsHistoryInteractor = smsHistoryInteractor;
+            _smsQuotaInteractor = smsQuotaInteractor;
             _logger = logger;
         }
 
@@ -100,6 +104,11 @@ namespace Nvg.SMSService.SMS
             try
             {
                 channelResponse = _smsChannelInteractor.AddSMSChannel(channelInput);
+                if (channelResponse.Status)
+                {
+                    //If channel has been added, add email quota for channel
+                    _smsQuotaInteractor.AddSMSQuota(channelInput);
+                }
                 _logger.LogDebug("Status: " + channelResponse.Status + ",Message: " + channelResponse.Message);
                 return channelResponse;
             }
@@ -268,6 +277,14 @@ namespace Nvg.SMSService.SMS
                         response.Message = $"No template found for template name {smsInputs.TemplateName} and channel key {smsInputs.ChannelKey}.";
                         return response;
                     }
+                }
+                var isExceeded = _smsQuotaInteractor.CheckIfQuotaExceeded(smsInputs.ChannelKey);
+                if (isExceeded)
+                {
+                    _logger.LogError($"SMS Quota for Channel {smsInputs.ChannelKey} has exceeded.");
+                    response.Status = isExceeded;
+                    response.Message = $"SMS Quota for Channel {smsInputs.ChannelKey} has exceeded.";
+                    return response;
                 }
                 _logger.LogInformation("Trying to send sms.");
                 _smsEventInteractor.SendSMS(smsInputs);

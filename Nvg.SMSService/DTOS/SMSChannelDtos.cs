@@ -14,6 +14,12 @@ namespace Nvg.SMSService.DTOS
         public string SMSPoolName { get; set; }
         public string SMSProviderID { get; set; }
         public string SMSProviderName { get; set; }
+        public int MonthlyQuota { get; set; }
+        public int TotalQuota { get; set; }
+        public int MonthlyConsumption { get; set; }
+        public int TotalConsumption { get; set; }
+        public string CurrentMonth { get; set; }
+        public bool IsRestrictedByQuota { get; set; }
     }
 
     public class SMSChannelProfile : Profile
