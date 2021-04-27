@@ -114,7 +114,7 @@ namespace Nvg.SMSService.SMSQuota
         }
         public SMSResponseDto<SMSQuotaDto> AddSMSQuota(SMSChannelDto smsChannelDto)
         {
-            _logger.LogInformation("UpdateSMSQuota interactor method.");
+            _logger.LogInformation("AddSMSQuota interactor method.");
             var response = new SMSResponseDto<SMSQuotaDto>();
             try
             {
@@ -126,6 +126,25 @@ namespace Nvg.SMSService.SMSQuota
             catch (Exception ex)
             {
                 _logger.LogError("Failed to Add SMS Quota" + ex.Message);
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+        public SMSResponseDto<SMSQuotaDto> UpdateSMSQuota(SMSChannelDto smsChannelDto)
+        {
+            _logger.LogInformation("UpdateSMSQuota interactor method.");
+            var response = new SMSResponseDto<SMSQuotaDto>();
+            try
+            {
+                var smsQuotaResponse = _smsQuotaRepository.UpdateSMSQuota(smsChannelDto);
+                _logger.LogDebug("Status: " + smsQuotaResponse.Status + "Message:" + smsQuotaResponse.Message);
+                var mappedResponse = _mapper.Map<SMSResponseDto<SMSQuotaDto>>(smsQuotaResponse);
+                return mappedResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to Update SMS Quota" + ex.Message);
                 response.Status = false;
                 response.Message = ex.Message;
                 return response;

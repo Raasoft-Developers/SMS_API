@@ -110,7 +110,8 @@ namespace Nvg.SMSService.Data.SMSChannel
                                         TotalQuota = sq.TotalQuota,
                                         MonthlyConsumption = sq.MonthlyConsumption,
                                         TotalConsumption = sq.TotalConsumption,
-                                        CurrentMonth = sq.CurrentMonth
+                                        CurrentMonth = sq.CurrentMonth,
+                                        IsRestrictedByQuota = sq.TotalQuota != -1 && sq.MonthlyQuota != -1
                                     }).FirstOrDefault();
                 //var smsChannel = _context.SMSChannels.FirstOrDefault(sp => sp.Key.ToLower().Equals(channelKey.ToLower()));
                 if (smsChannel != null)
@@ -185,22 +186,26 @@ namespace Nvg.SMSService.Data.SMSChannel
             }
         }
 
-        public SMSResponseDto<List<SMSChannelTable>> GetSMSChannels(string poolID)
+        public SMSResponseDto<List<SMSChannelDto>> GetSMSChannels(string poolID)
         {
-            var response = new SMSResponseDto<List<SMSChannelTable>>();
+            var response = new SMSResponseDto<List<SMSChannelDto>>();
             try
             {
                 var smsChannels = (from p in _context.SMSPools
                                      join c in _context.SMSChannels on p.ID equals c.SMSPoolID
                                      join pr in _context.SMSProviderSettings on c.SMSProviderID equals pr.ID
                                      where p.ID.ToLower().Equals(poolID.ToLower())
-                                     select new SMSChannelTable { 
+                                     from q in _context.SMSQuotas.Where(sq => sq.SMSChannelID == c.ID).DefaultIfEmpty()
+                                     select new SMSChannelDto { 
                                      ID=c.ID,
                                      Key=c.Key,
                                      SMSPoolID=c.SMSPoolID,
                                      SMSProviderID=c.SMSProviderID,
                                      SMSPoolName=p.Name,
-                                     SMSProviderName=pr.Name
+                                     SMSProviderName=pr.Name,
+                                     MonthlyQuota = q.MonthlyQuota,
+                                     TotalQuota = q.TotalQuota,
+                                    IsRestrictedByQuota = q.TotalQuota != -1 && q.MonthlyQuota != -1
                                      }).ToList();
                 
                 response.Message = $"Retrieved {smsChannels.Count} SMS channel data";                

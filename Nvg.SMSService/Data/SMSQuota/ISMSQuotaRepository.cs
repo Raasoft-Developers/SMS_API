@@ -16,13 +16,18 @@ namespace Nvg.SMSService.Data.SMSQuota
         SMSResponseDto<SMSQuotaTable> GetSMSQuota(string channelKey);
 
         /// <summary>
-        /// Updates the SMS Quota.
+        /// Updates the Consumption value in SMS Quota .
         /// </summary>
         /// <param name="channelID">Channel Id</param>
         /// <returns><see cref="SMSResponseDto{SMSQuotaTable}"/></returns>
         SMSResponseDto<SMSQuotaTable> UpdateSMSQuota(string channelID);
 
-
+        /// <summary>
+        /// Updates the SMS Quota.
+        /// </summary>
+        /// <param name="smsChannel">SMS Channel </param>
+        /// <returns><see cref="SMSResponseDto{SMSQuotaTable}"/></returns>
+        SMSResponseDto<SMSQuotaTable> UpdateSMSQuota(SMSChannelDto smsChannel);
 
         /// <summary>
         /// Adds the SMS Quota Values for Channel.
@@ -39,5 +44,13 @@ namespace Nvg.SMSService.Data.SMSQuota
         /// <param name="currentMonth">Current Month</param>
         /// <returns><see cref="SMSResponseDto{SMSQuotaTable}"/></returns>
         SMSResponseDto<SMSQuotaTable> UpdateCurrentMonth(string channelKey, string currentMonth);
+        
+        /// <summary>
+        /// Deletes the SMS Quota Values from the SMS Channel ID.
+        /// </summary>
+        /// <param name="channelID">Channel Id</param>
+        /// <returns><see cref="SMSResponseDto{SMSQuotaTable}"/></returns>
+        SMSResponseDto<string> DeleteSMSQuota(string channelID);
+
     }
 }

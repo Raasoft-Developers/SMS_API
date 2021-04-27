@@ -15,7 +15,7 @@ namespace Nvg.SMSService.SMSQuota
         SMSResponseDto<SMSQuotaDto> GetSMSQuota(string channelKey);
 
         /// <summary>
-        /// Updates the sms quota.
+        /// Updates the Consumption value of the SMS Quota.
         /// </summary>
         /// <param name="channelKey">Channel Key</param>
         /// <returns><see cref="SMSResponseDto{SMSQuotaDto}"/></returns>
@@ -35,6 +35,14 @@ namespace Nvg.SMSService.SMSQuota
         /// <param name="smsChannel">SMS Channel </param>
         /// <returns><see cref="SMSResponseDto{SMSQuotaDto}"/></returns>
         SMSResponseDto<SMSQuotaDto> AddSMSQuota(SMSChannelDto smsChannel);
+
+        /// <summary>
+        /// Updates the sms quota.
+        /// </summary>
+        /// <param name="smsChannel">SMS Channel </param>
+        /// <returns><see cref="SMSResponseDto{SMSQuotaDto}"/></returns>
+        SMSResponseDto<SMSQuotaDto> UpdateSMSQuota(SMSChannelDto smsChannel);
+
 
 
 

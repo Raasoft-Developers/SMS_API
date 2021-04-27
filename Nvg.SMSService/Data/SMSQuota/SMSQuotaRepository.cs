@@ -153,5 +153,77 @@ namespace Nvg.SMSService.Data.SMSQuota
                 return response;
             }
         }
+        public SMSResponseDto<SMSQuotaTable> UpdateSMSQuota(SMSChannelDto smsChannel)
+        {
+            var response = new SMSResponseDto<SMSQuotaTable>();
+            try
+            {
+                var smsQuota = _context.SMSQuotas.FirstOrDefault(q => q.SMSChannelID == smsChannel.ID);
+                if (smsQuota != null)
+                {
+                    smsQuota.TotalQuota = smsChannel.IsRestrictedByQuota ? smsChannel.TotalQuota : -1;
+                    smsQuota.MonthlyQuota = smsChannel.IsRestrictedByQuota ? smsChannel.MonthlyQuota : -1;
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"SMS Quota does not exist for provided channel ID : {smsChannel.ID}";
+                    response.Result = smsQuota;
+                }
+                if (_context.SaveChanges() > 0)
+                {
+                    response.Status = true;
+                    response.Message = "SMS Quota is Updated";
+                    response.Result = smsQuota;
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = "SMS Quota is not Updated";
+                    response.Result = smsQuota;
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+        public SMSResponseDto<string> DeleteSMSQuota(string channelID)
+        {
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                var smsQuota = _context.SMSQuotas.Where(q => q.SMSChannelID.ToLower().Equals(channelID.ToLower())).FirstOrDefault();
+                if (smsQuota != null)
+                {
+                    _context.SMSQuotas.Remove(smsQuota);
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = $"Deleted Successfully";
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = $"Failed to delete";
+                    }
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = $"SMS Quota Data not found";
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
     }
 }

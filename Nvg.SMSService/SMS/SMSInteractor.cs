@@ -128,6 +128,13 @@ namespace Nvg.SMSService.SMS
             try
             {
                 channelResponse = _smsChannelInteractor.UpdateSMSChannel(channelInput);
+                var quotaResponse = _smsQuotaInteractor.UpdateSMSQuota(channelInput);
+                if(!channelResponse.Status)
+                { 
+                    //if sms channel is not updated , then take response of sms quota updation
+                    channelResponse.Status = quotaResponse.Status;
+                    channelResponse.Message = quotaResponse.Message;
+                }
                 _logger.LogDebug("Status: " + channelResponse.Status + ",Message: " + channelResponse.Message);
                 return channelResponse;
             }
