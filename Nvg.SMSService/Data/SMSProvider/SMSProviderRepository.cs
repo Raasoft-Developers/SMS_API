@@ -158,14 +158,13 @@ namespace Nvg.SMSService.Data.SMSProvider
                                    select p).FirstOrDefault();
                 if (smsProvider != null)
                 {
-                    response.Status = true;
                     response.Message = $"Retrieved SMS provider data for channel {channelKey}";
                 }
                 else
                 {
-                    response.Status = false;
                     response.Message = $"SMS provider data for channel {channelKey} is not available.";
                 }
+                response.Status = true;
                 response.Result = smsProvider;
                 return response;
             }
@@ -184,18 +183,102 @@ namespace Nvg.SMSService.Data.SMSProvider
             {
                 var smsProviders = (from p in _context.SMSProviderSettings
                                    join sp in _context.SMSPools on p.SMSPoolID equals sp.ID
-                                   where sp.Name.ToLower().Equals(poolName.ToLower())
+                                   where sp.Name.ToLower().Equals(poolName.ToLower()) && (string.IsNullOrEmpty(providerName) || p.Name.ToLower().Equals(providerName.ToLower()))
                                    select p).ToList();
-                if (smsProviders.Count != 0)
-                {
-                    if(!string.IsNullOrEmpty(providerName))
-                        smsProviders = smsProviders.Where(s => s.Name.ToLower().Equals(providerName.ToLower())).ToList();
-                    response.Status = true;
-                }
-                else
-                    response.Status = false;
+                //if (smsProviders.Count != 0)
+                //{
+                //    //if(!string.IsNullOrEmpty(providerName))
+                //    //    smsProviders = smsProviders.Where(s => s.Name.ToLower().Equals(providerName.ToLower())).ToList();
+                //    response.Status = true;
+                //}
+                //else
+                response.Status = true;
                 response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool {poolName}";
                 response.Result = smsProviders;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<List<SMSProviderSettingsTable>> GetSMSProviders(string poolID)
+        {
+            var response = new SMSResponseDto<List<SMSProviderSettingsTable>>();
+            try
+            {
+                var smsProviders = (from p in _context.SMSProviderSettings
+                                      join sp in _context.SMSPools on p.SMSPoolID equals sp.ID
+                                      where sp.ID.ToLower().Equals(poolID.ToLower())
+                                      select p).ToList();
+
+             
+                response.Status = true;
+                response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool";
+                response.Result = smsProviders;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<List<SMSProviderSettingsTable>> GetSMSProviderNames(string poolID)
+        {
+            var response = new SMSResponseDto<List<SMSProviderSettingsTable>>();
+            try
+            {
+                var smsProviders = (from p in _context.SMSProviderSettings
+                                      join sp in _context.SMSPools on p.SMSPoolID equals sp.ID
+                                      where sp.ID.ToLower().Equals(poolID.ToLower())
+                                      select p).ToList();
+
+               
+                response.Status = true;
+                response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool";
+                response.Result = smsProviders;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<string> DeleteSMSProvider(string providerID)
+        {
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                var smsProvider = _context.SMSProviderSettings.Where(o => o.ID.ToLower().Equals(providerID.ToLower())).FirstOrDefault();
+
+                if (smsProvider != null)
+                {
+                    _context.SMSProviderSettings.Remove(smsProvider);
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = $"Deleted successfully";
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = $"Delete failed";
+                    }
+                }
+                else
+                {
+                    response.Message = "No record found.";
+                    response.Status = false;
+                }
                 return response;
             }
             catch (Exception ex)

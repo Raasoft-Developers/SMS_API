@@ -22,6 +22,7 @@ namespace Nvg.SMSService.DTOS
         {
             CreateMap<SMSChannelDto, SMSChannelTable>().ReverseMap();
             CreateMap<SMSResponseDto<SMSChannelTable>, SMSResponseDto<SMSChannelDto>>();
+            CreateMap<SMSResponseDto<List<SMSChannelTable>>, SMSResponseDto<List<SMSChannelDto>>>();
         }
     }
 

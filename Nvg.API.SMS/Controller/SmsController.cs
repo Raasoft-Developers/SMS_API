@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Nvg.SMSService.Data;
 using Nvg.SMSService.Data.Entities;
@@ -20,27 +24,44 @@ namespace Nvg.API.SMS.Controller
         private readonly ISMSInteractor _smsInteractor;
         private readonly ILogger<SmsController> _logger;
         private readonly string defaultChannelKey = "MasterSMSChannel";
+
         public SmsController(ISMSInteractor smsInteractor, ILogger<SmsController> logger)
         {
             _smsInteractor = smsInteractor;
             _logger = logger;
         }
-        //added comment for testing deployment
+
+        /// <summary>
+        /// API to add the SMS Pool data.
+        /// </summary>
+        /// <param name="poolInput"><see cref="SMSPoolDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult AddSMSPool(SMSPoolDto poolInput)
         {
             _logger.LogInformation("AddSMSPool action method.");
             _logger.LogInformation($"SMSPoolName: {poolInput.Name}.");
+            SMSResponseDto<SMSPoolDto> poolResponse = new SMSResponseDto<SMSPoolDto>();
             try
             {
-                var poolResponse = _smsInteractor.AddSMSPool(poolInput);
-                if (poolResponse.Status)
+                if (!string.IsNullOrWhiteSpace(poolInput.Name))
                 {
-                    _logger.LogDebug("Status: "+poolResponse.Status+", Message:" + poolResponse.Message);
-                    return Ok(poolResponse);
+                    poolResponse = _smsInteractor.AddSMSPool(poolInput);
+                    if (poolResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
+                        return Ok(poolResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
+                        return StatusCode(412, poolResponse);
+                    }
                 }
                 else
                 {
+                    poolResponse.Status = false;
+                    poolResponse.Message = "Pool Name cannot be empty or whitespace.";
                     _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
                     return StatusCode(412, poolResponse);
                 }
@@ -52,21 +73,37 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to add the SMS Provider data.
+        /// </summary>
+        /// <param name="providerInput"><see cref="SMSProviderSettingsDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult AddSMSProvider(SMSProviderSettingsDto providerInput)
         {
             _logger.LogInformation("AddSMSProvider action method.");
             _logger.LogInformation($"SMSPoolName: {providerInput.SMSPoolName}, ProviderName: {providerInput.Name}, Configuration: {providerInput.Configuration}.");
+            SMSResponseDto<SMSProviderSettingsDto> providerResponse = new SMSResponseDto<SMSProviderSettingsDto>();
             try
             {
-                var providerResponse = _smsInteractor.AddSMSProvider(providerInput);
-                if (providerResponse.Status)
+                if (!string.IsNullOrWhiteSpace(providerInput.Name) && !string.IsNullOrWhiteSpace(providerInput.Type) && !string.IsNullOrWhiteSpace(providerInput.Configuration))
                 {
-                    _logger.LogDebug("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
-                    return Ok(providerResponse);
+                    providerResponse = _smsInteractor.AddSMSProvider(providerInput);
+                    if (providerResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
+                        return Ok(providerResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
+                        return StatusCode(412, providerResponse);
+                    }
                 }
                 else
                 {
+                    providerResponse.Status = false;
+                    providerResponse.Message = "Provider Name, Type and Configuration cannot be empty or whitespace.";
                     _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
                     return StatusCode(412, providerResponse);
                 }
@@ -78,6 +115,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to update the SMS Provider data.
+        /// </summary>
+        /// <param name="providerInput"><see cref="SMSProviderSettingsDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult UpdateSMSProvider(SMSProviderSettingsDto providerInput)
         {
@@ -104,21 +146,37 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to add the SMS Channel data.
+        /// </summary>
+        /// <param name="channelInput"><see cref="SMSChannelDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult AddSMSChannel(SMSChannelDto channelInput)
         {
             _logger.LogInformation("AddSMSChannel action method.");
             _logger.LogInformation($"SMSPoolName: {channelInput.SMSPoolName}, ProviderName: {channelInput.SMSProviderName}.");
+            SMSResponseDto<SMSChannelDto> channelResponse = new SMSResponseDto<SMSChannelDto>();
             try
             {
-                var channelResponse = _smsInteractor.AddSMSChannel(channelInput);
-                if (channelResponse.Status)
+                if (!string.IsNullOrWhiteSpace(channelInput.Key))
                 {
-                    _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
-                    return Ok(channelResponse);
+                    channelResponse = _smsInteractor.AddSMSChannel(channelInput);
+                    if (channelResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                        return Ok(channelResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                        return StatusCode(412, channelResponse);
+                    }
                 }
                 else
                 {
+                    channelResponse.Status = false;
+                    channelResponse.Message = "Channel Key cannot be empty or whitespace.";
                     _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
                     return StatusCode(412, channelResponse);
                 }
@@ -130,6 +188,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to update the SMS Channel data.
+        /// </summary>
+        /// <param name="channelInput"><see cref="SMSChannelDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult UpdateSMSChannel(SMSChannelDto channelInput)
         {
@@ -156,21 +219,37 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to add the SMS Template data.
+        /// </summary>
+        /// <param name="templateInput"><see cref="SMSTemplateDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult AddSMSTemplate(SMSTemplateDto templateInput)
         {
             _logger.LogInformation("AddSMSTemplate action method.");
             _logger.LogInformation($"SMSPoolName: {templateInput.SMSPoolName}, MessageTemplate: {templateInput.MessageTemplate}, Variant: {templateInput.Variant}.");
+            SMSResponseDto<SMSTemplateDto> templateResponse = new SMSResponseDto<SMSTemplateDto>();
             try
             {
-                var templateResponse = _smsInteractor.AddSMSTemplate(templateInput);
-                if (templateResponse.Status)
+                if (!string.IsNullOrWhiteSpace(templateInput.MessageTemplate) && !string.IsNullOrWhiteSpace(templateInput.Name))
                 {
-                    _logger.LogDebug("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
-                    return Ok(templateResponse);
+                    templateResponse = _smsInteractor.AddSMSTemplate(templateInput);
+                    if (templateResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
+                        return Ok(templateResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
+                        return StatusCode(412, templateResponse);
+                    }
                 }
                 else
                 {
+                    templateResponse.Status = false;
+                    templateResponse.Message = "Name and Message Template cannot be empty or whitespace.";
                     _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
                     return StatusCode(412, templateResponse);
                 }
@@ -182,6 +261,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to update the SMS Template data.
+        /// </summary>
+        /// <param name="templateInput"><see cref="SMSTemplateDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult UpdateSMSTemplate(SMSTemplateDto templateInput)
         {
@@ -208,6 +292,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get the SMS channel data by Channel Key.
+        /// </summary>
+        /// <param name="channelKey"><see cref="SMSChannelDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{channelKey}")]
         public ActionResult GetSMSChannelByKey(string channelKey)
         {
@@ -234,6 +323,10 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get the default Channel data.
+        /// </summary>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet]
         public ActionResult GetDefaultChannelKey()
         {
@@ -259,6 +352,12 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get the SMS Provider data for a pool name and provider name.
+        /// </summary>
+        /// <param name="poolName">Pool Name</param>
+        /// <param name="providerName">Provider Name</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{poolName}/{providerName}")]
         public ActionResult GetSMSProvidersByPool(string poolName, string providerName)
         {
@@ -285,6 +384,12 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to get the SMS Histories data.
+        /// </summary>
+        /// <param name="channelKey">Channel Key</param>
+        /// <param name="tag">Tag</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpGet("{channelKey}/{tag?}")]
         public ActionResult GetSMSHistories(string channelKey, string tag = null)
         {
@@ -311,6 +416,11 @@ namespace Nvg.API.SMS.Controller
             }
         }
 
+        /// <summary>
+        /// API to send SMS.
+        /// </summary>
+        /// <param name="smsInputs"><see cref="SMSDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
         public ActionResult SendSMS(SMSDto smsInputs)
         {

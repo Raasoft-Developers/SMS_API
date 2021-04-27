@@ -51,21 +51,30 @@ namespace Nvg.SMSService.Data.SMSHistory
             try
             {
                 var smsHistories = new List<SMSHistoryTable>();
-                if(!string.IsNullOrEmpty(tag))
                     smsHistories = (from h in _context.SMSHistories
                                     join c in _context.SMSChannels on h.SMSChannelID equals c.ID
-                                    where c.Key.ToLower().Equals(channelKey.ToLower()) && h.Tags.ToLower().Equals(tag.ToLower())
-                                    select h).ToList();
-                else
-                    smsHistories = (from h in _context.SMSHistories
-                                    join c in _context.SMSChannels on h.SMSChannelID equals c.ID
-                                    where c.Key.ToLower().Equals(channelKey.ToLower())
-                                    select h).ToList();
-                if (smsHistories.Count != 0)
-                    response.Status = true;
-                else
-                    response.Status = false;
-                response.Message = $"Retrieved {smsHistories.Count} SMS histories data for pool {tag}";
+                                    join pr in _context.SMSProviderSettings on h.SMSProviderID equals pr.ID
+                                    where c.Key.ToLower().Equals(channelKey.ToLower()) && (string.IsNullOrEmpty(tag) || h.Tags.ToLower().Equals(tag.ToLower()))
+                                    select  new SMSHistoryTable { 
+                                        ID=h.ID,
+                                    Sender=h.Sender,
+                                    Recipients=h.Recipients,
+                                    SentOn=h.SentOn,
+                                    MessageSent=h.MessageSent,
+                                    Attempts=h.Attempts,
+                                    Status=h.Status,
+                                    Tags=h.Tags,
+                                    SMSProviderID=h.SMSProviderID,
+                                    SMSChannelID = h.SMSChannelID,
+                                    TemplateName=h.TemplateName,
+                                    TemplateVariant=h.TemplateVariant,
+                                    ChannelKey=c.Key,
+                                    ProviderName=pr.Name
+                                    }).ToList();
+                
+                response.Status = true;
+                
+                response.Message = $"Retrieved {smsHistories.Count} SMS histories data for pool";
                 response.Result = smsHistories;
                 return response;
             }

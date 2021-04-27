@@ -29,6 +29,9 @@ namespace Nvg.SMSService.Data
             modelBuilder.Entity<SMSChannelTable>()
                 .Property(c => c.Key)
                 .HasColumnName("Key");
+
+            modelBuilder.Entity<SMSChannelTable>()
+                .HasIndex(x => x.Key).IsUnique(true);
         }
     }
 }
