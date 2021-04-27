@@ -282,7 +282,7 @@ namespace Nvg.SMSService.SMS
                 if (isExceeded)
                 {
                     _logger.LogError($"SMS Quota for Channel {smsInputs.ChannelKey} has exceeded.");
-                    response.Status = isExceeded;
+                    response.Status = !isExceeded;
                     response.Message = $"SMS Quota for Channel {smsInputs.ChannelKey} has exceeded.";
                     return response;
                 }
