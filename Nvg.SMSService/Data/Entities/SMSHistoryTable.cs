@@ -18,9 +18,13 @@ namespace Nvg.SMSService.Data.Entities
         public string TemplateName { get; set; }
         public string TemplateVariant { get; set; }
         public string SMSChannelID { get; set; }
+        [NotMapped]
+        public string ChannelKey { get; set; }
         [ForeignKey("SMSChannelID")]
         public SMSChannelTable SMSChannel { get; set; }
         public string SMSProviderID { get; set; }
+        [NotMapped]
+        public string ProviderName { get; set; }
         [ForeignKey("SMSProviderID")]
         public SMSProviderSettingsTable SMSProvider { get; set; }
         public string Tags { get; set; }

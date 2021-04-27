@@ -29,6 +29,7 @@ namespace Nvg.SMSService
             services.AddScoped<ISMSInteractor, SMSInteractor>();
 
             services.AddScoped<ISMSEventInteractor, SMSEventInteractor>();
+            services.AddScoped<ISMSManagementInteractor,SMSManagementInteractor>();
 
             services.AddScoped<ISMSPoolInteractor, SMSPoolInteractor>();
             services.AddScoped<ISMSPoolRepository, SMSPoolRepository>();

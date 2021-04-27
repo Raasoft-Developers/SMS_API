@@ -82,6 +82,131 @@ namespace Nvg.SMSService.Data.SMSPool
             }
         }
 
+        public SMSResponseDto<List<SMSPoolTable>> GetSMSPools()
+        {
+            var response = new SMSResponseDto<List<SMSPoolTable>>();
+            try
+            {
+                var smsPools = _context.SMSPools.ToList();
+                if (smsPools.Count > 0)
+                {                    
+                    response.Message = $"Retrieved SMS pool data";
+                }
+                else
+                {
+                    response.Message = $"SMS pool data is not available";
+                }
+                response.Status = true;
+                response.Result = smsPools;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<List<SMSPoolTable>> GetSMSPoolNames()
+        {
+            var response = new SMSResponseDto<List<SMSPoolTable>>();
+            try
+            {
+                var smsPools = _context.SMSPools.ToList();
+                if (smsPools.Count > 0)
+                {                    
+                    response.Message = $"Retrieved SMS pool data";
+                }
+                else
+                {
+                    response.Message = $"SMS pool data is not available";
+                }
+                response.Status = true;
+                response.Result = smsPools;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<SMSPoolTable> UpdateSMSPool(SMSPoolTable smsPoolInput)
+        {
+            var response = new SMSResponseDto<SMSPoolTable>();
+            try
+            {
+                var queryResult = _context.SMSPools.Where(sp => sp.ID.ToLower().Equals(smsPoolInput.ID.ToLower())).FirstOrDefault();
+                if (queryResult != null)
+                {
+                    queryResult.Name = smsPoolInput.Name;
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Updated";
+                        response.Result = smsPoolInput;
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Not Updated";
+                        response.Result = smsPoolInput;
+                    }
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = "No Record found.";
+                    response.Result = smsPoolInput;
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<string> DeleteSMSPool(string poolID)
+        {
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                var queryResult = _context.SMSPools.Where(sp => sp.ID.ToLower().Equals(poolID.ToLower())).FirstOrDefault();
+                if (queryResult != null)
+                {
+                    _context.Remove(queryResult);
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "Deleted";
+                    }
+                    else
+                    {
+                        response.Status = false;
+                        response.Message = "Not Deleted";
+                    }
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = "No Record found.";
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
         public SMSResponseDto<string> CheckIfSmsPoolIDIsValid(string poolID)
         {
             var response = new SMSResponseDto<string>();

@@ -23,6 +23,7 @@ namespace Nvg.SMSService.DTOS
         {
             CreateMap<SMSTemplateDto, SMSTemplateTable>().ReverseMap();
             CreateMap<SMSResponseDto<SMSTemplateTable>, SMSResponseDto<SMSTemplateDto>>();
+            CreateMap<SMSResponseDto<List<SMSTemplateTable>>, SMSResponseDto<List<SMSTemplateDto>>>();
         }
     }
 }

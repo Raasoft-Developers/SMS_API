@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Nvg.SMSService.Data;
@@ -9,9 +10,10 @@ using Nvg.SMSService.Data;
 namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
 {
     [DbContext(typeof(SMSPgSqlDbContext))]
-    partial class SMSPgSqlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210326130219_ChannelKeyUnique")]
+    partial class ChannelKeyUnique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,13 +146,10 @@ namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("CurrentMonth")
-                        .HasColumnType("text");
-
-                    b.Property<int>("MonthlyConsumption")
+                    b.Property<int>("MonthlyQuota")
                         .HasColumnType("integer");
 
-                    b.Property<int>("MonthlyQuota")
+                    b.Property<int>("MonthylConsumption")
                         .HasColumnType("integer");
 
                     b.Property<string>("SMSChannelID")
@@ -158,10 +157,6 @@ namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
 
                     b.Property<int>("TotalConsumption")
                         .HasColumnType("integer");
-
-                    b.Property<int>("TotalQuota")
-                        .HasColumnType("integer")
-                        .HasDefaultValue(-1);
 
                     b.HasKey("ID");
 

@@ -20,6 +20,7 @@
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="5.2.0" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,6 +29,7 @@
 		<PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
 		<PackageReference Include="Serilog.Sinks.Http" Version="6.0.0" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -37,11 +39,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Controller\" />
+	  <Folder Include="wwwroot\" />
 	</ItemGroup>
 
 	<PropertyGroup>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
+		<UserSecretsId>27373409-92ae-474c-9bd1-8242fd84e30b</UserSecretsId>
 	</PropertyGroup>
 </Project>

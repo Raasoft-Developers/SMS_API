@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "swagger/index.html",
+      "launchUrl": "sms/swagger/index.html",
       //"launchUrl": "api/sms",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
