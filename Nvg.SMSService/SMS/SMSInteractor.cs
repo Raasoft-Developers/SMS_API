@@ -104,9 +104,9 @@ namespace Nvg.SMSService.SMS
             try
             {
                 channelResponse = _smsChannelInteractor.AddSMSChannel(channelInput);
-                if (channelResponse.Status)
+                if (channelResponse.Status && channelInput.IsRestrictedByQuota)
                 {
-                    //If channel has been added, add email quota for channel
+                    //If channel has been added and email is restricted by quota, add email quota for channel
                     _smsQuotaInteractor.AddSMSQuota(channelInput);
                 }
                 _logger.LogDebug("Status: " + channelResponse.Status + ",Message: " + channelResponse.Message);

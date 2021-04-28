@@ -19,7 +19,7 @@ namespace Nvg.SMSService.SMSQuota
         /// </summary>
         /// <param name="channelKey">Channel Key</param>
         /// <returns><see cref="SMSResponseDto{SMSQuotaDto}"/></returns>
-        SMSResponseDto<SMSQuotaDto> UpdateSMSQuota(string channelKey);
+        SMSResponseDto<SMSQuotaDto> IncrementSMSQuota(string channelKey);
 
         /// <summary>
         /// Check if SMS Quota of the channel is exceeded.Status is set to true or false based on value

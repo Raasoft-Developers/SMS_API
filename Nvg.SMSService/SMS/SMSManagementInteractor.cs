@@ -277,10 +277,10 @@ namespace Nvg.SMSService.SMS
                 _logger.LogInformation("Trying to add SMSChannel.");
                 var mappedSMSInput = _mapper.Map<SMSChannelTable>(channelInput);
                 var response = _smsChannelRepository.AddSMSChannel(mappedSMSInput);
-                if (response.Status)
+                if (response.Status && channelInput.IsRestrictedByQuota)
                 {
+                    //If channel has been added and channel isRestrictedByQuota, add sms quota for channel
                     channelInput.ID = response.Result.ID;
-                    //If channel has been added, add sms quota for channel
                     _smsQuotaRepository.AddSMSQuota(channelInput);
                 }
                 channelResponse = _mapper.Map<SMSResponseDto<SMSChannelDto>>(response);

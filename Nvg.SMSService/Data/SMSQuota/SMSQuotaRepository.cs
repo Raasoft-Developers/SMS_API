@@ -38,7 +38,7 @@ namespace Nvg.SMSService.Data.SMSQuota
             }
         }
 
-        public SMSResponseDto<SMSQuotaTable> UpdateSMSQuota(string channelID)
+        public SMSResponseDto<SMSQuotaTable> IncrementSMSQuota(string channelID)
         {
             var response = new SMSResponseDto<SMSQuotaTable>();
             try
@@ -55,16 +55,9 @@ namespace Nvg.SMSService.Data.SMSQuota
                 }
                 else
                 {
-                    smsQuota = new SMSQuotaTable()
-                    {
-                        SMSChannelID = channelID,
-                        MonthlyQuota = -1,
-                        MonthlyConsumption = 1,
-                        TotalConsumption = 1,
-                        TotalQuota = -1,
-                        CurrentMonth = DateTime.Now.ToString("MMM").ToUpper()
-                    };
-                    _context.SMSQuotas.Add(smsQuota);
+                    response.Status = false;
+                    response.Message = $"SMS Quota does not exist for Channel ID :{channelID}";
+                    response.Result = smsQuota;
                 }
                 if(_context.SaveChanges() == 1)
                 {
@@ -124,10 +117,10 @@ namespace Nvg.SMSService.Data.SMSQuota
                     smsQuota = new SMSQuotaTable()
                     {
                         SMSChannelID = smsChannel.ID,
-                        MonthlyQuota = smsChannel.IsRestrictedByQuota ? smsChannel.MonthlyQuota : -1,
+                        MonthlyQuota = smsChannel.MonthlyQuota ,
                         MonthlyConsumption = 0,
                         TotalConsumption = 0,
-                        TotalQuota = smsChannel.IsRestrictedByQuota ? smsChannel.TotalQuota : -1,
+                        TotalQuota =  smsChannel.TotalQuota,
                         CurrentMonth = DateTime.Now.ToString("MMM").ToUpper()
                     };
                     _context.SMSQuotas.Add(smsQuota);
@@ -161,14 +154,31 @@ namespace Nvg.SMSService.Data.SMSQuota
                 var smsQuota = _context.SMSQuotas.FirstOrDefault(q => q.SMSChannelID == smsChannel.ID);
                 if (smsQuota != null)
                 {
-                    smsQuota.TotalQuota = smsChannel.IsRestrictedByQuota ? smsChannel.TotalQuota : -1;
-                    smsQuota.MonthlyQuota = smsChannel.IsRestrictedByQuota ? smsChannel.MonthlyQuota : -1;
+                    if(smsChannel.IsRestrictedByQuota)
+                    {
+                        smsQuota.TotalQuota = smsChannel.TotalQuota;
+                        smsQuota.MonthlyQuota = smsChannel.MonthlyQuota;
+                    }
+                    else
+                    {
+                        _context.SMSQuotas.Remove(smsQuota);
+                    }
                 }
                 else
                 {
-                    response.Status = false;
-                    response.Message = $"SMS Quota does not exist for provided channel ID : {smsChannel.ID}";
-                    response.Result = smsQuota;
+                    if (!smsChannel.IsRestrictedByQuota)
+                    {
+                        smsQuota = new SMSQuotaTable()
+                        {
+                            SMSChannelID = smsChannel.ID,
+                            MonthlyQuota = smsChannel.MonthlyQuota,
+                            MonthlyConsumption = 0,
+                            TotalConsumption = 0,
+                            TotalQuota = smsChannel.TotalQuota,
+                            CurrentMonth = DateTime.Now.ToString("MMM").ToUpper()
+                        };
+                        _context.SMSQuotas.Add(smsQuota);
+                    }
                 }
                 if (_context.SaveChanges() > 0)
                 {

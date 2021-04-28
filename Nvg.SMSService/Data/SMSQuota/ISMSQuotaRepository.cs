@@ -16,11 +16,11 @@ namespace Nvg.SMSService.Data.SMSQuota
         SMSResponseDto<SMSQuotaTable> GetSMSQuota(string channelKey);
 
         /// <summary>
-        /// Updates the Consumption value in SMS Quota .
+        /// Increments the Consumption value in SMS Quota .
         /// </summary>
         /// <param name="channelID">Channel Id</param>
         /// <returns><see cref="SMSResponseDto{SMSQuotaTable}"/></returns>
-        SMSResponseDto<SMSQuotaTable> UpdateSMSQuota(string channelID);
+        SMSResponseDto<SMSQuotaTable> IncrementSMSQuota(string channelID);
 
         /// <summary>
         /// Updates the SMS Quota.
