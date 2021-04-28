@@ -82,7 +82,7 @@ namespace Nvg.SMSService.SMSQuota
                     if (smsQuota.CurrentMonth == currentMonth)
                     {
                         //Check if quota is exceeded for current month
-                        if (smsQuota.MonthlyConsumption >= smsQuota.MonthlyQuota && smsQuota.TotalConsumption >= smsQuota.TotalConsumption)
+                        if (smsQuota.TotalQuota != -1 && smsQuota.MonthlyConsumption >= smsQuota.MonthlyQuota && smsQuota.TotalConsumption >= smsQuota.TotalConsumption)
                         {
                             response = true;
                         }
@@ -95,7 +95,7 @@ namespace Nvg.SMSService.SMSQuota
                             _logger.LogDebug("Status: " + updatedQuotaResponse.Status + ", Message: " + updatedQuotaResponse.Message);
                             smsQuota = updatedQuotaResponse.Result;
                             //Check if quota is exceeded for current month
-                            if (smsQuota.MonthlyConsumption >= smsQuota.MonthlyQuota && smsQuota.TotalConsumption >= smsQuota.TotalConsumption)
+                            if (smsQuota.TotalQuota != -1 && smsQuota.MonthlyConsumption >= smsQuota.MonthlyQuota && smsQuota.TotalConsumption >= smsQuota.TotalConsumption)
                             {
                                 response = true;
                             }
