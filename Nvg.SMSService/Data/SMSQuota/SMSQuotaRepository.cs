@@ -166,7 +166,7 @@ namespace Nvg.SMSService.Data.SMSQuota
                 }
                 else
                 {
-                    if (!smsChannel.IsRestrictedByQuota)
+                    if (smsChannel.IsRestrictedByQuota)
                     {
                         smsQuota = new SMSQuotaTable()
                         {
