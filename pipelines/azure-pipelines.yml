@@ -1,4 +1,3 @@
-# Starter pipeline
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -8,12 +7,80 @@ trigger:
 
 pool:
   vmImage: ubuntu-latest
-
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your commands here
+      #cli installation
+      #doctl cli
+      cd ~
+      wget https://github.com/digitalocean/doctl/releases/download/v1.58.0/doctl-1.58.0-linux-amd64.tar.gz
+      tar xf ~/doctl-1.58.0-linux-amd64.tar.gz
+      sudo mv ~/doctl /usr/local/bin
+      #login to digitalocean registry
+      doctl auth init -t cf9b816121903f8101d96c9d73a36ae6716b42d4902a23f2c5d1f1a8b3f5f17c
+      doctl registry login
+      #kubectl cli
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      #helm cli
+      curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+      chmod 700 get_helm.sh
+      ./get_helm.sh
+      #Add kubeconfig file  
+      mkdir .kube
+      sudo cp $(Build.SourcesDirectory)/pipelines/config $HOME/.kube/
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $commitHash='$(Build.SourceVersion)'
+      $commitHash
+      $changedServices=@()
+      $paths="Nvg.API.SMS","Nvg.SMSBackgroundTask"
+      $gitChangedPath = git diff-tree --no-commit-id --name-only -r $commitHash
+      $gitChangedPath
+      $changedPaths=$gitChangedPath -Split ' '
+      $changedPaths 
+      For($i=0; $i -lt $changedPaths.Length; $i++){ 
+          $changedPath=$changedPaths[$i];
+          For($j=0; $j -lt $paths.Length; $j++){
+            $path=$paths[$j]
+            if($changedPath -Match $path){
+               $changedServices += $j
+             }
+          }
+      }
+      $changedService=$changedServices -join ','
+      if($changedService -eq ""){
+        $changedService="nochanges"
+      }
+      Write-Host "##vso[task.setvariable variable=SERVICES;]$changedService"
+      $versionNum=$commitHash.substring(0,8)
+      Write-Host "##vso[task.setvariable variable=VERSIONNUMBER;]$versionNum"
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      build/build.ps1 -num ${env:SERVICES} 
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.
+      build/tagNpush.ps1  -tag ${env:VERSIONNUMBER} -num ${env:SERVICES}  
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your commands here
+      $commitMessage="$(Build.SourceVersionMessage)"
+      $commitMessage
+      if($commitMessage -Match "{deploy}"){
+        helm/rollout.ps1 -imageTag ${env:VERSIONNUMBER} -num ${env:SERVICES}
+      }
