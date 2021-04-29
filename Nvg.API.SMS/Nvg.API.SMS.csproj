@@ -2,9 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
-		<!--<UserSecretsId>fca6e91f-6a4a-4e89-8051-91c079309cbe</UserSecretsId>
+		<UserSecretsId>fca6e91f-6a4a-4e89-8051-91c079309cbe</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<DockerfileContext>..\..\..\..</DockerfileContext>
+		<!--<DockerfileContext>..\..\..\..</DockerfileContext>
 		<DockerComposeProjectPath>..\..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
 		<AssemblyName>Nvg.API.SMS</AssemblyName>
 		<RootNamespace>Nvg.API.SMS</RootNamespace>-->
