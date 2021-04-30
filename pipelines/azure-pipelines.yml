@@ -36,7 +36,13 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      if("$(Build.SourceVersionMessage)" -Match "Merge Branch"){
+        $commitHash=git log -n 2 --pretty=format:"%H" | tail -1
+        $commitMessage=git log -n 2 --pretty=format:"%s" | tail -1
+      }else{
       $commitHash='$(Build.SourceVersion)'
+      $commitMessage="$(Build.SourceVersionMessage)"
+      }
       $commitHash
       $changedServices=@()
       $paths="Nvg.API.SMS","Nvg.SMSBackgroundTask"
@@ -49,7 +55,9 @@ steps:
           For($j=0; $j -lt $paths.Length; $j++){
             $path=$paths[$j]
             if($changedPath -Match $path){
+              if($j -notin $changedServices){
                $changedServices += $j
+               }
              }
           }
       }
@@ -60,6 +68,7 @@ steps:
       Write-Host "##vso[task.setvariable variable=SERVICES;]$changedService"
       $versionNum=$commitHash.substring(0,8)
       Write-Host "##vso[task.setvariable variable=VERSIONNUMBER;]$versionNum"
+      Write-Host "##vso[task.setvariable variable=COMMITMSG;]$commitMessage"
 
 - task: PowerShell@2
   inputs:
@@ -79,7 +88,7 @@ steps:
     targetType: 'inline'
     script: |
       # Write your commands here
-      $commitMessage="$(Build.SourceVersionMessage)"
+      $commitMessage=${env:COMMITMSG}
       $commitMessage
       if($commitMessage -Match "{deploy}"){
         build/rollout.ps1 -imageTag ${env:VERSIONNUMBER} -num ${env:SERVICES}
