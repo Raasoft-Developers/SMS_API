@@ -82,5 +82,5 @@ steps:
       $commitMessage="$(Build.SourceVersionMessage)"
       $commitMessage
       if($commitMessage -Match "{deploy}"){
-        helm/rollout.ps1 -imageTag ${env:VERSIONNUMBER} -num ${env:SERVICES}
+        build/rollout.ps1 -imageTag ${env:VERSIONNUMBER} -num ${env:SERVICES}
       }
