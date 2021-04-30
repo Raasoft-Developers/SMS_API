@@ -3,7 +3,7 @@ Param(
 	[parameter(Mandatory=$false)][string]$num ="*"
 
     )
-$rollout=@("apivts","websharelink","apigeofence","apinotifier","apireports")
+$rollout=@("nvgapisms","nvgsmsbackgroundtask")
 
 if($num -eq "*"){
 $contexts=@("dev","test","stag","prod");
@@ -50,11 +50,7 @@ For($i=0;$i -lt $services.Count;$i++){
       $name = $services[$i];
 	  $registryImage= "$name=registry.digitalocean.com/tv2/$name"
 	  echo " $name $nameservice     "
-	if($name -eq "tv2routing"){
-		 $registryImage= "$name=registry.digitalocean.com/tv2/tv2routinng_opt"
-	     kubectl set image deployment/$name ${registryImage}:$imageTag --record
-	}
-	else{
-         kubectl set image deployment/$name ${registryImage}:$imageTag --record
-		}
+
+      kubectl set image deployment/$name ${registryImage}:$imageTag --record
+
  }
