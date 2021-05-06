@@ -35,8 +35,8 @@ steps:
       $commitHash=git log -n 1 --pretty=format:"%h"
       $changedServices=@()
       $regex = [regex]"\{{(.*)\}}"
-      $changedService = [regex]::match($commitMessage, $regex).Groups[1]
-      $changedService
+      $enteredServices = [regex]::match($commitMessage, $regex).Groups[1]
+      $changedService = $enteredServices.Value
       if($changedService -eq ""){
       $paths="Nvg.API.SMS","Nvg.SMSBackgroundTask"
       $gitChangedPath = git diff-tree --no-commit-id --name-only -r $changesCommit
