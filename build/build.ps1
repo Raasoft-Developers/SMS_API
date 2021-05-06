@@ -3,11 +3,12 @@ Param(
 )
 #$basePath=".."
 $dockerFiles=@(
-@{name='nvgapisms';path='/Nvg.API.SMS/Dockerfile'}
-@{name='nvgsmsbackgroundtask';path='/Nvg.SMSBackgroundTask/Dockerfile'}
+@{name='nvgapisms';path='Nvg.API.SMS/Dockerfile'}
+@{name='nvgsmsbackgroundtask';path='Nvg.SMSBackgroundTask/Dockerfile'}
 
 )
 if($num -eq "*"){
+$basePath=".."
 For($i=0;$i -lt $dockerFiles.Count;$i++){
 	$name=$dockerFiles[$i].name;
 	$path=$dockerFiles[$i].path;
@@ -35,7 +36,7 @@ For($i=0;$i -lt $dockerFiles.Count;$i++){
 		$path="$($path).develop"; 
 		echo  "BUILDING $name  $path";
 		#echo "-f $basePath$path --force-rm -t ${name}:latest";
-		docker build -f $path --force-rm -t ${name}:latest .#$basePath	
+		docker build -f $path --force-rm -t ${name}:latest . #$basePath	
 	}
 	elseif(-not($i -in $indexes)){
 		
