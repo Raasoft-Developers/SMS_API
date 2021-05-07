@@ -16,7 +16,7 @@ namespace Nvg.API.SMS.Controller
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "SuperAdmin")]
     public class SmsManagementController : ControllerBase
     {
         private readonly ISMSManagementInteractor _smsManagementInteractor;
@@ -87,6 +87,48 @@ namespace Nvg.API.SMS.Controller
             {
                 _logger.LogError("Internal server error: Error occurred while getting sms pool names: " + ex.Message);
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
+        /// <summary>
+        /// API to add the SMS Pool data.
+        /// </summary>
+        /// <param name="poolInput"><see cref="SMSPoolDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
+        [HttpPost]
+        public ActionResult AddSMSPool(SMSPoolDto poolInput)
+        {
+            _logger.LogInformation("AddSMSPool action method.");
+            _logger.LogInformation($"SMSPoolName: {poolInput.Name}.");
+            SMSResponseDto<SMSPoolDto> poolResponse = new SMSResponseDto<SMSPoolDto>();
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(poolInput.Name))
+                {
+                    poolResponse = _smsManagementInteractor.AddSMSPool(poolInput);
+                    if (poolResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
+                        return Ok(poolResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
+                        return StatusCode(412, poolResponse);
+                    }
+                }
+                else
+                {
+                    poolResponse.Status = false;
+                    poolResponse.Message = "Pool Name cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
+                    return StatusCode(412, poolResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while adding SMS pool: " + ex.Message);
+                return StatusCode(500, ex);
             }
         }
 
@@ -774,7 +816,7 @@ namespace Nvg.API.SMS.Controller
         }
         #endregion
 
-        #region SMS histores
+        #region SMS histories
         /// <summary>
         /// API to get the sms histories data.
         /// </summary>
@@ -807,6 +849,37 @@ namespace Nvg.API.SMS.Controller
             }
         }
         #endregion
+
+        /// <summary>
+        /// API to send SMS.
+        /// </summary>
+        /// <param name="smsInputs"><see cref="SMSDto"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
+        [HttpPost]
+        public ActionResult SendSMS(SMSDto smsInputs)
+        {
+            _logger.LogInformation("SendSMS action method.");
+            _logger.LogInformation($"ChannelKey: {smsInputs.ChannelKey}, Tag: {smsInputs.Tag},TemplateName: {smsInputs.TemplateName}, Recipients: {smsInputs.Recipients}");
+            try
+            {
+                var smsResponse = _smsManagementInteractor.SendSMS(smsInputs);
+                if (smsResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + smsResponse.Status + ", Message:" + smsResponse.Message);
+                    return Ok(smsResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + smsResponse.Status + ", Message:" + smsResponse.Message);
+                    return StatusCode(412, smsResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while sending SMS: " + ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
 
         /// <summary>
         /// API to get the SMS API document URL.

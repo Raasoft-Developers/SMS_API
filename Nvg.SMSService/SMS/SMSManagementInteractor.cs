@@ -16,6 +16,7 @@ namespace Nvg.SMSService.SMS
     public class SMSManagementInteractor : ISMSManagementInteractor
     {
         private readonly IMapper _mapper;
+        private readonly ISMSEventInteractor _smsEventInteractor;
         private readonly ISMSPoolRepository _smsPoolRepository;
         private readonly ISMSProviderRepository _smsProviderRepository;
         private readonly ISMSChannelRepository _smsChannelRepository;
@@ -23,11 +24,12 @@ namespace Nvg.SMSService.SMS
         private readonly ISMSHistoryRepository _smsHistoryRepository;
         private readonly ILogger<SMSManagementInteractor> _logger;
 
-        public SMSManagementInteractor(IMapper mapper, ISMSPoolRepository smsPoolRepository, ISMSProviderRepository smsProviderRepository,
+        public SMSManagementInteractor(IMapper mapper, ISMSEventInteractor smsEventInteractor, ISMSPoolRepository smsPoolRepository, ISMSProviderRepository smsProviderRepository,
             ISMSChannelRepository smsChannelRepository, ISMSTemplateRepository smsTemplateRepository,
             ISMSHistoryRepository smsHistoryRepository, ILogger<SMSManagementInteractor> logger)
         {
             _mapper = mapper;
+            _smsEventInteractor = smsEventInteractor;
             _smsPoolRepository = smsPoolRepository;
             _smsProviderRepository = smsProviderRepository;
             _smsChannelRepository = smsChannelRepository;
@@ -75,6 +77,27 @@ namespace Nvg.SMSService.SMS
 
                 _logger.LogError("Error occurred in SMS Management Interactor while getting SMS pool names: ", ex.Message);
                 poolResponse.Message = "Error occurred while getting SMS pool: " + ex.Message;
+                poolResponse.Status = false;
+                return poolResponse;
+            }
+        }
+
+        public SMSResponseDto<SMSPoolDto> AddSMSPool(SMSPoolDto poolInput)
+        {
+            _logger.LogInformation("AddSMSPool interactor method.");
+            SMSResponseDto<SMSPoolDto> poolResponse = new SMSResponseDto<SMSPoolDto>();
+            try
+            {
+                var mappedSMSInput = _mapper.Map<SMSPoolTable>(poolInput);
+                var response = _smsPoolRepository.AddSMSPool(mappedSMSInput);
+                poolResponse = _mapper.Map<SMSResponseDto<SMSPoolDto>>(response);
+                _logger.LogDebug("Status: " + poolResponse.Status + ",Message: " + poolResponse.Message);
+                return poolResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error occurred in SMS Interactor while adding SMS pool: ", ex.Message);
+                poolResponse.Message = "Error occurred while adding SMS pool: " + ex.Message;
                 poolResponse.Status = false;
                 return poolResponse;
             }
@@ -416,7 +439,7 @@ namespace Nvg.SMSService.SMS
             SMSResponseDto<SMSTemplateDto> templateResponse = new SMSResponseDto<SMSTemplateDto>();
             try
             {
-                _logger.LogInformation("Trying to get Email Templates.");
+                _logger.LogInformation("Trying to get SMS Templates.");
                 var response = _smsTemplateRepository.GetSMSTemplate(templateID);
                 if (response != null)
                 {
@@ -435,8 +458,8 @@ namespace Nvg.SMSService.SMS
             catch (Exception ex)
             {
 
-                _logger.LogError("Error occurred in Email Management Interactor while getting email template by id: ", ex.Message);
-                templateResponse.Message = "Error occurred while getting email template by id: " + ex.Message;
+                _logger.LogError("Error occurred in SMS Management Interactor while getting SNS template by id: ", ex.Message);
+                templateResponse.Message = "Error occurred while getting SMS template by id: " + ex.Message;
                 templateResponse.Status = false;
                 return templateResponse;
             }
@@ -545,5 +568,64 @@ namespace Nvg.SMSService.SMS
             }
         }
         #endregion
+
+        public SMSResponseDto<string> SendSMS(SMSDto smsInputs)
+        {
+
+            _logger.LogInformation("SendSMS interactor method.");
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                if (string.IsNullOrEmpty(smsInputs.ChannelKey))
+                {
+                    _logger.LogError("Channel key cannot be blank.");
+                    response.Status = false;
+                    response.Message = "Channel key cannot be blank.";
+                    return response;
+                }
+                else
+                {
+                    var channelExist = _smsChannelRepository.CheckIfChannelExist(smsInputs.ChannelKey).Result;
+                    if (!channelExist)
+                    {
+                        _logger.LogError($"Invalid Channel key {smsInputs.ChannelKey}.");
+                        response.Status = channelExist;
+                        response.Message = $"Invalid Channel key {smsInputs.ChannelKey}.";
+                        return response;
+                    }
+                }
+                if (string.IsNullOrEmpty(smsInputs.TemplateName))
+                {
+                    _logger.LogError($"Template name cannot be blank.");
+                    response.Status = false;
+                    response.Message = "Template name cannot be blank.";
+                    return response;
+                }
+                else
+                {
+                    var templateExist = _smsTemplateRepository.CheckIfTemplateExist(smsInputs.ChannelKey, smsInputs.TemplateName).Result;
+                    if (!templateExist)
+                    {
+                        _logger.LogError($"No template found for template name {smsInputs.TemplateName} and channel key {smsInputs.ChannelKey}.");
+                        response.Status = templateExist;
+                        response.Message = $"No template found for template name {smsInputs.TemplateName} and channel key {smsInputs.ChannelKey}.";
+                        return response;
+                    }
+                }
+                _logger.LogInformation("Trying to send sms.");
+                _smsEventInteractor.SendSMS(smsInputs);
+                response.Status = true;
+                response.Message = $"SMS is sent successfully to {smsInputs.Recipients}.";
+                _logger.LogDebug("" + response.Message);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error occurred in SMSInteractor while sending SMS: ", ex.Message);
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
     }
 }

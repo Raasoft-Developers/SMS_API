@@ -48,7 +48,7 @@ namespace Nvg.SMSService.SMSQuota
 
         public SMSResponseDto<SMSQuotaDto> UpdateSMSQuota(string channelKey)
         {
-            _logger.LogInformation("UpdateEmailQuota interactor method.");
+            _logger.LogInformation("UpdateSMSQuota interactor method.");
             var response = new SMSResponseDto<SMSQuotaDto>();
             try
             {

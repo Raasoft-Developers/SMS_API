@@ -21,6 +21,13 @@ namespace Nvg.SMSService.SMS
         SMSResponseDto<List<SMSPoolDto>> GetSMSPoolNames();
 
         /// <summary>
+        /// Adds the sms pool into the database.
+        /// </summary>
+        /// <param name="poolInput"><see cref="SMSPoolDto"/> model</param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<SMSPoolDto> AddSMSPool(SMSPoolDto poolInput);
+
+        /// <summary>
         /// Updates the sms pool into the database.
         /// </summary>
         /// <param name="SMSPoolInput"><see cref="SMSPoolDto"/> model</param>
@@ -147,8 +154,21 @@ namespace Nvg.SMSService.SMS
         #endregion
 
         #region SMS Histories
-
+        /// <summary>
+        /// Gets the SMS Histories by channel.
+        /// </summary>
+        /// <param name="channelID">Channel ID</param>
+        /// <param name="tag">Tag</param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
         SMSResponseDto<List<SMSHistoryDto>> GetSMSHistories(string channelID, string tag);
         #endregion
+
+
+        /// <summary>
+        /// Sends the sms.
+        /// </summary>
+        /// <param name="smsInputs"><see cref="SMSDto"/> model</param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<string> SendSMS(SMSDto smsInputs);
     }
 }
