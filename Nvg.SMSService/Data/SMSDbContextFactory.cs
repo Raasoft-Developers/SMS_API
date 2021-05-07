@@ -26,8 +26,8 @@ namespace Nvg.SMSService.Data
         {
             var optionsBuilder = new DbContextOptionsBuilder<SMSSqlServerDbContext>();
             // For Removing migration or Updating the database, uncomment the hardcoded connection string.
-            //string connectionString = "Server=172.16.16.62;Database=TestIdentity;User ID =Nyletech;Password=Novigo@123;Port=5432;Integrated Security=true;Pooling=true;No Reset On Close=true;Trust Server Certificate=true;Server Compatibility Mode=Redshift;";
-            //optionsBuilder.UseNpgsql(connectionString);
+            //string connectionString = "Server=LAP00257\\SQLEXPRESS17;Database=TestEmailDB;Trusted_Connection=true;MultipleActiveResultSets=true";
+            //optionsBuilder.UseSqlServer(connectionString);
             optionsBuilder.UseSqlServer("SMS-ConnectionString");
             return new SMSSqlServerDbContext(optionsBuilder.Options, "SMS"); // TODO: Should avoid hardcoding of schema.
         }

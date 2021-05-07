@@ -32,6 +32,14 @@ namespace Nvg.SMSService.Data
 
             modelBuilder.Entity<SMSChannelTable>()
                 .HasIndex(x => x.Key).IsUnique(true);
+
+            modelBuilder.Entity<SMSProviderSettingsTable>()
+               .HasIndex(p => new { p.Name, p.SMSPoolID })
+               .IsUnique(true);
+
+            modelBuilder.Entity<SMSTemplateTable>()
+               .HasIndex(p => new { p.Name, p.SMSPoolID })
+               .IsUnique(true);
         }
     }
 }
