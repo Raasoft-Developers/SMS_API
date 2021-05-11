@@ -110,7 +110,7 @@ namespace Nvg.API.SMS.Controller
                     else
                     {
                         _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
-                        return StatusCode(412, poolResponse);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, poolResponse);
                     }
                 }
                 else
@@ -118,13 +118,13 @@ namespace Nvg.API.SMS.Controller
                     poolResponse.Status = false;
                     poolResponse.Message = "Pool Name cannot be empty or whitespace.";
                     _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
-                    return StatusCode(412, poolResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, poolResponse);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError("Internal server error: Error occurred while adding SMS pool: " + ex.Message);
-                return StatusCode(500, ex);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
             }
         }
 
@@ -159,7 +159,7 @@ namespace Nvg.API.SMS.Controller
                     poolResponse.Status = false;
                     poolResponse.Message = "Pool Name cannot be empty or whitespace.";
                     _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
-                    return StatusCode(412, poolResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, poolResponse);
                 }
             }
             catch (Exception ex)
@@ -201,7 +201,7 @@ namespace Nvg.API.SMS.Controller
                     poolResponse.Status = false;
                     poolResponse.Message = "Pool ID cannot be empty or whitespace.";
                     _logger.LogError("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
-                    return StatusCode(412, poolResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, poolResponse);
                 }
             }
             catch (Exception ex)
@@ -307,7 +307,7 @@ namespace Nvg.API.SMS.Controller
                     providerResponse.Status = false;
                     providerResponse.Message = "Provider Name, Type and Configuration cannot be empty or whitespace.";
                     _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
-                    return StatusCode(412, providerResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, providerResponse);
                 }
             }
             catch (Exception ex)
@@ -349,7 +349,7 @@ namespace Nvg.API.SMS.Controller
                     providerResponse.Status = false;
                     providerResponse.Message = "Provider Name, Type and Configuration cannot be empty or whitespace.";
                     _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
-                    return StatusCode(412, providerResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, providerResponse);
                 }
             }
             catch (Exception ex)
@@ -391,7 +391,7 @@ namespace Nvg.API.SMS.Controller
                     providerResponse.Status = false;
                     providerResponse.Message = "ProviderID cannot be empty or whitespace.";
                     _logger.LogError("Status: " + providerResponse.Status + ", Message:" + providerResponse.Message);
-                    return StatusCode(412, providerResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, providerResponse);
                 }
 
             }
@@ -527,7 +527,7 @@ namespace Nvg.API.SMS.Controller
                     channelResponse.Status = false;
                     channelResponse.Message = "Channel Key cannot be empty or whitespace.";
                     _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
-                    return StatusCode(412, channelResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
                 }
             }
             catch (Exception ex)
@@ -569,7 +569,7 @@ namespace Nvg.API.SMS.Controller
                     channelResponse.Status = false;
                     channelResponse.Message = "Channel Key cannot be empty or whitespace.";
                     _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
-                    return StatusCode(412, channelResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
                 }
             }
             catch (Exception ex)
@@ -611,7 +611,7 @@ namespace Nvg.API.SMS.Controller
                     channelResponse.Status = false;
                     channelResponse.Message = "Channel ID cannot be empty or whitespace.";
                     _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
-                    return StatusCode(412, channelResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
                 }
             }
             catch (Exception ex)
@@ -717,7 +717,7 @@ namespace Nvg.API.SMS.Controller
                     templateResponse.Status = false;
                     templateResponse.Message = "Name and Message Template cannot be empty or whitespace.";
                     _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
-                    return StatusCode(412, templateResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, templateResponse);
                 }
             }
             catch (Exception ex)
@@ -759,7 +759,7 @@ namespace Nvg.API.SMS.Controller
                     templateResponse.Status = false;
                     templateResponse.Message = "Name and Message Template cannot be empty or whitespace.";
                     _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
-                    return StatusCode(412, templateResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, templateResponse);
                 }
             }
             catch (Exception ex)
@@ -801,7 +801,7 @@ namespace Nvg.API.SMS.Controller
                     templateResponse.Status = false;
                     templateResponse.Message = "Template ID cannot be empty or whitespace.";
                     _logger.LogError("Status: " + templateResponse.Status + ", Message:" + templateResponse.Message);
-                    return StatusCode(412, templateResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, templateResponse);
                 }
             }
             catch (Exception ex)
@@ -867,13 +867,13 @@ namespace Nvg.API.SMS.Controller
                 else
                 {
                     _logger.LogError("Status: " + smsResponse.Status + ", Message:" + smsResponse.Message);
-                    return StatusCode(412, smsResponse);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, smsResponse);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError("Internal server error: Error occurred while sending SMS: " + ex.Message);
-                return StatusCode(500, ex);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
             }
         }
 
