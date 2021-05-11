@@ -184,13 +184,7 @@ namespace Nvg.SMSService.Data.SMSProvider
                                    join sp in _context.SMSPools on p.SMSPoolID equals sp.ID
                                    where sp.Name.ToLower().Equals(poolName.ToLower()) && (string.IsNullOrEmpty(providerName) || p.Name.ToLower().Equals(providerName.ToLower()))
                                    select p).ToList();
-                //if (smsProviders.Count != 0)
-                //{
-                //    //if(!string.IsNullOrEmpty(providerName))
-                //    //    smsProviders = smsProviders.Where(s => s.Name.ToLower().Equals(providerName.ToLower())).ToList();
-                //    response.Status = true;
-                //}
-                //else
+                
                 response.Status = true;
                 response.Message = $"Retrieved {smsProviders.Count} SMS providers data for pool {poolName}";
                 response.Result = smsProviders;

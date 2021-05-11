@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Nvg.SMSBackgroundTask.SMSProvider
 {
+    /// <summary>
+    /// Kaleyra SMS Provider.
+    /// </summary>
     public class KaleyraProvider : ISMSProvider
     {
         private readonly SMSProviderConnectionString _smsProviderCS;

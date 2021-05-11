@@ -85,6 +85,11 @@ namespace Nvg.SMSService.SMS
         /// <returns><see cref="SMSResponseDto{T}"/></returns>
         SMSResponseDto<List<SMSChannelDto>> GetSMSChannelsByPool(string poolID);
 
+        /// <summary>
+        /// Gets all the SMS Templates by channel ID.
+        /// </summary>
+        /// <param name="channelID">Channel ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
         SMSResponseDto<List<SMSTemplateDto>> GetSMSTemplatesByChannelID(string channelID);
 
         /// <summary>

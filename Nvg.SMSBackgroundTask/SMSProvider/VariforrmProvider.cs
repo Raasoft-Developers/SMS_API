@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Nvg.SMSBackgroundTask.SMSProvider
 {
+    /// <summary>
+    /// Variforrm SMS Provider.
+    /// </summary>
     public class VariforrmProvider : ISMSProvider
     {
         private readonly SMSProviderConnectionString _smsProviderCS;

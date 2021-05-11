@@ -139,11 +139,6 @@ namespace Nvg.SMSService.Data.SMSChannel
             }
         }
 
-        /// <summary>
-        /// Gets the Channel by Channel Key.
-        /// </summary>
-        /// <param name="channelID">Channel Key</param>
-        /// <returns><see cref="SMSResponseDto{SMSChannelTable}"/> model</returns>
         public SMSResponseDto<SMSChannelTable> GetSMSChannelByID(string channelID)
         {
             var response = new SMSResponseDto<SMSChannelTable>();
