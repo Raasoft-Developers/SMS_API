@@ -25,15 +25,14 @@ namespace Nvg.SMSBackgroundTask.SMSProvider
         {
             string responseMsg = "NOT SENT";
 
-            var url = _smsProviderCS.Fields["url"]; //_smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("url")).Value;
+            var url = _smsProviderCS.Fields["url"];
             _logger.LogDebug("URL: " + url);
-            var apiKey = _smsProviderCS.Fields["key"]; //_smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("key")).Value;
+            var apiKey = _smsProviderCS.Fields["key"];
             _logger.LogDebug("APIKey: "+apiKey);
             // If external app didnt send the sender value and template also have sender as null, then get it from provider conn string.
             if (string.IsNullOrEmpty(sender))
-                sender = _smsProviderCS.Fields["sender"]; // _smsProviderCS.Fields.FirstOrDefault(k => k.Key.Contains("sender")).Value;
+                sender = _smsProviderCS.Fields["sender"];
             _logger.LogDebug("sender: " + sender);
-            //var url = _smsProviderCS.ApiUrl;
             var parameters = new Dictionary<string, string> {
                 { "sender", sender },
                 { "to", recipients },
