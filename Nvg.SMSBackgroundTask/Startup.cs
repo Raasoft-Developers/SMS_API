@@ -1,20 +1,15 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using EventBus.Abstractions;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
-using HealthChecks.UI.Client;
-using RabbitMQ.Client;
-using EventBus.Abstractions;
-using EventBus.Subscription;
 using Nvg.SMSBackgroundTask.AutofacModules;
 using Nvg.SMSBackgroundTask.EventHandler;
 using Nvg.SMSBackgroundTask.Events;
 using Nvg.SMSBackgroundTask.Extensions;
 using Nvg.SMSBackgroundTask.Models;
+using System;
 
 namespace Nvg.SMSBackgroundTask
 {

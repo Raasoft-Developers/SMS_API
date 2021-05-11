@@ -342,3 +342,4 @@ healthchecksdb
 /docker-compose.yml
 /docker-compose.override.yml
 /docker-compose.dcproj
+/Nvg.API.SMS/Logs

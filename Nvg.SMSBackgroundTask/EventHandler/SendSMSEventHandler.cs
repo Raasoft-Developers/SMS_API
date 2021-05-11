@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EventBus.Abstractions;
+﻿using EventBus.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Nvg.SMSBackgroundTask.Events;
-using Nvg.SMSService;
-using Nvg.SMSBackgroundTask.Models;
 using Nvg.SMSBackgroundTask.Extensions;
-using Nvg.SMSService.Data.Models;
+using Nvg.SMSBackgroundTask.Models;
 using Nvg.SMSBackgroundTask.SMSProvider;
-using Nvg.SMSService.SMSQuota;
+using Nvg.SMSService;
+using Nvg.SMSService.Data.Models;
 using Nvg.SMSService.SMSProvider;
+using Nvg.SMSService.SMSQuota;
+using System;
+using System.Threading.Tasks;
 
 namespace Nvg.SMSBackgroundTask.EventHandler
 {

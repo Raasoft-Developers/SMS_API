@@ -1,8 +1,5 @@
-﻿using System;
+﻿using EventBus.Events;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EventBus.Events;
 
 namespace Nvg.SMSBackgroundTask.Events
 {

@@ -1,16 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Serilog;
-using Microsoft.AspNetCore;
+using Microsoft.Extensions.Hosting;
 using Nvg.SMSBackgroundTask.Extensions;
+using Serilog;
+using System;
+using System.IO;
 
 namespace Nvg.SMSBackgroundTask
 {

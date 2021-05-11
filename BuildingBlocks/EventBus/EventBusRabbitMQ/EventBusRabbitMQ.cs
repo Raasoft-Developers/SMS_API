@@ -1,10 +1,10 @@
 ﻿using Autofac;
-using EventBus;
 using EventBus.Abstractions;
 using EventBus.Events;
+using EventBus.Extensions;
 using EventBus.Subscription;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Polly;
 using Polly.Retry;
 using RabbitMQ.Client;
@@ -13,12 +13,10 @@ using RabbitMQ.Client.Exceptions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.Extensions.Logging;
-using EventBus.Extensions;
 
 namespace EventBusRabbitMQ
 {

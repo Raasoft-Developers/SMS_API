@@ -4,8 +4,6 @@ using Nvg.SMSService.Data.SMSChannel;
 using Nvg.SMSService.Data.SMSQuota;
 using Nvg.SMSService.DTOS;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nvg.SMSService.SMSQuota
 {

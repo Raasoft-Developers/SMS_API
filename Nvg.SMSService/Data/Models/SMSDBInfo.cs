@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Nvg.SMSService.Data.Models
+﻿namespace Nvg.SMSService.Data.Models
 {
     public class SMSDBInfo
     {

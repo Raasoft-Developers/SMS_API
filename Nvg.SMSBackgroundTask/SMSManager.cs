@@ -6,8 +6,6 @@ using Nvg.SMSService.DTOS;
 using Nvg.SMSService.SMSHistory;
 using Nvg.SMSService.SMSQuota;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nvg.SMSBackgroundTask
 {

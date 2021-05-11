@@ -1,18 +1,14 @@
 ﻿using Autofac;
-using Microsoft.Azure.ServiceBus;
-using EventBus;
-using EventBus.Events;
-using EventBus.Subscription;
 using EventBus.Abstractions;
+using EventBus.Subscription;
+using EventBusRabbitMQ;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Nvg.SMSBackgroundTask.SMSProvider;
+using Nvg.SMSService.SMSProvider;
 using RabbitMQ.Client;
 using Serilog;
-using Nvg.SMSBackgroundTask.SMSProvider;
-using EventBusRabbitMQ;
-using Nvg.SMSService.SMSProvider;
 
 namespace Nvg.SMSBackgroundTask.Extensions
 {

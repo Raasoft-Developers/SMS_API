@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nvg.SMSService.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nvg.SMSService.Data
 {

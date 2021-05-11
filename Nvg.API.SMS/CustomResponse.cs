@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Nvg.API.SMS
+﻿namespace Nvg.API.SMS
 {
     public class CustomResponse<T>
     {

@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nvg.SMSService.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nvg.SMSService.Data
 {
@@ -31,7 +28,15 @@ namespace Nvg.SMSService.Data
                 .HasColumnName("Key");
 
             modelBuilder.Entity<SMSChannelTable>()
-                .HasIndex(x => x.Key).IsUnique(true);
+               .HasIndex(x => x.Key).IsUnique(true);
+
+            modelBuilder.Entity<SMSProviderSettingsTable>()
+               .HasIndex(p => new { p.Name, p.SMSPoolID })
+               .IsUnique(true);
+
+            modelBuilder.Entity<SMSTemplateTable>()
+               .HasIndex(p => new { p.Name, p.SMSPoolID })
+               .IsUnique(true);
         }
     }
 }

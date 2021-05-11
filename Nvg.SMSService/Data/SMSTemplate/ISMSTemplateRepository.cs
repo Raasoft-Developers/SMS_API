@@ -1,9 +1,6 @@
 ﻿using Nvg.SMSService.Data.Entities;
 using Nvg.SMSService.DTOS;
-using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Nvg.SMSService.Data.SMSTemplate
 {

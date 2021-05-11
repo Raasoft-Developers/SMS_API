@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using EventBus.Abstractions;
+using System.Reflection;
 
 namespace Nvg.API.SMS.AutofacModules
 {

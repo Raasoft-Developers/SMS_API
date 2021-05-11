@@ -1,22 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Autofac.Extensions.DependencyInjection;
-using Serilog;
-using System.Net;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Newtonsoft.Json;
-using Serilog.Events;
 using Nvg.API.SMS.Extensions;
 using Nvg.SMSService.Data;
-using Serilog.Sinks.SystemConsole.Themes;
+using Serilog;
+using System;
+using System.IO;
 
 namespace Nvg.API.SMS
 {
@@ -108,6 +100,12 @@ namespace Nvg.API.SMS
                 .WriteTo.Console()
                 .WriteTo.Seq(string.IsNullOrWhiteSpace(seqServerUrl) ? "http://seq" : seqServerUrl)
                 .WriteTo.Http(string.IsNullOrWhiteSpace(logstashUrl) ? "http://logstash:8080" : logstashUrl)
+                    .WriteTo.File(
+                        Directory.GetCurrentDirectory()+"\\Logs\\SMSLog.txt",
+                        fileSizeLimitBytes: 1_000_000,
+                        rollOnFileSizeLimit: true,
+                        shared: true,
+                        flushToDiskInterval: TimeSpan.FromSeconds(1))
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
         }

@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
-using System.Linq;
 using Nvg.SMSService.Data.Entities;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Nvg.SMSService.Data
 {

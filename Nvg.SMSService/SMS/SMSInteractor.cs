@@ -1,14 +1,11 @@
-﻿using EventBus.Abstractions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Nvg.SMSService.DTOS;
-using Nvg.SMSService.Events;
 using Nvg.SMSService.SMSChannel;
 using Nvg.SMSService.SMSHistory;
 using Nvg.SMSService.SMSPool;
 using Nvg.SMSService.SMSProvider;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Nvg.SMSService.SMS
 {

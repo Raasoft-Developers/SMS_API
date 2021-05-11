@@ -9,9 +9,6 @@ using Nvg.SMSService;
 using Nvg.SMSService.Data.Models;
 using RabbitMQ.Client;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Nvg.API.SMS.Helpers
 {

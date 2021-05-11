@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Nvg.SMSBackgroundTask.Models
+﻿namespace Nvg.SMSBackgroundTask.Models
 {
     public class BackgroundTaskSettings
     {

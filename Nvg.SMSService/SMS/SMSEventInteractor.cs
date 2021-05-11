@@ -3,8 +3,6 @@ using Microsoft.Extensions.Logging;
 using Nvg.SMSService.DTOS;
 using Nvg.SMSService.Events;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Nvg.SMSService.SMS
 {

@@ -1,7 +1,5 @@
 ﻿using Nvg.SMSService;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Nvg.SMSBackgroundTask.Models
 {
