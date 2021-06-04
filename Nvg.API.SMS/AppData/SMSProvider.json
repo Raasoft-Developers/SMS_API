@@ -1,10 +1,9 @@
 [
   {
-    "id": "default-provider",
-    "name": "MasterSMSProvider",
+    "name": "default-provider",
     "type": "variforrm",
     "configuration": "Provider=Variforrm;Url=http://alerts.variforrm.in/api;Key=24feddee37df703b24bcfdb0761dae6455cb3bbf;Sender=NYLTEC;method=sms.normal;",
-    "smsPoolID": "fa32bf59-4832-4d10-b7e2-80f46f90520e",
+    "smsPoolName": "default-pool",
     "isDefault": true
   }
 ]

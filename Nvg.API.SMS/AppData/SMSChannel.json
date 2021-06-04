@@ -1,8 +1,7 @@
 [
   {
-    "id": "default-channel",
-    "name": "MasterSMSChannel",
-    "smsProviderID": "default-provider",
-    "smsPoolID": "fa32bf59-4832-4d10-b7e2-80f46f90520e"
+    "key": "default-channel",
+    "smsProviderName": "default-provider",
+    "smsPoolName": "default-pool"
   }
 ]

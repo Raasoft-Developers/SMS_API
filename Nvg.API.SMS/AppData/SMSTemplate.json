@@ -1,10 +1,9 @@
 [
   {
-    "id": "default-template",
-    "name": "MasterSMSTemplate",
+    "name": "default-template",
     "variant": "",
     "sender": "",
-    "smsPoolID": "fa32bf59-4832-4d10-b7e2-80f46f90520e",
+    "smsPoolName": "default-pool",
     "messageTemplate": "Hi {User}, We have received your request. {Content}."
   }
 ]
