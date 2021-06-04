@@ -15,7 +15,7 @@ namespace Nvg.API.SMS.Controller
         private readonly ISMSInteractor _smsInteractor;
         private readonly ILogger<SmsController> _logger;
         private readonly IMapper _mapper;
-        private readonly string defaultChannelKey = "MasterSMSChannel";
+        private readonly string defaultChannelKey = "default-channel";
 
         public SmsController(ISMSInteractor smsInteractor, ILogger<SmsController> logger, IMapper mapper)
         {

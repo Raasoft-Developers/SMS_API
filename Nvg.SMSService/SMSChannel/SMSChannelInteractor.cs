@@ -13,7 +13,7 @@ namespace Nvg.SMSService.SMSChannel
         private readonly IMapper _mapper;
         private readonly ISMSProviderRepository _smsProviderRepository;
         private readonly ISMSPoolRepository _smsPoolRepository;
-        private readonly string defaultSMSProvider = "MasterSMSProvider";
+        private readonly string defaultSMSProvider = "default-provider";
 
         public SMSChannelInteractor(IMapper mapper, ISMSChannelRepository smsChannelRepository, ISMSProviderRepository smsProviderRepository, 
             ISMSPoolRepository smsPoolRepository)
