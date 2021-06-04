@@ -79,7 +79,7 @@ namespace Nvg.SMSService
                     });
                     break;
             }
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            //services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using AutoMapper;
 using EventBus.Abstractions;
 using EventBus.Subscription;
 using EventBusRabbitMQ;
@@ -6,7 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nvg.SMSService;
+using Nvg.SMSService.Data.Entities;
 using Nvg.SMSService.Data.Models;
+using Nvg.SMSService.DTOS;
 using RabbitMQ.Client;
 using System;
 
@@ -59,6 +62,19 @@ namespace Nvg.API.SMS.Helpers
                 return new EventBusRabbitMQ.EventBusRabbitMQ(rabbitMQPersistentConnection, logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
             });
             services.AddSingleton<ISubscriptionManager, SubscriptionManager>();
+        }
+
+        public static void ConfigureAutoMapper(this IServiceCollection services)
+        {
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            var notificationConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<SMSHistoryProfile>();
+                cfg.CreateMap<SMSHistoryTable, SMSHistoryDto>();
+            });
+            IMapper notificationMapper = new Mapper(notificationConfig);
+            notificationMapper.Map<SMSHistoryTable, SMSHistoryDto>(new SMSHistoryTable());
         }
     }
 }

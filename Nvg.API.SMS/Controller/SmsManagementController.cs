@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Nvg.API.SMS.Models;
 using Nvg.SMSService.DTOS;
 using Nvg.SMSService.SMS;
 using System;
@@ -17,12 +19,14 @@ namespace Nvg.API.SMS.Controller
     {
         private readonly ISMSManagementInteractor _smsManagementInteractor;
         private IConfiguration _config;
+        private readonly IMapper _mapper;
         private readonly ILogger<SmsManagementController> _logger;
 
-        public SmsManagementController(ISMSManagementInteractor smsManagementInteractor, ILogger<SmsManagementController> logger, IConfiguration config)
+        public SmsManagementController(ISMSManagementInteractor smsManagementInteractor, ILogger<SmsManagementController> logger, IConfiguration config, IMapper mapper)
         {
             _smsManagementInteractor = smsManagementInteractor;
             _config = config;
+            _mapper = mapper;
             _logger = logger;
         }
 
@@ -89,10 +93,10 @@ namespace Nvg.API.SMS.Controller
         /// <summary>
         /// API to add the SMS Pool data.
         /// </summary>
-        /// <param name="poolInput"><see cref="SMSPoolDto"/></param>
+        /// <param name="poolInput"><see cref="PoolInput"/></param>
         /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
-        public ActionResult AddSMSPool(SMSPoolDto poolInput)
+        public ActionResult AddSMSPool(PoolInput poolInput)
         {
             _logger.LogInformation("AddSMSPool action method.");
             _logger.LogInformation($"SMSPoolName: {poolInput.Name}.");
@@ -101,7 +105,8 @@ namespace Nvg.API.SMS.Controller
             {
                 if (!string.IsNullOrWhiteSpace(poolInput.Name))
                 {
-                    poolResponse = _smsManagementInteractor.AddSMSPool(poolInput);
+                    var mappedInput = _mapper.Map<SMSPoolDto>(poolInput);
+                    poolResponse = _smsManagementInteractor.AddSMSPool(mappedInput);
                     if (poolResponse.Status)
                     {
                         _logger.LogDebug("Status: " + poolResponse.Status + ", Message:" + poolResponse.Message);
@@ -131,10 +136,10 @@ namespace Nvg.API.SMS.Controller
         /// <summary>
         /// API to Update the SMS Pool data.
         /// </summary>
-        /// <param name="poolInput"><see cref="SMSPoolDto"/></param>
+        /// <param name="poolInput"><see cref="PoolMgmtInput"/></param>
         /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
-        public ActionResult UpdateSMSPool(SMSPoolDto poolInput)
+        public ActionResult UpdateSMSPool(PoolMgmtInput poolInput)
         {
             _logger.LogInformation("UpdateSMSPool action method.");
             SMSResponseDto<SMSPoolDto> poolResponse = new SMSResponseDto<SMSPoolDto>();
@@ -142,7 +147,8 @@ namespace Nvg.API.SMS.Controller
             {
                 if (!string.IsNullOrWhiteSpace(poolInput.Name))
                 {
-                    poolResponse = _smsManagementInteractor.UpdateSMSPool(poolInput);
+                    var mappedInput = _mapper.Map<SMSPoolDto>(poolInput);
+                    poolResponse = _smsManagementInteractor.UpdateSMSPool(mappedInput);
                     if (poolResponse.Status)
                     {
                         _logger.LogDebug("Status: " + poolResponse.Status + ", " + poolResponse.Message);
@@ -278,10 +284,10 @@ namespace Nvg.API.SMS.Controller
         /// <summary>
         /// API to add SMS Provider data.
         /// </summary>
-        /// <param name="providerInput"><see cref="SMSProviderSettingsDto"/></param>
+        /// <param name="providerInput"><see cref="ProviderInput"/></param>
         /// <returns><see cref="SMSResponseDto{T}"/></returns>
         [HttpPost]
-        public ActionResult AddSMSProvider(SMSProviderSettingsDto providerInput)
+        public ActionResult AddSMSProvider(ProviderInput providerInput)
         {
             _logger.LogInformation("AddSMSProvider action method.");
             _logger.LogDebug("Pool Name: " + providerInput.SMSPoolName);
@@ -290,7 +296,8 @@ namespace Nvg.API.SMS.Controller
             {
                 if (!string.IsNullOrWhiteSpace(providerInput.Name) && !string.IsNullOrWhiteSpace(providerInput.Type) && !string.IsNullOrWhiteSpace(providerInput.Configuration))
                 {
-                    providerResponse = _smsManagementInteractor.AddSMSProvider(providerInput);
+                    var mappedInput = _mapper.Map<SMSProviderSettingsDto>(providerInput);
+                    providerResponse = _smsManagementInteractor.AddSMSProvider(mappedInput);
                     if (providerResponse.Status)
                     {
                         _logger.LogDebug("Status: " + providerResponse.Status + ", " + providerResponse.Message);
@@ -320,10 +327,10 @@ namespace Nvg.API.SMS.Controller
         /// <summary>
         /// API to update the SMS Provider data.
         /// </summary>
-        /// <param name="providerInput"><see cref="SMSProviderSettingsDto"/></param>
+        /// <param name="providerInput"><see cref="ProviderMgmtInput"/></param>
         /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
-        public ActionResult UpdateSMSProvider(SMSProviderSettingsDto providerInput)
+        public ActionResult UpdateSMSProvider(ProviderMgmtInput providerInput)
         {
             _logger.LogInformation("UpdateSMSProvider action method.");
             _logger.LogDebug("Pool Name: " + providerInput.SMSPoolName);
@@ -332,7 +339,8 @@ namespace Nvg.API.SMS.Controller
             {
                 if (!string.IsNullOrWhiteSpace(providerInput.Name) && !string.IsNullOrWhiteSpace(providerInput.Type) && !string.IsNullOrWhiteSpace(providerInput.Configuration))
                 {
-                    providerResponse = _smsManagementInteractor.UpdateSMSProvider(providerInput);
+                    var mappedInput = _mapper.Map<SMSProviderSettingsDto>(providerInput);
+                    providerResponse = _smsManagementInteractor.UpdateSMSProvider(mappedInput);
                     if (providerResponse.Status)
                     {
                         _logger.LogDebug("Status: " + providerResponse.Status + ", " + providerResponse.Message);
@@ -498,10 +506,10 @@ namespace Nvg.API.SMS.Controller
         /// <summary>
         /// API to add the SMS Channel data.
         /// </summary>
-        /// <param name="channelInput"><see cref="SMSChannelDto"/></param>
+        /// <param name="channelInput"><see cref="ChannelInput"/></param>
         /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
-        public ActionResult AddSMSChannel(SMSChannelDto channelInput)
+        public ActionResult AddSMSChannel(ChannelInput channelInput)
         {
             _logger.LogInformation("AddSMSChannel action method.");
             _logger.LogDebug("Pool Name: " + channelInput.SMSPoolName);
@@ -510,7 +518,8 @@ namespace Nvg.API.SMS.Controller
             {
                 if (!string.IsNullOrWhiteSpace(channelInput.Key))
                 {
-                    channelResponse = _smsManagementInteractor.AddSMSChannel(channelInput);
+                    var mappedInput = _mapper.Map<SMSChannelDto>(channelInput);
+                    channelResponse = _smsManagementInteractor.AddSMSChannel(mappedInput);
                     if (channelResponse.Status)
                     {
                         _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
@@ -540,10 +549,10 @@ namespace Nvg.API.SMS.Controller
         /// <summary>
         /// API to update the SMS Channel data.
         /// </summary>
-        /// <param name="channelInput"><see cref="SMSChannelDto"/></param>
+        /// <param name="channelInput"><see cref="ChannelMgmtInput"/></param>
         /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
-        public ActionResult UpdateSMSChannel(SMSChannelDto channelInput)
+        public ActionResult UpdateSMSChannel(ChannelMgmtInput channelInput)
         {
             _logger.LogInformation("UpdateSMSChannel action method.");
             _logger.LogDebug("Pool Name: " + channelInput.SMSPoolName);
@@ -552,7 +561,8 @@ namespace Nvg.API.SMS.Controller
             {
                 if (!string.IsNullOrWhiteSpace(channelInput.Key))
                 {
-                    channelResponse = _smsManagementInteractor.UpdateSMSChannel(channelInput);
+                    var mappedInput = _mapper.Map<SMSChannelDto>(channelInput);
+                    channelResponse = _smsManagementInteractor.UpdateSMSChannel(mappedInput);
                     if (channelResponse.Status)
                     {
                         _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
@@ -688,10 +698,10 @@ namespace Nvg.API.SMS.Controller
         /// <summary>
         /// API to add the SMS Template data.
         /// </summary>
-        /// <param name="templateInput"><see cref="SMSTemplateDto"/></param>
+        /// <param name="templateInput"><see cref="TemplateInput"/></param>
         /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
-        public ActionResult AddSMSTemplate(SMSTemplateDto templateInput)
+        public ActionResult AddSMSTemplate(TemplateInput templateInput)
         {
             _logger.LogInformation("AddSMSTemplate action method.");
             _logger.LogDebug("Pool ID: " + templateInput.SMSPoolID);
@@ -700,7 +710,8 @@ namespace Nvg.API.SMS.Controller
             {
                 if (!string.IsNullOrWhiteSpace(templateInput.MessageTemplate) && !string.IsNullOrWhiteSpace(templateInput.Name))
                 {
-                    templateResponse = _smsManagementInteractor.AddSMSTemplate(templateInput);
+                    var mappedInput = _mapper.Map<SMSTemplateDto>(templateInput);
+                    templateResponse = _smsManagementInteractor.AddSMSTemplate(mappedInput);
                     if (templateResponse.Status)
                     {
                         _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
@@ -730,10 +741,10 @@ namespace Nvg.API.SMS.Controller
         /// <summary>
         /// API to update the SMS Template data.
         /// </summary>
-        /// <param name="templateInput"><see cref="SMSTemplateDto"/></param>
+        /// <param name="templateInput"><see cref="TemplateMgmtInput"/></param>
         /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
-        public ActionResult UpdateSMSTemplate(SMSTemplateDto templateInput)
+        public ActionResult UpdateSMSTemplate(TemplateMgmtInput templateInput)
         {
             _logger.LogInformation("UpdateSMSTemplate action method.");
             _logger.LogDebug("Pool ID: " + templateInput.SMSPoolID);
@@ -742,7 +753,8 @@ namespace Nvg.API.SMS.Controller
             {
                 if (!string.IsNullOrWhiteSpace(templateInput.MessageTemplate) && !string.IsNullOrWhiteSpace(templateInput.Name))
                 {
-                    templateResponse = _smsManagementInteractor.UpdateSMSTemplate(templateInput);
+                    var mappedInput = _mapper.Map<SMSTemplateDto>(templateInput);
+                    templateResponse = _smsManagementInteractor.UpdateSMSTemplate(mappedInput);
                     if (templateResponse.Status)
                     {
                         _logger.LogDebug("Status: " + templateResponse.Status + ", " + templateResponse.Message);
@@ -849,16 +861,17 @@ namespace Nvg.API.SMS.Controller
         /// <summary>
         /// API to send SMS.
         /// </summary>
-        /// <param name="smsInputs"><see cref="SMSDto"/></param>
+        /// <param name="smsInputs"><see cref="SMSInput"/></param>
         /// <returns><see cref="SMSResponseDto{T}"></see></returns>
         [HttpPost]
-        public ActionResult SendSMS(SMSDto smsInputs)
+        public ActionResult SendSMS(SMSInput smsInputs)
         {
             _logger.LogInformation("SendSMS action method.");
             _logger.LogInformation($"ChannelKey: {smsInputs.ChannelKey}, Tag: {smsInputs.Tag},TemplateName: {smsInputs.TemplateName}, Recipients: {smsInputs.Recipients}");
             try
             {
-                var smsResponse = _smsManagementInteractor.SendSMS(smsInputs);
+                var mappedInput = _mapper.Map<SMSDto>(smsInputs);
+                var smsResponse = _smsManagementInteractor.SendSMS(mappedInput);
                 if (smsResponse.Status)
                 {
                     _logger.LogDebug("Status: " + smsResponse.Status + ", Message:" + smsResponse.Message);
