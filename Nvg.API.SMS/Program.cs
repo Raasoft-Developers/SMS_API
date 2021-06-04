@@ -100,12 +100,12 @@ namespace Nvg.API.SMS
                 .WriteTo.Console()
                 .WriteTo.Seq(string.IsNullOrWhiteSpace(seqServerUrl) ? "http://seq" : seqServerUrl)
                 .WriteTo.Http(string.IsNullOrWhiteSpace(logstashUrl) ? "http://logstash:8080" : logstashUrl)
-                    .WriteTo.File(
-                        Directory.GetCurrentDirectory()+"\\Logs\\SMSLog.txt",
-                        fileSizeLimitBytes: 1_000_000,
-                        rollOnFileSizeLimit: true,
-                        shared: true,
-                        flushToDiskInterval: TimeSpan.FromSeconds(1))
+                    //.WriteTo.File(
+                    //    Directory.GetCurrentDirectory()+"\\Logs\\SMSLog.txt",
+                    //    fileSizeLimitBytes: 1_000_000,
+                    //    rollOnFileSizeLimit: true,
+                    //    shared: true,
+                    //    flushToDiskInterval: TimeSpan.FromSeconds(1))
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
         }
