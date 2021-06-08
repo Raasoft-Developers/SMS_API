@@ -64,17 +64,17 @@ namespace Nvg.API.SMS.Helpers
             services.AddSingleton<ISubscriptionManager, SubscriptionManager>();
         }
 
-        public static void ConfigureAutoMapper(this IServiceCollection services)
-        {
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        //public static void ConfigureAutoMapper(this IServiceCollection services)
+        //{
+        //    services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            var notificationConfig = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<SMSHistoryProfile>();
-                cfg.CreateMap<SMSHistoryTable, SMSHistoryDto>();
-            });
-            IMapper notificationMapper = new Mapper(notificationConfig);
-            notificationMapper.Map<SMSHistoryTable, SMSHistoryDto>(new SMSHistoryTable());
-        }
+        //    var notificationConfig = new MapperConfiguration(cfg =>
+        //    {
+        //        cfg.AddProfile<SMSHistoryProfile>();
+        //        cfg.CreateMap<SMSHistoryTable, SMSHistoryDto>();
+        //    });
+        //    IMapper notificationMapper = new Mapper(notificationConfig);
+        //    notificationMapper.Map<SMSHistoryTable, SMSHistoryDto>(new SMSHistoryTable());
+        //}
     }
 }

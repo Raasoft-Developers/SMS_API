@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Nvg.SMSService.Data;
+using Nvg.SMSService.Data.Entities;
 using Nvg.SMSService.Data.Models;
 using Nvg.SMSService.Data.SMSChannel;
 using Nvg.SMSService.Data.SMSHistory;
@@ -9,12 +10,14 @@ using Nvg.SMSService.Data.SMSPool;
 using Nvg.SMSService.Data.SMSProvider;
 using Nvg.SMSService.Data.SMSQuota;
 using Nvg.SMSService.Data.SMSTemplate;
+using Nvg.SMSService.DTOS;
 using Nvg.SMSService.SMS;
 using Nvg.SMSService.SMSChannel;
 using Nvg.SMSService.SMSHistory;
 using Nvg.SMSService.SMSPool;
 using Nvg.SMSService.SMSProvider;
 using Nvg.SMSService.SMSQuota;
+using System;
 using System.Reflection;
 
 namespace Nvg.SMSService
@@ -80,6 +83,15 @@ namespace Nvg.SMSService
                     break;
             }
             //services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            var notificationConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<SMSHistoryProfile>();
+                cfg.CreateMap<SMSHistoryTable, SMSHistoryDto>();
+            });
+            IMapper notificationMapper = new Mapper(notificationConfig);
+            notificationMapper.Map<SMSHistoryTable, SMSHistoryDto>(new SMSHistoryTable());
         }
 
     }

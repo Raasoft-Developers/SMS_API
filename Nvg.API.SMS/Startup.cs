@@ -91,7 +91,7 @@ namespace Nvg.API.SMS
             services.AddControllers();
             ConfigureIdentityServer(services);
             services.RegisterEventBus(Configuration);
-            services.ConfigureAutoMapper();
+            //services.ConfigureAutoMapper();
             services.AddSMSService(Program.AppName, Configuration);
             services.AddCors(options =>
             {
