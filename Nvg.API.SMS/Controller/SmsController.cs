@@ -5,6 +5,7 @@ using Nvg.API.SMS.Models;
 using Nvg.SMSService.DTOS;
 using Nvg.SMSService.SMS;
 using System;
+using System.Collections.Generic;
 
 namespace Nvg.API.SMS.Controller
 {
@@ -412,6 +413,51 @@ namespace Nvg.API.SMS.Controller
             catch (Exception ex)
             {
                 _logger.LogError("Internal server error: Error occurred while getting SMS histories: " + ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
+        /// <summary>
+        /// API to get the SMS Histories data by date range.
+        /// </summary>
+        /// <param name="historyInput"><see cref="HistoryInput"/> model.</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
+        [HttpPost]
+        public ActionResult GetSMSHistoriesByDateRange(HistoryInput historyInput)
+        {
+            _logger.LogInformation("GetSMSHistoriesByDateRange action method.");
+            _logger.LogInformation($"ChannelKey: {historyInput.ChannelKey}, Tag: {historyInput.Tag}, FromDate: {historyInput.FromDate}, ToDate: {historyInput.ToDate}");
+            SMSResponseDto<List<SMSHistoryDto>> historiesResponse = new SMSResponseDto<List<SMSHistoryDto>>();
+            try
+            {
+                if (string.IsNullOrEmpty(historyInput.ChannelKey))
+                {
+                    historiesResponse.Status = false;
+                    historiesResponse.Message = "Channel Key cannot be null or empty.";
+                    return StatusCode(412, historiesResponse);
+                }
+                if(string.IsNullOrEmpty(historyInput.FromDate) || string.IsNullOrEmpty(historyInput.ToDate))
+                {
+                    historiesResponse.Status = false;
+                    historiesResponse.Message = "From Date and To Date cannot be null or empty.";
+                    return StatusCode(412, historiesResponse);
+                }
+
+                historiesResponse = _smsInteractor.GetSMSHistoriesByDateRange(historyInput.ChannelKey, historyInput.Tag, historyInput.FromDate, historyInput.ToDate);
+                if (historiesResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + historiesResponse.Status + ", Message:" + historiesResponse.Message);
+                    return Ok(historiesResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + historiesResponse.Status + ", Message:" + historiesResponse.Message);
+                    return StatusCode(412, historiesResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while getting SMS histories by date range: " + ex.Message);
                 return StatusCode(500, ex);
             }
         }

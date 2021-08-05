@@ -282,5 +282,23 @@ namespace Nvg.SMSService.SMS
             }
         }
 
+        public SMSResponseDto<List<SMSHistoryDto>> GetSMSHistoriesByDateRange(string channelKey, string tag, string fromDate, string toDate)
+        {
+            _logger.LogInformation("GetSMSHistoriesByDateRange interactor method.");
+            SMSResponseDto<List<SMSHistoryDto>> poolResponse = new SMSResponseDto<List<SMSHistoryDto>>();
+            try
+            {
+                poolResponse = _smsHistoryInteractor.GetSMSHistoriesByDateRange(channelKey, tag, fromDate, toDate);
+                _logger.LogDebug("Status: " + poolResponse.Status + ",Message: " + poolResponse.Message);
+                return poolResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error occurred in SMS Interactor while getting SMS histories by date range: ", ex.Message);
+                poolResponse.Message = "Error occurred while getting SMS histories by date range: " + ex.Message;
+                poolResponse.Status = false;
+                return poolResponse;
+            }
+        }
     }
 }

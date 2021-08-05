@@ -19,5 +19,16 @@ namespace Nvg.SMSService.SMSHistory
         /// <param name="tag">Tag</param>
         /// <returns><see cref="SMSResponseDto{T}"/> model</returns>
         SMSResponseDto<List<SMSHistoryDto>> GetSMSHistoriesByTag(string channelKey, string tag);
+
+        /// <summary>
+        /// Gets the SMS History data by date range.
+        /// </summary>
+        /// <param name="channelKey">Channel Key</param>
+        /// <param name="tag">Tag</param>
+        /// <param name="fromDate">From date</param>
+        /// <param name="toDate">To Date</param>
+        /// <returns><see cref="SMSResponseDto{T}"/> model</returns>
+        SMSResponseDto<List<SMSHistoryDto>> GetSMSHistoriesByDateRange(string channelKey, string tag, string fromDate, string toDate);
+
     }
 }
