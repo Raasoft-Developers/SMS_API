@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Nvg.SMSBackgroundTask.SMSProvider
+namespace Nvg.SMSService.SMSServiceProviders
 {
     public interface ISMSProvider
     {

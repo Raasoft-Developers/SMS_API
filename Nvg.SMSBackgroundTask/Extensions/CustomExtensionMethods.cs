@@ -5,8 +5,9 @@ using EventBusRabbitMQ;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Nvg.SMSBackgroundTask.SMSProvider;
+//using Nvg.SMSBackgroundTask.SMSProvider;
 using Nvg.SMSService.SMSProvider;
+using Nvg.SMSService.SMSServiceProviders;
 using RabbitMQ.Client;
 using Serilog;
 
@@ -110,7 +111,7 @@ namespace Nvg.SMSBackgroundTask.Extensions
                 if(smsProviderConfiguration != null)
                 {
                     if (smsProviderConfiguration.Type.ToLowerInvariant() == "kaleyra")
-                        return new KaleyraProvider(cs, loggerKaleyra);
+                        return new KaleyraProvider(cs, loggerKaleyra) ;
                     else if (smsProviderConfiguration.Type.ToLowerInvariant() == "variforrm")
                     {
                         var loggerVariforrm = provider.GetRequiredService<ILogger<VariforrmProvider>>();

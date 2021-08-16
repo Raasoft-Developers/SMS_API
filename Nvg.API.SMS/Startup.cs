@@ -90,7 +90,7 @@ namespace Nvg.API.SMS
         {
             services.AddControllers();
             ConfigureIdentityServer(services);
-            services.RegisterEventBus(Configuration);
+            //services.RegisterEventBus(Configuration);
             //services.ConfigureAutoMapper();
             services.AddSMSService(Program.AppName, Configuration);
             services.AddCors(options =>
@@ -162,6 +162,13 @@ namespace Nvg.API.SMS
                 //c.DocumentFilter<OpenApiCustomDocumentFilter>();
                 c.OperationFilter<OpenApiCustomOperationFilter>();
             });
+
+            var isEventBusEnabled = Configuration.GetValue<bool>("SMSEventBusEnabled");
+            if (isEventBusEnabled)
+            {
+                services.RegisterEventBus(Configuration);
+            }
+
             var container = new ContainerBuilder();
             container.RegisterModule(new ApplicationModule());
             container.Populate(services);

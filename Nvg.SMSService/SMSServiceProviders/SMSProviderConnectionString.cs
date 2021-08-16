@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace Nvg.SMSBackgroundTask.SMSProvider
+namespace Nvg.SMSService.SMSServiceProviders
 {
     public class SMSProviderConnectionString
     {

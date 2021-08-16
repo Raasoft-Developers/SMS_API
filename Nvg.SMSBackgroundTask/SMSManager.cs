@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Nvg.SMSBackgroundTask.Models;
-using Nvg.SMSBackgroundTask.SMSProvider;
+//using Nvg.SMSBackgroundTask.SMSProvider;
 using Nvg.SMSService;
 using Nvg.SMSService.DTOS;
 using Nvg.SMSService.SMSHistory;
 using Nvg.SMSService.SMSQuota;
+using Nvg.SMSService.SMSServiceProviders;
 using System;
 
 namespace Nvg.SMSBackgroundTask

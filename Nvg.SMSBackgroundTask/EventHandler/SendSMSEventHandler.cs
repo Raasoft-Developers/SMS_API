@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 using Nvg.SMSBackgroundTask.Events;
 using Nvg.SMSBackgroundTask.Extensions;
 using Nvg.SMSBackgroundTask.Models;
-using Nvg.SMSBackgroundTask.SMSProvider;
 using Nvg.SMSService;
 using Nvg.SMSService.Data.Models;
 using Nvg.SMSService.SMSProvider;
 using Nvg.SMSService.SMSQuota;
+using Nvg.SMSService.SMSServiceProviders;
 using System;
 using System.Threading.Tasks;
 
