@@ -93,5 +93,12 @@ namespace Nvg.SMSService.SMS
         /// <param name="toDate">To Date</param>
         /// <returns><see cref="SMSResponseDto{T}"/></returns>
         SMSResponseDto<List<SMSHistoryDto>> GetSMSHistoriesByDateRange(string channelKey, string tag, string fromDate, string toDate);
+
+        /// <summary>
+        /// Gets the SMS Quota.
+        /// </summary>
+        /// <param name="channelKey">Channel Key</param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<SMSQuotaDto> GetSMSQuota(string channelKey);
     }
 }

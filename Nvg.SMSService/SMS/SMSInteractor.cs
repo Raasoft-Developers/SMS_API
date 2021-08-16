@@ -4,6 +4,7 @@ using Nvg.SMSService.SMSChannel;
 using Nvg.SMSService.SMSHistory;
 using Nvg.SMSService.SMSPool;
 using Nvg.SMSService.SMSProvider;
+using Nvg.SMSService.SMSQuota;
 using System;
 using System.Collections.Generic;
 
@@ -17,12 +18,13 @@ namespace Nvg.SMSService.SMS
         private readonly ISMSChannelInteractor _smsChannelInteractor;
         private readonly ISMSTemplateInteractor _smsTemplateInteractor;
         private readonly ISMSHistoryInteractor _smsHistoryInteractor;
+        private readonly ISMSQuotaInteractor _smsQuotaInteractor;
         private readonly ILogger<SMSInteractor> _logger;
 
         public SMSInteractor(ISMSEventInteractor smsEventInteractor,
             ISMSPoolInteractor smsPoolInteractor, ISMSProviderInteractor smsProviderInteractor,
             ISMSChannelInteractor smsChannelInteractor, ISMSTemplateInteractor smsTemplateInteractor,
-            ISMSHistoryInteractor smsHistoryInteractor, ILogger<SMSInteractor> logger)
+            ISMSHistoryInteractor smsHistoryInteractor, ISMSQuotaInteractor smsQuotaInteractor, ILogger<SMSInteractor> logger)
         {
             _smsEventInteractor = smsEventInteractor;
             _smsPoolInteractor = smsPoolInteractor;
@@ -30,6 +32,7 @@ namespace Nvg.SMSService.SMS
             _smsChannelInteractor = smsChannelInteractor;
             _smsTemplateInteractor = smsTemplateInteractor;
             _smsHistoryInteractor = smsHistoryInteractor;
+            _smsQuotaInteractor = smsQuotaInteractor;
             _logger = logger;
         }
 
@@ -192,7 +195,7 @@ namespace Nvg.SMSService.SMS
             try
             {
                 poolResponse = _smsProviderInteractor.GetSMSProvidersByPool(poolName, providerName);
-                _logger.LogDebug("Status: "+ poolResponse .Status+ ",Message: " + poolResponse.Message);
+                _logger.LogDebug("Status: " + poolResponse.Status + ",Message: " + poolResponse.Message);
                 return poolResponse;
             }
             catch (Exception ex)
@@ -299,6 +302,33 @@ namespace Nvg.SMSService.SMS
                 poolResponse.Status = false;
                 return poolResponse;
             }
+        }
+
+        public SMSResponseDto<SMSQuotaDto> GetSMSQuota(string channelKey)
+        {
+            _logger.LogInformation("GetSMSQuota interactor method.");
+            SMSResponseDto<SMSQuotaDto> quotaResponse = new SMSResponseDto<SMSQuotaDto>();
+            try
+            {
+                var channelExist = _smsChannelInteractor.CheckIfChannelExist(channelKey).Result;
+                if (!channelExist)
+                {
+                    quotaResponse.Status = channelExist;
+                    quotaResponse.Message = $"Invalid Channel key {channelKey}.";
+                }
+                else
+                {
+                    quotaResponse = _smsQuotaInteractor.GetSMSQuota(channelKey);
+                }
+                _logger.LogDebug("Status: " + quotaResponse.Status + ",Message: " + quotaResponse.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error occurred in SMS Interactor while getting SMS Quota: ", ex.Message);
+                quotaResponse.Message = "Error occurred while getting SMS Quota: " + ex.Message;
+                quotaResponse.Status = false;
+            }
+            return quotaResponse;
         }
     }
 }

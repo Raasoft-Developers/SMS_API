@@ -463,6 +463,45 @@ namespace Nvg.API.SMS.Controller
         }
 
         /// <summary>
+        /// API to get the SMS Quota.
+        /// </summary>
+        /// <param name="channelKey">Channel Key.</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
+        [HttpGet("{channelKey}")]
+        public ActionResult GetSMSQuota(string channelKey)
+        {
+            _logger.LogInformation("GetSMSQuota action method.");
+            _logger.LogInformation($"ChannelKey: {channelKey}");
+            SMSResponseDto<SMSQuotaDto> quotaResponse = new SMSResponseDto<SMSQuotaDto>();
+            try
+            {
+                if (string.IsNullOrEmpty(channelKey))
+                {
+                    quotaResponse.Status = false;
+                    quotaResponse.Message = "Channel Key cannot be null or empty.";
+                    return StatusCode(412, quotaResponse);
+                }
+
+                quotaResponse = _smsInteractor.GetSMSQuota(channelKey);
+                if (quotaResponse.Status)
+                {
+                    _logger.LogDebug("Status: " + quotaResponse.Status + ", Message:" + quotaResponse.Message);
+                    return Ok(quotaResponse);
+                }
+                else
+                {
+                    _logger.LogError("Status: " + quotaResponse.Status + ", Message:" + quotaResponse.Message);
+                    return StatusCode(412, quotaResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while getting SMS Quota: " + ex.Message);
+                return StatusCode(500, ex);
+            }
+        }
+
+        /// <summary>
         /// API to send SMS.
         /// </summary>
         /// <param name="smsInputs"><see cref="SMSInput"/></param>

@@ -14,5 +14,7 @@ namespace Nvg.SMSService.Data.Entities
         public int TotalConsumption { get; set; }
         public int MonthylConsumption { get; set; }
         public int MonthlyQuota { get; set; }
+        [NotMapped]
+        public string SMSChannelKey { get; set; }
     }
 }
