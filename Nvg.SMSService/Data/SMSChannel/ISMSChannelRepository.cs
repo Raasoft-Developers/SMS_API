@@ -25,7 +25,7 @@ namespace Nvg.SMSService.Data.SMSChannel
         /// </summary>
         /// <param name="channelKey">Channel Key</param>
         /// <returns><see cref="SMSResponseDto{T}"/> model</returns>
-        SMSResponseDto<SMSChannelTable> GetSMSChannelByKey(string channelKey);
+        SMSResponseDto<SMSChannelDto> GetSMSChannelByKey(string channelKey);
 
         /// <summary>
         /// Checks if the SMS channel exists in the database.
@@ -39,7 +39,7 @@ namespace Nvg.SMSService.Data.SMSChannel
         /// </summary>
         /// <param name="poolID">Pool ID</param>
         /// <returns><see cref="SMSResponseDto{T}"/> model</returns>
-        SMSResponseDto<List<SMSChannelTable>> GetSMSChannels(string poolID);
+        SMSResponseDto<List<SMSChannelDto>> GetSMSChannels(string poolID);
 
         /// <summary>
         /// Delete the SMS channel in the database.

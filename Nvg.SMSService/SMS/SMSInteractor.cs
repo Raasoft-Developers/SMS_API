@@ -100,6 +100,11 @@ namespace Nvg.SMSService.SMS
             try
             {
                 channelResponse = _smsChannelInteractor.AddSMSChannel(channelInput);
+                if (channelResponse.Status && channelInput.IsRestrictedByQuota)
+                {
+                    //If channel has been added and email is restricted by quota, add email quota for channel
+                    _smsQuotaInteractor.AddSMSQuota(channelInput);
+                }
                 _logger.LogDebug("Status: " + channelResponse.Status + ",Message: " + channelResponse.Message);
                 return channelResponse;
             }
@@ -119,6 +124,13 @@ namespace Nvg.SMSService.SMS
             try
             {
                 channelResponse = _smsChannelInteractor.UpdateSMSChannel(channelInput);
+                var quotaResponse = _smsQuotaInteractor.UpdateSMSQuota(channelInput);
+                if(!channelResponse.Status)
+                { 
+                    //if sms channel is not updated , then take response of sms quota updation
+                    channelResponse.Status = quotaResponse.Status;
+                    channelResponse.Message = quotaResponse.Message;
+                }
                 _logger.LogDebug("Status: " + channelResponse.Status + ",Message: " + channelResponse.Message);
                 return channelResponse;
             }
@@ -268,6 +280,14 @@ namespace Nvg.SMSService.SMS
                         response.Message = $"No template found for template name {smsInputs.TemplateName} and channel key {smsInputs.ChannelKey}.";
                         return response;
                     }
+                }
+                var isExceeded = _smsQuotaInteractor.CheckIfQuotaExceeded(smsInputs.ChannelKey);
+                if (isExceeded)
+                {
+                    _logger.LogError($"SMS Quota for Channel {smsInputs.ChannelKey} has exceeded.");
+                    response.Status = !isExceeded;
+                    response.Message = $"SMS Quota for Channel {smsInputs.ChannelKey} has exceeded.";
+                    return response;
                 }
                 _logger.LogInformation("Trying to send sms.");
                 _smsEventInteractor.SendSMS(smsInputs);

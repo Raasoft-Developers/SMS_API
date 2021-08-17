@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Nvg.SMSService.Data;
@@ -9,9 +10,10 @@ using Nvg.SMSService.Data;
 namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
 {
     [DbContext(typeof(SMSPgSqlDbContext))]
-    partial class SMSPgSqlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210427035830_AddedTotalQuotaAndCurrentMonthInSMSQuota")]
+    partial class AddedTotalQuotaAndCurrentMonthInSMSQuota
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,9 +38,6 @@ namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
                         .HasColumnType("text");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("Key")
-                        .IsUnique();
 
                     b.HasIndex("SMSPoolID");
 
@@ -134,9 +133,6 @@ namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
 
                     b.HasIndex("SMSPoolID");
 
-                    b.HasIndex("Name", "SMSPoolID")
-                        .IsUnique();
-
                     b.ToTable("SMSProviderSettings");
                 });
 
@@ -163,8 +159,7 @@ namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
                         .HasColumnType("integer");
 
                     b.Property<int>("TotalQuota")
-                        .HasColumnType("integer")
-                        .HasDefaultValue(-1);
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -196,9 +191,6 @@ namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
                     b.HasKey("ID");
 
                     b.HasIndex("SMSPoolID");
-
-                    b.HasIndex("Name", "SMSPoolID")
-                        .IsUnique();
 
                     b.ToTable("SMSTemplate");
                 });

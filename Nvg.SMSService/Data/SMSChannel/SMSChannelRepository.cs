@@ -92,12 +92,27 @@ namespace Nvg.SMSService.Data.SMSChannel
             }
         }
 
-        public SMSResponseDto<SMSChannelTable> GetSMSChannelByKey(string channelKey)
+        public SMSResponseDto<SMSChannelDto> GetSMSChannelByKey(string channelKey)
         {
-            var response = new SMSResponseDto<SMSChannelTable>();
+            var response = new SMSResponseDto<SMSChannelDto>();
             try
             {
-                var smsChannel = _context.SMSChannels.FirstOrDefault(sp => sp.Key.ToLower().Equals(channelKey.ToLower()));
+                var smsChannel = (from sc in _context.SMSChannels.Where(c => c.Key.ToLower().Equals(channelKey.ToLower()))
+                                    from sq in _context.SMSQuotas.Where(quota => quota.SMSChannelID == sc.ID).DefaultIfEmpty()
+                                    select new SMSChannelDto
+                                    {
+                                        ID = sc.ID,
+                                        Key = sc.Key,
+                                        SMSPoolID = sc.SMSPoolID,
+                                        SMSProviderID = sc.SMSProviderID,
+                                        MonthlyQuota = sq.MonthlyQuota,
+                                        TotalQuota = sq.TotalQuota,
+                                        MonthlyConsumption = sq.MonthlyConsumption,
+                                        TotalConsumption = sq.TotalConsumption,
+                                        CurrentMonth = sq.CurrentMonth,
+                                        IsRestrictedByQuota = sq.TotalQuota > 0 && sq.MonthlyQuota > 0
+                                    }).FirstOrDefault();
+                //var smsChannel = _context.SMSChannels.FirstOrDefault(sp => sp.Key.ToLower().Equals(channelKey.ToLower()));
                 if (smsChannel != null)
                 {
                     response.Status = true;
@@ -165,22 +180,26 @@ namespace Nvg.SMSService.Data.SMSChannel
             }
         }
 
-        public SMSResponseDto<List<SMSChannelTable>> GetSMSChannels(string poolID)
+        public SMSResponseDto<List<SMSChannelDto>> GetSMSChannels(string poolID)
         {
-            var response = new SMSResponseDto<List<SMSChannelTable>>();
+            var response = new SMSResponseDto<List<SMSChannelDto>>();
             try
             {
                 var smsChannels = (from p in _context.SMSPools
                                      join c in _context.SMSChannels on p.ID equals c.SMSPoolID
                                      join pr in _context.SMSProviderSettings on c.SMSProviderID equals pr.ID
                                      where p.ID.ToLower().Equals(poolID.ToLower())
-                                     select new SMSChannelTable { 
+                                     from q in _context.SMSQuotas.Where(sq => sq.SMSChannelID == c.ID).DefaultIfEmpty()
+                                     select new SMSChannelDto { 
                                      ID=c.ID,
                                      Key=c.Key,
                                      SMSPoolID=c.SMSPoolID,
                                      SMSProviderID=c.SMSProviderID,
                                      SMSPoolName=p.Name,
-                                     SMSProviderName=pr.Name
+                                     SMSProviderName=pr.Name,
+                                     MonthlyQuota = q.MonthlyQuota,
+                                     TotalQuota = q.TotalQuota,
+                                    IsRestrictedByQuota = q.TotalQuota > 0 && q.MonthlyQuota > 0
                                      }).ToList();
                 
                 response.Message = $"Retrieved {smsChannels.Count} SMS channel data";                

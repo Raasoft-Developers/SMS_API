@@ -5,8 +5,10 @@ using Nvg.SMSService.Data.SMSChannel;
 using Nvg.SMSService.Data.SMSHistory;
 using Nvg.SMSService.Data.SMSPool;
 using Nvg.SMSService.Data.SMSProvider;
+using Nvg.SMSService.Data.SMSQuota;
 using Nvg.SMSService.Data.SMSTemplate;
 using Nvg.SMSService.DTOS;
+using Nvg.SMSService.SMSQuota;
 using System;
 using System.Collections.Generic;
 
@@ -21,11 +23,12 @@ namespace Nvg.SMSService.SMS
         private readonly ISMSChannelRepository _smsChannelRepository;
         private readonly ISMSTemplateRepository _smsTemplateRepository;
         private readonly ISMSHistoryRepository _smsHistoryRepository;
+        private readonly ISMSQuotaRepository _smsQuotaRepository;
         private readonly ILogger<SMSManagementInteractor> _logger;
 
         public SMSManagementInteractor(IMapper mapper, ISMSEventInteractor smsEventInteractor, ISMSPoolRepository smsPoolRepository, ISMSProviderRepository smsProviderRepository,
             ISMSChannelRepository smsChannelRepository, ISMSTemplateRepository smsTemplateRepository,
-            ISMSHistoryRepository smsHistoryRepository, ILogger<SMSManagementInteractor> logger)
+            ISMSHistoryRepository smsHistoryRepository, ISMSQuotaRepository smsQuotaRepository, ILogger<SMSManagementInteractor> logger)
         {
             _mapper = mapper;
             _smsEventInteractor = smsEventInteractor;
@@ -34,6 +37,7 @@ namespace Nvg.SMSService.SMS
             _smsChannelRepository = smsChannelRepository;
             _smsTemplateRepository = smsTemplateRepository;
             _smsHistoryRepository = smsHistoryRepository;
+            _smsQuotaRepository = smsQuotaRepository;
             _logger = logger;
         }
         #region SMS Pool
@@ -272,9 +276,9 @@ namespace Nvg.SMSService.SMS
             {
                 _logger.LogInformation("Trying to get SMS Channels.");
                 var response = _smsChannelRepository.GetSMSChannels(poolID);
-                channelResponse = _mapper.Map<SMSResponseDto<List<SMSChannelDto>>>(response);
-                _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
-                return channelResponse;
+                //channelResponse = _mapper.Map<SMSResponseDto<List<SMSChannelDto>>>(response);
+                _logger.LogDebug("Status: " + response.Status + ", " + response.Message);
+                return response;
             }
             catch (Exception ex)
             {
@@ -295,6 +299,12 @@ namespace Nvg.SMSService.SMS
                 _logger.LogInformation("Trying to add SMSChannel.");
                 var mappedSMSInput = _mapper.Map<SMSChannelTable>(channelInput);
                 var response = _smsChannelRepository.AddSMSChannel(mappedSMSInput);
+                if (response.Status && channelInput.IsRestrictedByQuota)
+                {
+                    //If channel has been added and channel isRestrictedByQuota, add sms quota for channel
+                    channelInput.ID = response.Result.ID;
+                    _smsQuotaRepository.AddSMSQuota(channelInput);
+                }
                 channelResponse = _mapper.Map<SMSResponseDto<SMSChannelDto>>(response);
                 _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
                 return channelResponse;
@@ -317,6 +327,13 @@ namespace Nvg.SMSService.SMS
                 _logger.LogInformation("Trying to update SMSChannel.");
                 var mappedSMSInput = _mapper.Map<SMSChannelTable>(channelInput);
                 var response = _smsChannelRepository.UpdateSMSChannel(mappedSMSInput);
+                var quotaResponse = _smsQuotaRepository.UpdateSMSQuota(channelInput);
+                if (!response.Status)
+                {
+                    //if sms channel is not updated , then take response of sms quota updation
+                    response.Status = quotaResponse.Status;
+                    response.Message = quotaResponse.Message;
+                }
                 channelResponse = _mapper.Map<SMSResponseDto<SMSChannelDto>>(response);
                 _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
                 return channelResponse;
@@ -338,6 +355,7 @@ namespace Nvg.SMSService.SMS
             try
             {
                 _logger.LogInformation("Trying to delete SMS Channel.");
+                var quotaResponse = _smsQuotaRepository.DeleteSMSQuota(channelID);
                 channelResponse = _smsChannelRepository.DeleteSMSChannel(channelID);
                 _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
                 return channelResponse;

@@ -64,7 +64,7 @@ namespace Nvg.SMSBackgroundTask
             };
             _smsHistoryInteractor.AddSMSHistory(smsObj);
 
-            _smsQuotaInteractor.UpdateSMSQuota(sms.ChannelKey);
+            _smsQuotaInteractor.IncrementSMSQuota(sms.ChannelKey);
         }
     }
 }
