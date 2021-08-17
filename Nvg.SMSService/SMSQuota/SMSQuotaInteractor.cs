@@ -80,7 +80,7 @@ namespace Nvg.SMSService.SMSQuota
                     if (smsQuota.CurrentMonth == currentMonth)
                     {
                         //Check if quota is exceeded for current month
-                        if (smsQuota.TotalQuota != -1 && smsQuota.MonthlyConsumption >= smsQuota.MonthlyQuota && smsQuota.TotalConsumption >= smsQuota.TotalQuota)
+                        if (smsQuota.TotalQuota != -1 && (smsQuota.MonthlyConsumption >= smsQuota.MonthlyQuota || smsQuota.TotalConsumption >= smsQuota.TotalQuota))
                         {
                             response = true;
                         }
@@ -93,10 +93,14 @@ namespace Nvg.SMSService.SMSQuota
                             _logger.LogDebug("Status: " + updatedQuotaResponse.Status + ", Message: " + updatedQuotaResponse.Message);
                             smsQuota = updatedQuotaResponse.Result;
                             //Check if quota is exceeded for current month
-                            if (smsQuota.TotalQuota != -1 && smsQuota.MonthlyConsumption >= smsQuota.MonthlyQuota && smsQuota.TotalConsumption >= smsQuota.TotalQuota)
+                            if (smsQuota.TotalQuota != -1 && (smsQuota.MonthlyConsumption >= smsQuota.MonthlyQuota || smsQuota.TotalConsumption >= smsQuota.TotalQuota))
                             {
                                 response = true;
                             }
+                        }
+                        else
+                        {
+                            throw new Exception(updatedQuotaResponse.Message);
                         }
                     }
                 }
@@ -135,6 +139,13 @@ namespace Nvg.SMSService.SMSQuota
             var response = new SMSResponseDto<SMSQuotaDto>();
             try
             {
+                if (smsChannelDto.IsRestrictedByQuota && (smsChannelDto.MonthlyQuota == 0 || smsChannelDto.TotalQuota == 0))
+                {
+                    response.Status = false;
+                    response.Message = "Monthly quota and/or Total quota cannot have value as 0. Quota has not been updated in the database.";
+                    _logger.LogDebug("Status: " + response.Status + "Message:" + response.Message);
+                    return response;
+                }
                 var smsQuotaResponse = _smsQuotaRepository.UpdateSMSQuota(smsChannelDto);
                 _logger.LogDebug("Status: " + smsQuotaResponse.Status + "Message:" + smsQuotaResponse.Message);
                 var mappedResponse = _mapper.Map<SMSResponseDto<SMSQuotaDto>>(smsQuotaResponse);

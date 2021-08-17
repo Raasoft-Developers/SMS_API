@@ -166,6 +166,7 @@ namespace Nvg.SMSService.Data.SMSQuota
                     {
                         smsQuota.TotalQuota = smsChannel.TotalQuota;
                         smsQuota.MonthlyQuota = smsChannel.MonthlyQuota;
+                        smsQuota.CurrentMonth = DateTime.Now.ToString("MMM").ToUpper();
                     }
                     else
                     {

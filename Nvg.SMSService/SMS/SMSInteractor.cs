@@ -99,10 +99,16 @@ namespace Nvg.SMSService.SMS
             SMSResponseDto<SMSChannelDto> channelResponse = new SMSResponseDto<SMSChannelDto>();
             try
             {
-                if (channelInput.IsRestrictedByQuota && channelInput.MonthlyQuota > channelInput.TotalQuota)
+                if (channelInput.IsRestrictedByQuota && channelInput.MonthlyQuota > 0 && channelInput.TotalQuota > 0 && channelInput.MonthlyQuota > channelInput.TotalQuota)
                 {
                     channelResponse.Status = false;
                     channelResponse.Message = "Monthly quota cannot be greater than Total quota. Channel and Quota have not been added to the database.";
+                    return channelResponse;
+                }
+                else if (channelInput.IsRestrictedByQuota && (channelInput.MonthlyQuota == 0 || channelInput.TotalQuota == 0))
+                {
+                    channelResponse.Status = false;
+                    channelResponse.Message = "Monthly quota and/or Total quota cannot have value as 0. Channel and Quota have not been added to the database.";
                     return channelResponse;
                 }
                 channelResponse = _smsChannelInteractor.AddSMSChannel(channelInput);
@@ -110,7 +116,7 @@ namespace Nvg.SMSService.SMS
                 {
                     channelInput.ID = channelResponse.Result.ID;
                     //If channel has been added and sms is restricted by quota, add sms quota for channel
-                    var quotaResponse =_smsQuotaInteractor.AddSMSQuota(channelInput);
+                    var quotaResponse = _smsQuotaInteractor.AddSMSQuota(channelInput);
                     channelResponse.Message += quotaResponse.Message;
                     if (quotaResponse.Status)
                     {
@@ -147,15 +153,25 @@ namespace Nvg.SMSService.SMS
                     return channelResponse;
                 }
                 channelResponse = _smsChannelInteractor.UpdateSMSChannel(channelInput);
+                if(channelInput.IsRestrictedByQuota &&  channelInput.MonthlyQuota ==0 && channelInput.TotalQuota == 0)
+                {
+                    _logger.LogDebug("Status: " + channelResponse.Status + ",Message: " + channelResponse.Message);
+                    return channelResponse;
+                }
                 channelInput.ID = _smsChannelInteractor.GetSMSChannelByKey(channelInput.Key).Result?.ID;
                 if (!string.IsNullOrEmpty(channelInput.ID))
                 {
                     var quotaResponse = _smsQuotaInteractor.UpdateSMSQuota(channelInput);
-                    if (!channelResponse.Status)
+                    if (!channelResponse.Status && quotaResponse.Status)
                     {
                         //if sms channel is not updated , then take response of sms quota updation
                         channelResponse.Status = quotaResponse.Status;
                         channelResponse.Message = quotaResponse.Message;
+                    }
+                    else if (channelResponse.Status && !quotaResponse.Status)
+                    {
+                        channelResponse.Status = channelResponse.Status;
+                        channelResponse.Message += quotaResponse.Message;
                     }
                     else
                     {
@@ -177,6 +193,7 @@ namespace Nvg.SMSService.SMS
                     channelResponse.Status = false;
                     channelResponse.Message = "Invalid Channel Key.";
                 }
+
                 _logger.LogDebug("Status: " + channelResponse.Status + ",Message: " + channelResponse.Message);
                 return channelResponse;
             }
@@ -330,9 +347,9 @@ namespace Nvg.SMSService.SMS
                 var isExceeded = _smsQuotaInteractor.CheckIfQuotaExceeded(smsInputs.ChannelKey);
                 if (isExceeded)
                 {
-                    _logger.LogError($"SMS Quota for Channel {smsInputs.ChannelKey} has exceeded.");
+                    _logger.LogError($"SMS Quota for Channel {smsInputs.ChannelKey} has been reached.");
                     response.Status = !isExceeded;
-                    response.Message = $"SMS Quota for Channel {smsInputs.ChannelKey} has exceeded.";
+                    response.Message = $"SMS Quota for Channel {smsInputs.ChannelKey} has been reached.";
                     return response;
                 }
                 _logger.LogInformation("Trying to send sms.");
