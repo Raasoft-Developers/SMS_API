@@ -258,7 +258,7 @@ namespace EventBusRabbitMQ
                                     type: _xchangeType);
 
             channel.QueueDeclare(queue: _queueName,
-                                 durable: false,
+                                 durable: true,
                                  exclusive: false,
                                  autoDelete: false,
                                  arguments: null);

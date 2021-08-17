@@ -196,17 +196,28 @@ namespace Nvg.API.SMS.Controller
         {
             _logger.LogInformation("UpdateSMSChannel action method.");
             _logger.LogInformation($"SMSPoolName: {channelInput.SMSPoolName}, ProviderName: {channelInput.SMSProviderName}.");
+            SMSResponseDto<SMSChannelDto> channelResponse = new SMSResponseDto<SMSChannelDto>();
             try
             {
-                var mappedInput = _mapper.Map<SMSChannelDto>(channelInput);
-                var channelResponse = _smsInteractor.UpdateSMSChannel(mappedInput);
-                if (channelResponse.Status)
+                if (!string.IsNullOrWhiteSpace(channelInput.Key))
                 {
-                    _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
-                    return Ok(channelResponse);
+                    var mappedInput = _mapper.Map<SMSChannelDto>(channelInput);
+                    channelResponse = _smsInteractor.UpdateSMSChannel(mappedInput);
+                    if (channelResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                        return Ok(channelResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
+                        return StatusCode(412, channelResponse);
+                    }
                 }
                 else
                 {
+                    channelResponse.Status = false;
+                    channelResponse.Message = "Channel Key cannot be empty or whitespace.";
                     _logger.LogError("Status: " + channelResponse.Status + ", Message:" + channelResponse.Message);
                     return StatusCode(412, channelResponse);
                 }

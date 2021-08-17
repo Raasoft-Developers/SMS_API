@@ -163,8 +163,7 @@ namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
                         .HasColumnType("integer");
 
                     b.Property<int>("TotalQuota")
-                        .HasColumnType("integer")
-                        .HasDefaultValue(-1);
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 

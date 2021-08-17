@@ -34,13 +34,13 @@ namespace Nvg.SMSService.Data.SMSChannel
                     if (_context.SaveChanges() == 1)
                     {
                         response.Status = true;
-                        response.Message = "Added";
+                        response.Message = "SMS Channel has been Added.";
                         response.Result = channelInput;
                     }
                     else
                     {
                         response.Status = false;
-                        response.Message = "Not Added";
+                        response.Message = "SMS Channel has not been Added.";
                         response.Result = channelInput;
                     }
                 }
@@ -66,13 +66,13 @@ namespace Nvg.SMSService.Data.SMSChannel
                     if (_context.SaveChanges() == 1)
                     {
                         response.Status = true;
-                        response.Message = "Updated";
+                        response.Message = "SMS Channel has been Updated.";
                         response.Result = channelInput;
                     }
                     else
                     {
                         response.Status = false;
-                        response.Message = "Failed To Update";
+                        response.Message = "Failed To Update SMS Channel.";
                         response.Result = channelInput;
                     }
                 }

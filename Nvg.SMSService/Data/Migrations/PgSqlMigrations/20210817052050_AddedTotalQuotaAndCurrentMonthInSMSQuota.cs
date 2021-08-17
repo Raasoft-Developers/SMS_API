@@ -29,7 +29,7 @@ namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
                 schema: "SMS",
                 table: "SMSQuota",
                 nullable: false,
-                defaultValue: -1);
+                defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

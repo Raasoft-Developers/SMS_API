@@ -10,7 +10,7 @@ using Nvg.SMSService.Data;
 namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
 {
     [DbContext(typeof(SMSPgSqlDbContext))]
-    [Migration("20210427035830_AddedTotalQuotaAndCurrentMonthInSMSQuota")]
+    [Migration("20210817052050_AddedTotalQuotaAndCurrentMonthInSMSQuota")]
     partial class AddedTotalQuotaAndCurrentMonthInSMSQuota
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,9 @@ namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
                         .HasColumnType("text");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
 
                     b.HasIndex("SMSPoolID");
 
@@ -133,6 +136,9 @@ namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
 
                     b.HasIndex("SMSPoolID");
 
+                    b.HasIndex("Name", "SMSPoolID")
+                        .IsUnique();
+
                     b.ToTable("SMSProviderSettings");
                 });
 
@@ -191,6 +197,9 @@ namespace Nvg.SMSService.data.Migrations.PgSqlMigrations
                     b.HasKey("ID");
 
                     b.HasIndex("SMSPoolID");
+
+                    b.HasIndex("Name", "SMSPoolID")
+                        .IsUnique();
 
                     b.ToTable("SMSTemplate");
                 });

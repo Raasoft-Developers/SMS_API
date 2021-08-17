@@ -10,6 +10,10 @@ namespace Nvg.API.SMS.Models
         public string SMSPoolName { get; set; }
         public string SMSProviderID { get; set; }
         public string SMSProviderName { get; set; }
+        public int MonthlyQuota { get; set; }
+        public int TotalQuota { get; set; }
+        //public string CurrentMonth { get; set; }
+        public bool IsRestrictedByQuota { get; set; }
     }
 
     /// <summary>

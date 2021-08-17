@@ -27,8 +27,10 @@ namespace Nvg.SMSService.Data.SMSQuota
                                 ID = q.ID,
                                 MonthlyQuota = q.MonthlyQuota,
                                 MonthlyConsumption = q.MonthlyConsumption,
+                                TotalQuota = q.TotalQuota,
                                 SMSChannelID = q.SMSChannelID,
                                 SMSChannelKey = c.Key,
+                                CurrentMonth = q.CurrentMonth,
                                 TotalConsumption = q.TotalConsumption
                                 }).FirstOrDefault();
                 response.Status = true;
@@ -95,12 +97,12 @@ namespace Nvg.SMSService.Data.SMSQuota
                 if (updated > 0)
                 {
                     response.Status = true;
-                    response.Message = $"Updated Channel Quota Current Month";
+                    response.Message = $"Updated Channel Quota Current Month.";
                 }
                 else
                 {
                     response.Status = false;
-                    response.Message = $"Failed to Update Channel Quota Current Month";
+                    response.Message = $"Failed to Update Channel Quota Current Month.";
                 }
                 response.Result = smsQuota;
                 return response;
@@ -189,13 +191,13 @@ namespace Nvg.SMSService.Data.SMSQuota
                 if (_context.SaveChanges() > 0)
                 {
                     response.Status = true;
-                    response.Message = "SMS Quota is Updated";
+                    response.Message = "SMS Quota has been Updated.";
                     response.Result = smsQuota;
                 }
                 else
                 {
                     response.Status = false;
-                    response.Message = "SMS Quota is not Updated";
+                    response.Message = "SMS Quota has not been Updated.";
                     response.Result = smsQuota;
                 }
                 return response;
