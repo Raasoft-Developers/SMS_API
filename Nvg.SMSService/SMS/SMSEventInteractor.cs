@@ -133,7 +133,7 @@ namespace Nvg.SMSService.SMS
                     };
                     _smsHistoryInteractor.AddSMSHistory(smsObj);
 
-                    _smsQuotaInteractor.UpdateSMSQuota(smsInputs.ChannelKey);
+                    _smsQuotaInteractor.IncrementSMSQuota(smsInputs.ChannelKey);
                 }
             }
         }

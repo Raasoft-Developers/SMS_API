@@ -26,7 +26,7 @@ namespace Nvg.SMSService.Data.SMSQuota
                                 select new SMSQuotaTable { 
                                 ID = q.ID,
                                 MonthlyQuota = q.MonthlyQuota,
-                                MonthylConsumption = q.MonthylConsumption,
+                                MonthlyConsumption = q.MonthlyConsumption,
                                 SMSChannelID = q.SMSChannelID,
                                 SMSChannelKey = c.Key,
                                 TotalConsumption = q.TotalConsumption
