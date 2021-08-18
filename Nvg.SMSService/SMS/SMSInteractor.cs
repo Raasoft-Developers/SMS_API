@@ -122,7 +122,7 @@ namespace Nvg.SMSService.SMS
                     {
                         channelResponse.Result.TotalQuota = quotaResponse.Result.TotalQuota;
                         channelResponse.Result.TotalConsumption = quotaResponse.Result.TotalConsumption;
-                        channelResponse.Result.MonthlyConsumption = quotaResponse.Result.MonthylConsumption;
+                        channelResponse.Result.MonthlyConsumption = quotaResponse.Result.MonthlyConsumption;
                         channelResponse.Result.MonthlyQuota = quotaResponse.Result.MonthlyQuota;
                         channelResponse.Result.CurrentMonth = quotaResponse.Result.CurrentMonth;
                         channelResponse.Result.IsRestrictedByQuota = channelInput.IsRestrictedByQuota;
@@ -182,7 +182,7 @@ namespace Nvg.SMSService.SMS
                     {
                         channelResponse.Result.TotalQuota = quotaResponse.Result.TotalQuota;
                         channelResponse.Result.TotalConsumption = quotaResponse.Result.TotalConsumption;
-                        channelResponse.Result.MonthlyConsumption = quotaResponse.Result.MonthylConsumption;
+                        channelResponse.Result.MonthlyConsumption = quotaResponse.Result.MonthlyConsumption;
                         channelResponse.Result.MonthlyQuota = quotaResponse.Result.MonthlyQuota;
                         channelResponse.Result.CurrentMonth = quotaResponse.Result.CurrentMonth;
                         channelResponse.Result.IsRestrictedByQuota = channelInput.IsRestrictedByQuota;

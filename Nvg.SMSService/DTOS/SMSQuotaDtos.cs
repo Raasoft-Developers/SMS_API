@@ -10,7 +10,7 @@ namespace Nvg.SMSService.DTOS
         public string SMSChannelKey { get; set; }
         public int TotalConsumption { get; set; }
         public int TotalQuota { get; set; }
-        public int MonthylConsumption { get; set; }
+        public int MonthlyConsumption { get; set; }
         public string CurrentMonth { get; set; }
         public int MonthlyQuota { get; set; }
     }
