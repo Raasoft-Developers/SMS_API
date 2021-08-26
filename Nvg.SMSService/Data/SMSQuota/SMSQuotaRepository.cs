@@ -46,6 +46,38 @@ namespace Nvg.SMSService.Data.SMSQuota
             }
         }
 
+        public SMSResponseDto<List<SMSQuotaTable>> GetSMSQuotaList(string channelID)
+        {
+            var response = new SMSResponseDto<List<SMSQuotaTable>>();
+            try
+            {
+                var smsQuota = (from q in _context.SMSQuotas
+                                join c in _context.SMSChannels on q.SMSChannelID equals c.ID
+                                where q.SMSChannelID.Equals(channelID)
+                                select new SMSQuotaTable
+                                {
+                                    ID = q.ID,
+                                    MonthlyQuota = q.MonthlyQuota,
+                                    MonthlyConsumption = q.MonthlyConsumption,
+                                    TotalQuota = q.TotalQuota,
+                                    SMSChannelID = q.SMSChannelID,
+                                    SMSChannelKey = c.Key,
+                                    CurrentMonth = q.CurrentMonth,
+                                    TotalConsumption = q.TotalConsumption
+                                }).ToList();
+                response.Status = true;
+                response.Message = $"Retrieved SMS Quota";
+                response.Result = smsQuota;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
         public SMSResponseDto<SMSQuotaTable> IncrementSMSQuota(string channelID)
         {
             var response = new SMSResponseDto<SMSQuotaTable>();
@@ -56,7 +88,8 @@ namespace Nvg.SMSService.Data.SMSQuota
                 {
                     var totalCountInt = Convert.ToInt32(smsQuota.TotalConsumption); // TODO Implement encryption 
                     var monthCountInt = Convert.ToInt32(smsQuota.MonthlyConsumption); // TODO Implement encryption 
-                    totalCountInt += 1; monthCountInt += 1;
+                    totalCountInt += 1; 
+                    monthCountInt += 1;
                     smsQuota.TotalConsumption = totalCountInt;
                     smsQuota.MonthlyConsumption = monthCountInt;
                     _context.SMSQuotas.Update(smsQuota);
@@ -132,6 +165,19 @@ namespace Nvg.SMSService.Data.SMSQuota
                         CurrentMonth = DateTime.Now.ToString("MMM").ToUpper()
                     };
                     _context.SMSQuotas.Add(smsQuota);
+
+                    if (_context.SaveChanges() == 1)
+                    {
+                        response.Status = true;
+                        response.Message = "SMS Quota is Added";
+                        response.Result = smsQuota;
+                    }
+                    else
+                    {
+                        response.Status = true;
+                        response.Message = "SMS Quota is not added";
+                        response.Result = smsQuota;
+                    }
                 }
                 else
                 {
@@ -139,12 +185,7 @@ namespace Nvg.SMSService.Data.SMSQuota
                     response.Message = "SMS Quota already exists";
                     response.Result = smsQuota;
                 }
-                if (_context.SaveChanges() == 1)
-                {
-                    response.Status = true;
-                    response.Message = "SMS Quota is Added";
-                    response.Result = smsQuota;
-                }
+                
                 return response;
             }
             catch (Exception ex)

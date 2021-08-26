@@ -8,6 +8,7 @@ using Nvg.API.SMS.Models;
 using Nvg.SMSService.DTOS;
 using Nvg.SMSService.SMS;
 using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace Nvg.API.SMS.Controller
@@ -853,6 +854,178 @@ namespace Nvg.API.SMS.Controller
             catch (Exception ex)
             {
                 _logger.LogError("Internal server error: Error occurred while trying to get sms histories: " + ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
+        }
+        #endregion
+
+        #region SMS Quota
+        /// <summary>
+        /// API to gets the SMS Quota.
+        /// </summary>
+        /// <param name="channelID">Channel ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
+        [HttpGet("{channelID}")]
+        public ActionResult GetSMSQuotaList(string channelID)
+        {
+            _logger.LogInformation("GetSMSQuotaList action method.");
+            _logger.LogDebug("Channel ID: " + channelID);
+            SMSResponseDto<List<SMSQuotaDto>> channelResponse = new SMSResponseDto<List<SMSQuotaDto>>();
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(channelID))
+                {
+                    channelResponse = _smsManagementInteractor.GetSMSQuotaList(channelID);
+                    if (channelResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return Ok(channelResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                    }
+                }
+                else
+                {
+                    channelResponse.Status = false;
+                    channelResponse.Message = "Channel Key cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while getting SMS quota: " + ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
+        /// <summary>
+        /// API to add the SMS Quota.
+        /// </summary>
+        /// <param name="channelInput"><see cref="ChannelInput"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
+        [HttpPost]
+        public ActionResult AddSMSQuota(ChannelInput channelInput)
+        {
+            _logger.LogInformation("AddSMSQuota action method.");
+            _logger.LogDebug("Pool Name: " + channelInput.SMSPoolName);
+            SMSResponseDto<SMSQuotaDto> channelResponse = new SMSResponseDto<SMSQuotaDto>();
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(channelInput.Key))
+                {
+                    var mappedInput = _mapper.Map<SMSChannelDto>(channelInput);
+                    channelResponse = _smsManagementInteractor.AddSMSQuota(mappedInput);
+                    if (channelResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return Ok(channelResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                    }
+                }
+                else
+                {
+                    channelResponse.Status = false;
+                    channelResponse.Message = "Channel Key cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while adding SMS quota: " + ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
+        /// <summary>
+        /// API to update the SMS Quota.
+        /// </summary>
+        /// <param name="channelInput"><see cref="ChannelInput"/></param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
+        [HttpPost]
+        public ActionResult UpdateSMSQuota(ChannelInput channelInput)
+        {
+            _logger.LogInformation("UpdateSMSQuota action method.");
+            _logger.LogDebug("Pool Name: " + channelInput.SMSPoolName);
+            SMSResponseDto<SMSQuotaDto> channelResponse = new SMSResponseDto<SMSQuotaDto>();
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(channelInput.Key))
+                {
+                    var mappedInput = _mapper.Map<SMSChannelDto>(channelInput);
+                    channelResponse = _smsManagementInteractor.UpdateSMSQuota(mappedInput);
+                    if (channelResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return Ok(channelResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                    }
+                }
+                else
+                {
+                    channelResponse.Status = false;
+                    channelResponse.Message = "Channel Key cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while updating SMS quota: " + ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
+        }
+
+        /// <summary>
+        /// API to Delete the SMS Quota.
+        /// </summary>
+        /// <param name="channelID">Channel ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"></see></returns>
+        [HttpDelete("{channelID}")]
+        public ActionResult DeleteSMSQuota(string channelID)
+        {
+            _logger.LogInformation("DeleteSMSQuota action method.");
+            _logger.LogDebug("Channel ID: " + channelID);
+            SMSResponseDto<string> channelResponse = new SMSResponseDto<string>();
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(channelID))
+                {
+                    channelResponse = _smsManagementInteractor.DeleteSMSQuota(channelID);
+                    if (channelResponse.Status)
+                    {
+                        _logger.LogDebug("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return Ok(channelResponse);
+                    }
+                    else
+                    {
+                        _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                        return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                    }
+                }
+                else
+                {
+                    channelResponse.Status = false;
+                    channelResponse.Message = "Channel Key cannot be empty or whitespace.";
+                    _logger.LogError("Status: " + channelResponse.Status + ", " + channelResponse.Message);
+                    return StatusCode((int)HttpStatusCode.PreconditionFailed, channelResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Internal server error: Error occurred while deleting SMS quota: " + ex.Message);
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex);
             }
         }

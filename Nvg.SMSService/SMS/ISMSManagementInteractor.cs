@@ -166,6 +166,36 @@ namespace Nvg.SMSService.SMS
         SMSResponseDto<List<SMSHistoryDto>> GetSMSHistories(string channelID, string tag);
         #endregion
 
+        #region SMS Quota
+        /// <summary>
+        /// Gets the SMS Quota.
+        /// </summary>
+        /// <param name="channelID">Channel ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<List<SMSQuotaDto>> GetSMSQuotaList(string channelID);
+
+        /// <summary>
+        /// Adds the SMS Quota Values for Channel.
+        /// </summary>
+        /// <param name="smsChannel">SMS Channel </param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<SMSQuotaDto> AddSMSQuota(SMSChannelDto smsChannel);
+
+        /// <summary>
+        /// Updates the SMS quota.
+        /// </summary>
+        /// <param name="smsChannel">SMS Channel </param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<SMSQuotaDto> UpdateSMSQuota(SMSChannelDto smsChannel);
+
+        /// <summary>
+        /// Deletes the SMS quota.
+        /// </summary>
+        /// <param name="channelID">Channel ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<string> DeleteSMSQuota(string channelID);
+        #endregion
+
 
         /// <summary>
         /// Sends the sms.

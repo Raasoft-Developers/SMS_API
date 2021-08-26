@@ -644,5 +644,121 @@ namespace Nvg.SMSService.SMS
                 return response;
             }
         }
+
+        #region SMS Quota
+        public SMSResponseDto<List<SMSQuotaDto>> GetSMSQuotaList(string channelID)
+        {
+            _logger.LogInformation("GetSMSQuotaList interactor method.");
+            var response = new SMSResponseDto<List<SMSQuotaDto>>();
+            try
+            {
+                var smsQuotaResponse = _smsQuotaRepository.GetSMSQuotaList(channelID);
+                _logger.LogDebug("Status: " + smsQuotaResponse.Status + ", Message: " + smsQuotaResponse.Message);
+                var mappedResponse = _mapper.Map<SMSResponseDto<List<SMSQuotaDto>>>(smsQuotaResponse);
+                return mappedResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to get SMS Quota" + ex.Message);
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<SMSQuotaDto> AddSMSQuota(SMSChannelDto smsChannel)
+        {
+            _logger.LogInformation("AddSMSQuota interactor method.");
+            var response = new SMSResponseDto<SMSQuotaDto>();
+            try
+            {
+                if (smsChannel.IsRestrictedByQuota && (smsChannel.MonthlyQuota == 0 || smsChannel.TotalQuota == 0))
+                {
+                    response.Status = false;
+                    response.Message = "Monthly quota and/or Total quota cannot have value as 0. Quota has not been updated in the database.";
+                    _logger.LogDebug("Status: " + response.Status + "Message:" + response.Message);
+                    return response;
+                }
+                smsChannel.ID = _smsChannelRepository.GetSMSChannelByKey(smsChannel.Key)?.Result?.ID;
+                if (!string.IsNullOrEmpty(smsChannel.ID))
+                {
+                    var smsQuotaResponse = _smsQuotaRepository.AddSMSQuota(smsChannel);
+                    _logger.LogDebug("Status: " + smsQuotaResponse.Status + "Message:" + smsQuotaResponse.Message);
+                    var mappedResponse = _mapper.Map<SMSResponseDto<SMSQuotaDto>>(smsQuotaResponse);
+                    return mappedResponse;
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = "Invalid Channel Key.";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to Add SMS Quota" + ex.Message);
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<SMSQuotaDto> UpdateSMSQuota(SMSChannelDto smsChannel)
+        {
+            _logger.LogInformation("UpdateSMSQuota interactor method.");
+            var response = new SMSResponseDto<SMSQuotaDto>();
+            try
+            {
+                if (smsChannel.IsRestrictedByQuota && (smsChannel.MonthlyQuota == 0 || smsChannel.TotalQuota == 0))
+                {
+                    response.Status = false;
+                    response.Message = "Monthly quota and/or Total quota cannot have value as 0. Quota has not been updated in the database.";
+                    _logger.LogDebug("Status: " + response.Status + "Message:" + response.Message);
+                    return response;
+                }
+                smsChannel.ID = _smsChannelRepository.GetSMSChannelByKey(smsChannel.Key)?.Result?.ID;
+                if (!string.IsNullOrEmpty(smsChannel.ID))
+                {
+                    var smsQuotaResponse = _smsQuotaRepository.UpdateSMSQuota(smsChannel);
+                    _logger.LogDebug("Status: " + smsQuotaResponse.Status + "Message:" + smsQuotaResponse.Message);
+                    var mappedResponse = _mapper.Map<SMSResponseDto<SMSQuotaDto>>(smsQuotaResponse);
+                    return mappedResponse;
+                }
+                else
+                {
+                    response.Status = false;
+                    response.Message = "Invalid Channel Key.";
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to Update SMS Quota" + ex.Message);
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+
+        public SMSResponseDto<string> DeleteSMSQuota(string channelID)
+        {
+            _logger.LogInformation("DeleteSMSQuota interactor method.");
+            var response = new SMSResponseDto<string>();
+            try
+            {
+                var emailQuotaResponse = _smsQuotaRepository.DeleteSMSQuota(channelID);
+                _logger.LogDebug("Status: " + emailQuotaResponse.Status + "Message:" + emailQuotaResponse.Message);
+                //var mappedResponse = _mapper.Map<EmailResponseDto<EmailQuotaDto>>(emailQuotaResponse);
+                return emailQuotaResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to Add SMS Quota" + ex.Message);
+                response.Status = false;
+                response.Message = ex.Message;
+                return response;
+            }
+        }
+        #endregion'
     }
 }

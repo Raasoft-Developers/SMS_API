@@ -1,5 +1,6 @@
 ﻿using Nvg.SMSService.Data.Entities;
 using Nvg.SMSService.DTOS;
+using System.Collections.Generic;
 
 namespace Nvg.SMSService.Data.SMSQuota
 {
@@ -11,6 +12,13 @@ namespace Nvg.SMSService.Data.SMSQuota
         /// <param name="channelKey">Channel Key</param>
         /// <returns><see cref="SMSResponseDto{T}"/></returns>
         SMSResponseDto<SMSQuotaTable> GetSMSQuota(string channelKey);
+
+        /// <summary>
+        /// Gets the SMS Quota List.
+        /// </summary>
+        /// <param name="channelID">Channel ID</param>
+        /// <returns><see cref="SMSResponseDto{T}"/></returns>
+        SMSResponseDto<List<SMSQuotaTable>> GetSMSQuotaList(string channelID);
 
         /// <summary>
         /// Increments the Consumption value in SMS Quota .

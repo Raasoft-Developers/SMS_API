@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Nvg.SMSService.Data.Entities;
+using System.Collections.Generic;
 
 namespace Nvg.SMSService.DTOS
 {
@@ -21,6 +22,7 @@ namespace Nvg.SMSService.DTOS
         {
             CreateMap<SMSQuotaDto, SMSQuotaTable>().ReverseMap();
             CreateMap<SMSResponseDto<SMSQuotaTable>, SMSResponseDto<SMSQuotaDto>>();
+            CreateMap<SMSResponseDto<List<SMSQuotaTable>>, SMSResponseDto<List<SMSQuotaDto>>>();
 
         }
     }
