@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.QuickPulse;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -162,6 +163,15 @@ namespace Nvg.API.SMS
                 //c.DocumentFilter<OpenApiCustomDocumentFilter>();
                 c.OperationFilter<OpenApiCustomOperationFilter>();
             });
+
+            // The following line enables Application Insights telemetry collection.
+            string instrumentationKey = Configuration.GetValue<string>("InstrumentationKey", string.Empty);
+            if (!string.IsNullOrEmpty(instrumentationKey))
+                services.AddApplicationInsightsTelemetry(instrumentationKey);
+
+            string apiKey = Configuration.GetValue<string>("AuthenticationApiKey", string.Empty);
+            if (!string.IsNullOrEmpty(apiKey))
+                services.ConfigureTelemetryModule<QuickPulseTelemetryModule>((module, o) => module.AuthenticationApiKey = apiKey);
 
             var isEventBusEnabled = Configuration.GetValue<bool>("SMSEventBusEnabled");
             if (isEventBusEnabled)
