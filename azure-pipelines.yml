@@ -23,4 +23,5 @@ steps:
     containerRegistry: 'digitalocean registry'
     repository: 'sms111'
     command: 'buildAndPush'
+    buildContext: '$(Build.SourcesDirectory)'
     Dockerfile: '**/Dockerfile'
