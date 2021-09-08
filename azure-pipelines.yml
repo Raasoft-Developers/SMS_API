@@ -21,7 +21,7 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'digitalocean registry'
-    repository: 'sms111'
+    repository: '/tv2/sms111'
     command: 'buildAndPush'
     buildContext: '$(Build.SourcesDirectory)'
     Dockerfile: '**/Dockerfile'
