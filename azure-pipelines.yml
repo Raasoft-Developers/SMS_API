@@ -24,4 +24,4 @@ steps:
     repository: 'tv2/sms111'
     command: 'buildAndPush'
     buildContext: '$(Build.SourcesDirectory)'
-    Dockerfile: '**/Dockerfile'   
+    Dockerfile: '**/Dockerfile'    
