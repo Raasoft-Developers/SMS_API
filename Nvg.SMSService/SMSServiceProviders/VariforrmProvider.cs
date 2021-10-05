@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nvg.SMSService.Service;
 using System;
@@ -22,9 +23,9 @@ namespace Nvg.SMSService.SMSServiceProviders
             _logger = logger;
         }
 
-        public async Task<string> SendSMS(string recipients, string message, string sender = null)
+        public async Task<dynamic> SendSMS(string recipients, string message, string sender = null)
         {
-            string responseMsg = "NOT SENT";
+            dynamic responseData;
             string method;
 
             var url = _smsProviderCS.Fields["url"];
@@ -34,36 +35,57 @@ namespace Nvg.SMSService.SMSServiceProviders
             if (!string.IsNullOrEmpty(_smsProviderCS.Fields["method"]))
                 method = _smsProviderCS.Fields["method"];
             else
-                method = "sms.normal";
+                method = "T";
             //_logger.LogDebug("method: " + method);
             // If external app didnt send the sender value and template also have sender as null, then get it from provider conn string.
             if (string.IsNullOrEmpty(sender))
                 sender = _smsProviderCS.Fields["sender"];
             //_logger.LogDebug("sender: " + sender);
+            //var parameters = new Dictionary<string, string> {
+            //    { "sender", sender },
+            //    { "to", recipients },
+            //    { "message", message },
+            //    { "api_key", apiKey },
+            //    { "method", method}
+            //};
+
             var parameters = new Dictionary<string, string> {
                 { "sender", sender },
                 { "to", recipients },
                 { "message", message },
-                { "api_key", apiKey },
-                { "method", method}
+                { "service", method }
+            };
+            var headers = new Dictionary<string, string>() {
+                { "Authorization", "Bearer " + apiKey }
             };
 
             HttpService httpService = new HttpService();
-            HttpResponseMessage response = await httpService.PostData(url, parameters);
+            HttpResponseMessage response = await httpService.Post(url, parameters, headers);
             string apiResponse = response.Content.ReadAsStringAsync().Result;
 
             if (response.IsSuccessStatusCode)
             {
-                _logger.LogInformation("SMS Sent");
-                responseMsg = "SENT";
+                JObject smsResponse = JObject.Parse(apiResponse);
+                dynamic result;
+                if (smsResponse.ContainsKey("data"))
+                {
+                    _logger.LogInformation("SMS Sent");
+                    result = JsonConvert.DeserializeObject<dynamic>(smsResponse["data"].ToString());
+                }
+                else
+                {
+                    result = "NOT SENT." + smsResponse["message"].ToString();
+                    _logger.LogInformation("NOT SENT." + smsResponse["message"].ToString());
+                }
+                responseData = result;
             }
             else
             {
                 _logger.LogError("Could not send SMS. " + JObject.Parse(apiResponse)["message"].ToString());
-                responseMsg = responseMsg + ". " + JObject.Parse(apiResponse)["message"].ToString();
+                responseData = "NOT SENT. " + JObject.Parse(apiResponse)["message"].ToString();
             }
 
-            return responseMsg;
+            return responseData;
         }
     }
 }

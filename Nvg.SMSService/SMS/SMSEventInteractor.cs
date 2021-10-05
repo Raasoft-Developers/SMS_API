@@ -115,8 +115,20 @@ namespace Nvg.SMSService.SMS
                     _logger.LogDebug("sender: " + sender);
 
                     ISMSProvider _smsProvider = GetSMSProvider(provider.Type);
-                    string smsResponseStatus = _smsProvider.SendSMS(recipient, message, sender).Result;
-                    _logger.LogDebug("SMS Response Status: " + smsResponseStatus);
+                    var smsResponse = _smsProvider.SendSMS(recipient, message, sender).Result;
+                    string smsStatus;
+                    int credits;
+                    if (smsResponse is string)
+                    {
+                        smsStatus = smsResponse;
+                        credits = smsResponse.Equals("SENT") ? 1 : 0;
+                    }
+                    else
+                    {
+                        smsStatus = "SENT";
+                        credits = smsResponse[0].charges.Value;
+                    }
+                    //_logger.LogDebug("SMS Response Status: " + smsResponseStatus);
                     var smsObj = new SMSHistoryDto()
                     {
                         MessageSent = message,
@@ -128,12 +140,13 @@ namespace Nvg.SMSService.SMS
                         ProviderName = sms.ProviderName,
                         Tags = sms.Tag,
                         SentOn = DateTime.UtcNow,
-                        Status = smsResponseStatus,
+                        Status = smsStatus,
                         Attempts = 1,
+                        CreditsCharged = credits
                     };
                     _smsHistoryInteractor.AddSMSHistory(smsObj);
 
-                    _smsQuotaInteractor.IncrementSMSQuota(smsInputs.ChannelKey);
+                    _smsQuotaInteractor.IncrementSMSQuota(smsInputs.ChannelKey, credits);
                 }
             }
         }

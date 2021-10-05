@@ -11,6 +11,7 @@ namespace Nvg.SMSService.Service
     {
         HttpResponseMessage Get(string url);
         Task<HttpResponseMessage> Post(string url, Dictionary<string, string> parameters, Dictionary<string, string> headers);
+        Task<HttpResponseMessage> PostData(string url, object model);
     }
 
     public class HttpService : IHttpService

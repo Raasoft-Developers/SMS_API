@@ -44,14 +44,14 @@ namespace Nvg.SMSService.SMSQuota
             }
         }
 
-        public SMSResponseDto<SMSQuotaDto> IncrementSMSQuota(string channelKey)
+        public SMSResponseDto<SMSQuotaDto> IncrementSMSQuota(string channelKey,int creditsUsed)
         {
             _logger.LogInformation("UpdateSMSQuota interactor method.");
             var response = new SMSResponseDto<SMSQuotaDto>();
             try
             {
                 var channelID = _smsChannelRepository.GetSMSChannelByKey(channelKey)?.Result?.ID;
-                var smsQuotaResponse = _smsQuotaRepository.IncrementSMSQuota(channelID);
+                var smsQuotaResponse = _smsQuotaRepository.IncrementSMSQuota(channelID, creditsUsed);
                 _logger.LogDebug("Status: " + smsQuotaResponse.Status + "Message:" + smsQuotaResponse.Message);
                 var mappedResponse = _mapper.Map<SMSResponseDto<SMSQuotaDto>>(smsQuotaResponse);
                 return mappedResponse;

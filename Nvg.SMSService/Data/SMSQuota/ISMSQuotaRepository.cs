@@ -24,8 +24,9 @@ namespace Nvg.SMSService.Data.SMSQuota
         /// Increments the Consumption value in SMS Quota .
         /// </summary>
         /// <param name="channelID">Channel Id</param>
+        /// <param name="creditsUsed">Credits used for sending sms</param>
         /// <returns><see cref="SMSResponseDto{SMSQuotaTable}"/></returns>
-        SMSResponseDto<SMSQuotaTable> IncrementSMSQuota(string channelID);
+        SMSResponseDto<SMSQuotaTable> IncrementSMSQuota(string channelID, int creditsUsed);
 
         /// <summary>
         /// Updates the SMS Quota.
@@ -49,7 +50,7 @@ namespace Nvg.SMSService.Data.SMSQuota
         /// <param name="currentMonth">Current Month</param>
         /// <returns><see cref="SMSResponseDto{SMSQuotaTable}"/></returns>
         SMSResponseDto<SMSQuotaTable> UpdateCurrentMonth(string channelKey, string currentMonth);
-        
+
         /// <summary>
         /// Deletes the SMS Quota Values from the SMS Channel ID.
         /// </summary>

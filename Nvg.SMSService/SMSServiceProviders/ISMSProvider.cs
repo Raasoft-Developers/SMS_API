@@ -14,6 +14,6 @@ namespace Nvg.SMSService.SMSServiceProviders
         /// <param name="message">Message Body</param>
         /// <param name="sender">Sender</param>
         /// <returns><see cref="Task{TResult}"/></returns>
-        public Task<string> SendSMS(string recipients, string message, string sender = "");
+        public Task<dynamic> SendSMS(string recipients, string message, string sender = "");
     }
 }

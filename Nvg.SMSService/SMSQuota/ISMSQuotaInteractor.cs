@@ -15,8 +15,9 @@ namespace Nvg.SMSService.SMSQuota
         /// Updates the Consumption value of the SMS Quota.
         /// </summary>
         /// <param name="channelKey">Channel Key</param>
+        /// <param name="creditsUsed">Credits used for sending sms</param>
         /// <returns><see cref="SMSResponseDto{SMSQuotaDto}"/></returns>
-        SMSResponseDto<SMSQuotaDto> IncrementSMSQuota(string channelKey);
+        SMSResponseDto<SMSQuotaDto> IncrementSMSQuota(string channelKey, int creditsUsed);
 
         /// <summary>
         /// Check if SMS Quota of the channel is exceeded.Status is set to true or false based on value

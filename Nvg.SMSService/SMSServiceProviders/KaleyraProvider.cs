@@ -23,7 +23,7 @@ namespace Nvg.SMSService.SMSServiceProviders
             _logger = logger;
         }
 
-        public async Task<string> SendSMS(string recipients, string message, string sender = null)
+        public async Task<dynamic> SendSMS(string recipients, string message, string sender = null)
         {
             string responseMsg = "NOT SENT";
 
@@ -59,7 +59,7 @@ namespace Nvg.SMSService.SMSServiceProviders
                 _logger.LogError("Could not send SMS. " + JObject.Parse(apiResponse)["message"].ToString());
                 responseMsg = responseMsg + ". " + JObject.Parse(apiResponse)["message"].ToString();
             }
-
+            // TODO: Need to find a way to retrieve  Credits used.
             return responseMsg;
         }
     }
