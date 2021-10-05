@@ -23,9 +23,8 @@ namespace Nvg.SMSService.SMSServiceProviders
             _logger = logger;
         }
 
-        public async Task<dynamic> SendSMS(string recipients, string message, string sender = null)
+        public async Task<SmsProviderResponse> SendSMS(string recipients, string message, string sender = null)
         {
-            dynamic responseData;
             string method;
 
             var url = _smsProviderCS.Fields["url"];
@@ -62,30 +61,41 @@ namespace Nvg.SMSService.SMSServiceProviders
             HttpService httpService = new HttpService();
             HttpResponseMessage response = await httpService.Post(url, parameters, headers);
             string apiResponse = response.Content.ReadAsStringAsync().Result;
-
+            string statusMessage = "NOT SENT";
+            dynamic result;
             if (response.IsSuccessStatusCode)
             {
                 JObject smsResponse = JObject.Parse(apiResponse);
-                dynamic result;
+                
                 if (smsResponse.ContainsKey("data"))
                 {
-                    _logger.LogInformation("SMS Sent");
+                    statusMessage = "SMS SENT";
+                    _logger.LogInformation(statusMessage);
+
                     result = JsonConvert.DeserializeObject<dynamic>(smsResponse["data"].ToString());
                 }
                 else
                 {
-                    result = "NOT SENT." + smsResponse["message"].ToString();
+                    statusMessage = "NOT SENT." + smsResponse["message"].ToString();
+                    result = null;
                     _logger.LogInformation("NOT SENT." + smsResponse["message"].ToString());
                 }
-                responseData = result;
             }
             else
             {
+                result = null;
                 _logger.LogError("Could not send SMS. " + JObject.Parse(apiResponse)["message"].ToString());
-                responseData = "NOT SENT. " + JObject.Parse(apiResponse)["message"].ToString();
+                statusMessage = "NOT SENT. " + JObject.Parse(apiResponse)["message"].ToString();
             }
 
-            return responseData;
+            SmsProviderResponse smsProviderResponse = new SmsProviderResponse
+            {
+                StatusMessage = statusMessage,
+                Unit = result != null? result[0].units.Value : null,
+                SmsCost = result != null ?  result[0].charges.Value: null
+            };
+
+            return smsProviderResponse;
         }
     }
 }
