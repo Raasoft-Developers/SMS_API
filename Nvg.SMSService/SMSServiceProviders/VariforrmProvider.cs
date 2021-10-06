@@ -69,7 +69,7 @@ namespace Nvg.SMSService.SMSServiceProviders
                 
                 if (smsResponse.ContainsKey("data"))
                 {
-                    statusMessage = "SMS SENT";
+                    statusMessage = "SENT";
                     _logger.LogInformation(statusMessage);
 
                     result = JsonConvert.DeserializeObject<dynamic>(smsResponse["data"].ToString());

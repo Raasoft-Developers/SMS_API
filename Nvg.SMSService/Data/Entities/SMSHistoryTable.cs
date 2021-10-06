@@ -28,5 +28,8 @@ namespace Nvg.SMSService.Data.Entities
         public string Tags { get; set; }
         public string Status { get; set; }
         public int Attempts { get; set; }
+
+        public long? ActualSMSCount { get; set; }
+        public long? ActualSMSCost { get; set; }
     }
 }

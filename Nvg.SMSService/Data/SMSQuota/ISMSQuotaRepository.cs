@@ -26,7 +26,7 @@ namespace Nvg.SMSService.Data.SMSQuota
         /// <param name="channelID">Channel Id</param>
         /// <param name="creditsUsed">Credits used for sending sms</param>
         /// <returns><see cref="SMSResponseDto{SMSQuotaTable}"/></returns>
-        SMSResponseDto<SMSQuotaTable> IncrementSMSQuota(string channelID, int creditsUsed);
+        SMSResponseDto<SMSQuotaTable> IncrementSMSQuota(string channelID, long creditsUsed);
 
         /// <summary>
         /// Updates the SMS Quota.

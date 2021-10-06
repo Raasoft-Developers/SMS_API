@@ -78,7 +78,7 @@ namespace Nvg.SMSService.Data.SMSQuota
             }
         }
 
-        public SMSResponseDto<SMSQuotaTable> IncrementSMSQuota(string channelID, int creditsUsed)
+        public SMSResponseDto<SMSQuotaTable> IncrementSMSQuota(string channelID, long creditsUsed)
         {
             var response = new SMSResponseDto<SMSQuotaTable>();
             try
@@ -86,12 +86,12 @@ namespace Nvg.SMSService.Data.SMSQuota
                 var smsQuota = _context.SMSQuotas.FirstOrDefault(q => q.SMSChannelID == channelID);
                 if (smsQuota != null)
                 {
-                    var totalCountInt = Convert.ToInt32(smsQuota.TotalConsumption); // TODO Implement encryption 
-                    var monthCountInt = Convert.ToInt32(smsQuota.MonthlyConsumption); // TODO Implement encryption 
+                    var totalCountInt = Convert.ToInt64(smsQuota.TotalConsumption); // TODO Implement encryption 
+                    var monthCountInt = Convert.ToInt64(smsQuota.MonthlyConsumption); // TODO Implement encryption 
                     totalCountInt += creditsUsed; 
                     monthCountInt += creditsUsed;
-                    smsQuota.TotalConsumption = totalCountInt;
-                    smsQuota.MonthlyConsumption = monthCountInt;
+                    smsQuota.TotalConsumption = Convert.ToInt32(totalCountInt);
+                    smsQuota.MonthlyConsumption = Convert.ToInt32(monthCountInt);
                     _context.SMSQuotas.Update(smsQuota);
                 }
                 else

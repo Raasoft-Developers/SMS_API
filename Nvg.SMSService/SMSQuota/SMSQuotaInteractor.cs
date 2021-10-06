@@ -44,7 +44,7 @@ namespace Nvg.SMSService.SMSQuota
             }
         }
 
-        public SMSResponseDto<SMSQuotaDto> IncrementSMSQuota(string channelKey,int creditsUsed)
+        public SMSResponseDto<SMSQuotaDto> IncrementSMSQuota(string channelKey,long creditsUsed)
         {
             _logger.LogInformation("UpdateSMSQuota interactor method.");
             var response = new SMSResponseDto<SMSQuotaDto>();

@@ -63,8 +63,8 @@ namespace Nvg.SMSService.SMSServiceProviders
             SmsProviderResponse smsProviderResponse = new SmsProviderResponse
             {
                 StatusMessage = responseMsg,
-                //Unit = 0,
-                //SmsCost = 0
+                Unit = null,
+                SmsCost = null
             };
             return smsProviderResponse;
         }

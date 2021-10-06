@@ -17,7 +17,7 @@ namespace Nvg.SMSBackgroundTask
         private readonly ISMSHistoryInteractor _smsHistoryInteractor;
         private readonly ISMSQuotaInteractor _smsQuotaInteractor;
         private readonly SMSProviderConnectionString _smsProviderConnectionString;
-        private readonly ILogger<SMSManager> _logger;
+        private readonly ILogger<SMSManager> _logger;     
 
         public SMSManager(ISMSProvider smsProvider, ISMSTemplateInteractor smsTemplateInteractor,
             ISMSHistoryInteractor smsHistoryInteractor, ISMSQuotaInteractor smsQuotaInteractor,
@@ -47,18 +47,29 @@ namespace Nvg.SMSBackgroundTask
                 sender = _smsProviderConnectionString.Fields["sender"];
             _logger.LogDebug("sender: " + sender);
             var smsResponse = _smsProvider.SendSMS(sms.Recipients, message, sender).Result;
-            string smsStatus;
-            int credits;
-            if (smsResponse is string)
+          
+            long credits;
+            //if (smsResponse is string)
+            //{
+            //    smsStatus = smsResponse.StatusMessage;
+            //    credits = smsResponse.Equals("SENT") ? 1 : 0;
+            //}
+            //else
+            //{
+            //    smsStatus = "SENT";
+            //    //  credits = smsResponse[0].charges.Value;
+            //    credits = (long)smsResponse.SmsCost;
+            //}
+
+            if (smsResponse.SmsCost is null)
             {
-                smsStatus = smsResponse;
-                credits = smsResponse.Equals("SENT") ? 1 : 0;
+                credits = 1;
             }
             else
             {
-                smsStatus = "SENT";
-                credits = (int)((Newtonsoft.Json.Linq.JValue)smsResponse[0]["charges"]).Value;
+                credits = smsResponse.SmsCost.Value;
             }
+
             //_logger.LogDebug("SMS Response Status: " + smsResponseStatus);
             var smsObj = new SMSHistoryDto()
             {
@@ -71,9 +82,10 @@ namespace Nvg.SMSBackgroundTask
                 ProviderName = sms.ProviderName,
                 Tags = sms.Tag,
                 SentOn = DateTime.UtcNow,
-                Status = smsStatus,
+                Status = smsResponse.StatusMessage,
                 Attempts = 1,
-                CreditsCharged = credits
+                ActualSMSCount = smsResponse.Unit,
+                ActualSMSCost = credits
             };
             _smsHistoryInteractor.AddSMSHistory(smsObj);
 

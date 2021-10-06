@@ -52,6 +52,12 @@ namespace Nvg.SMSService.data.Migrations.SqlServerMigrations
                     b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<long?>("ActualSMSCost")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("ActualSMSCount")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("Attempts")
                         .HasColumnType("int");
 

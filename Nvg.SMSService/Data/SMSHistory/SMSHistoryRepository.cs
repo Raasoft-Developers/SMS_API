@@ -77,7 +77,9 @@ namespace Nvg.SMSService.Data.SMSHistory
                                     TemplateName = h.TemplateName,
                                     TemplateVariant = h.TemplateVariant,
                                     ChannelKey = c.Key,
-                                    ProviderName = pr.Name
+                                    ProviderName = pr.Name,
+                                    ActualSMSCount = h.ActualSMSCount,
+                                    ActualSMSCost = h.ActualSMSCost
                                 }).ToList();
 
                 response.Status = true;
@@ -118,7 +120,9 @@ namespace Nvg.SMSService.Data.SMSHistory
                                     TemplateName=h.TemplateName,
                                     TemplateVariant=h.TemplateVariant,
                                     ChannelKey=c.Key,
-                                    ProviderName=pr.Name
+                                    ProviderName=pr.Name,
+                                    ActualSMSCount=h.ActualSMSCount,
+                                    ActualSMSCost=h.ActualSMSCost
                                     }).ToList();
                 
                 response.Status = true;

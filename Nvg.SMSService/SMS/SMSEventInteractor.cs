@@ -22,7 +22,7 @@ namespace Nvg.SMSService.SMS
         private readonly ILogger<SMSEventInteractor> _logger;
         private readonly ILogger<VariforrmProvider> _variforrmLogger;
         private readonly ILogger<KaleyraProvider> _kaleyraLogger;
-        private SMSProviderConnectionString _smsProviderConnectionString;
+        private SMSProviderConnectionString _smsProviderConnectionString;        
 
         // This constructor is used when SMSEventBusEnabled = true in appsettings.
         public SMSEventInteractor(IEventBus eventBus, IConfiguration configuration, ISMSProviderInteractor smsProviderInteractor,
@@ -116,19 +116,29 @@ namespace Nvg.SMSService.SMS
 
                     ISMSProvider _smsProvider = GetSMSProvider(provider.Type);
                     var smsResponse = _smsProvider.SendSMS(recipient, message, sender).Result;
-                    string smsStatus;
-                    int credits;
-                    if (smsResponse is string)
+                  
+                    long credits;
+                    //if (smsResponse is string)
+                    //{
+                    //    smsStatus = smsResponse.StatusMessage;
+                    //    credits = smsResponse.Equals("SENT") ? 1 : 0;
+                    //}
+                    //else
+                    //{
+                    //    smsStatus = "SENT";
+                    //    //  credits = smsResponse[0].charges.Value;
+                    //    credits = (long) smsResponse.SmsCost;
+                    //}
+                    if (smsResponse.SmsCost is null)
                     {
-                        smsStatus = smsResponse;
-                        credits = smsResponse.Equals("SENT") ? 1 : 0;
+                        credits = 1;
                     }
                     else
                     {
-                        smsStatus = "SENT";
-                        credits = smsResponse[0].charges.Value;
+                        credits = smsResponse.SmsCost.Value;
                     }
-                    //_logger.LogDebug("SMS Response Status: " + smsResponseStatus);
+                
+                    //  _logger.LogDebug("SMS Response Status: " + smsResponseStatus);
                     var smsObj = new SMSHistoryDto()
                     {
                         MessageSent = message,
@@ -140,9 +150,12 @@ namespace Nvg.SMSService.SMS
                         ProviderName = sms.ProviderName,
                         Tags = sms.Tag,
                         SentOn = DateTime.UtcNow,
-                        Status = smsStatus,
+                        Status = smsResponse.StatusMessage,
                         Attempts = 1,
-                        CreditsCharged = credits
+                        // CreditsCharged = credits
+                        //ActualSMSCount =smsResponse[0].units,
+                        ActualSMSCount = smsResponse.Unit,
+                        ActualSMSCost = credits
                     };
                     _smsHistoryInteractor.AddSMSHistory(smsObj);
 
