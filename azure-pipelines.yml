@@ -18,10 +18,9 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
-- task: Docker@2
+- task: SSH@0
   inputs:
-    containerRegistry: 'digitalocean registry'
-    repository: 'tv2/sms111'
-    command: 'buildAndPush'
-    buildContext: '$(Build.SourcesDirectory)'
-    Dockerfile: '**/Dockerfile'  
+    sshEndpoint: 'local kubernetes'
+    runOptions: 'inline'
+    inline: 'kubectl get pods -n local-dev-etms'
+    readyTimeout: '20000'
