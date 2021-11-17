@@ -22,7 +22,12 @@ namespace Nvg.SMSService.DTOS
         public string Message { get; set; }
         public T Result { get; set; }
     }
-
+    public class SMSBalanceDto
+    {
+        public bool HasLimit { get; set; }
+        public bool IsExceeded { get; set; }
+        public int Balance { get; set; }
+    }
     public class SMSDTOProfile : Profile
     {
         

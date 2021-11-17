@@ -10,7 +10,7 @@ namespace Nvg.SMSService.SMS
         /// </summary>
         /// <param name="smsInputs"><see cref="SMSDto"/> model</param>
         /// <returns><see cref="SMSResponseDto{T}"/></returns>
-        SMSResponseDto<string> SendSMS(SMSDto smsInputs);
+        SMSResponseDto<SMSBalanceDto> SendSMS(SMSDto smsInputs);
 
         /// <summary>
         /// Adds the SMS Pool to the database.

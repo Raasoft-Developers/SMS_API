@@ -65,10 +65,10 @@ namespace Nvg.SMSService.SMSQuota
             }
         }
 
-        public bool CheckIfQuotaExceeded(string channelKey)
+        public SMSBalanceDto CheckIfQuotaExceeded(string channelKey)
         {
             _logger.LogInformation("CheckIfQuotaExceeded interactor method.");
-            var response = false;
+            var response = new SMSBalanceDto();
             try
             {
                 var smsQuotaResponse = _smsQuotaRepository.GetSMSQuota(channelKey);
@@ -76,41 +76,40 @@ namespace Nvg.SMSService.SMSQuota
                 {
                     var smsQuota = smsQuotaResponse.Result;
                     var currentMonth = DateTime.Now.ToString("MMM").ToUpper();
-                    //Check if Quota is set for current month
-                    if (smsQuota.CurrentMonth == currentMonth)
+                    //Check if Current Month in Table is set to the actual current month else update the table value
+                    if (smsQuota.CurrentMonth != currentMonth)
                     {
-                        //Check if quota is exceeded for current month
-                        if (smsQuota.TotalQuota != -1 && (smsQuota.MonthlyConsumption >= smsQuota.MonthlyQuota || smsQuota.TotalConsumption >= smsQuota.TotalQuota))
-                        {
-                            response = true;
-                        }
-                    }
-                    else
-                    {   //Reset Quota for Current month and Update the Current Month
                         var updatedQuotaResponse = _smsQuotaRepository.UpdateCurrentMonth(channelKey, currentMonth);
                         if (updatedQuotaResponse.Status)
                         {
                             _logger.LogDebug("Status: " + updatedQuotaResponse.Status + ", Message: " + updatedQuotaResponse.Message);
                             smsQuota = updatedQuotaResponse.Result;
-                            //Check if quota is exceeded for current month
-                            if (smsQuota.TotalQuota != -1 && (smsQuota.MonthlyConsumption >= smsQuota.MonthlyQuota || smsQuota.TotalConsumption >= smsQuota.TotalQuota))
-                            {
-                                response = true;
-                            }
                         }
-                        else
+                    }
+                    if (smsQuota.TotalQuota != -1)
+                    {
+                        response.HasLimit = true;
+                        response.Balance = smsQuota.TotalQuota - smsQuota.TotalConsumption;
+                        //Replace Balance with the lower value from the Total and Monthly Balance
+                        var monthlyBalance = smsQuota.MonthlyQuota - smsQuota.MonthlyConsumption;
+                        if (response.Balance > monthlyBalance)
                         {
-                            throw new Exception(updatedQuotaResponse.Message);
+                            response.Balance = monthlyBalance;
+                        }
+                        if (smsQuota.MonthlyConsumption >= smsQuota.MonthlyQuota || smsQuota.TotalConsumption >= smsQuota.TotalQuota)
+                        {
+                            response.IsExceeded = true;
                         }
                     }
                 }
                 _logger.LogDebug("Status: " + smsQuotaResponse.Status + ", Message: " + smsQuotaResponse.Message);
+                _logger.LogDebug("IsExceed: " + response.IsExceeded + ", Balance: " + response.Balance + ", HasLimit: " + response.HasLimit);
                 return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError("Failed to get SMS Quota" + ex.Message);
-                response = true;
+                response.IsExceeded = true;
                 return response;
             }
         }

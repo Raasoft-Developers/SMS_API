@@ -23,8 +23,8 @@ namespace Nvg.SMSService.SMSQuota
         /// Check if SMS Quota of the channel is exceeded.Status is set to true or false based on value
         /// </summary>
         /// <param name="channelKey">Channel Key</param>
-        /// <returns><see cref="bool"/></returns>
-        bool CheckIfQuotaExceeded(string channelKey);
+        /// <returns><see cref="SMSBalanceDto"/></returns>
+        SMSBalanceDto CheckIfQuotaExceeded(string channelKey);
 
 
         /// <summary>

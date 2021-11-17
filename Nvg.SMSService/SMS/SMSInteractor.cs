@@ -301,11 +301,11 @@ namespace Nvg.SMSService.SMS
             }
         }
 
-        public SMSResponseDto<string> SendSMS(SMSDto smsInputs)
+        public SMSResponseDto<SMSBalanceDto> SendSMS(SMSDto smsInputs)
         {
 
             _logger.LogInformation("SendSMS interactor method.");
-            var response = new SMSResponseDto<string>();
+            var response = new SMSResponseDto<SMSBalanceDto>();
             try
             {
                 if (string.IsNullOrEmpty(smsInputs.ChannelKey))
@@ -344,17 +344,18 @@ namespace Nvg.SMSService.SMS
                         return response;
                     }
                 }
-                var isExceeded = _smsQuotaInteractor.CheckIfQuotaExceeded(smsInputs.ChannelKey);
-                if (isExceeded)
+                var smsBalance = _smsQuotaInteractor.CheckIfQuotaExceeded(smsInputs.ChannelKey);
+                if (smsBalance != null && smsBalance.IsExceeded)
                 {
                     _logger.LogError($"SMS Quota for Channel {smsInputs.ChannelKey} has been reached.");
-                    response.Status = !isExceeded;
+                    response.Status = !smsBalance.IsExceeded;
                     response.Message = $"SMS Quota for Channel {smsInputs.ChannelKey} has been reached.";
                     return response;
                 }
                 _logger.LogInformation("Trying to send sms.");
                 _smsEventInteractor.SendSMS(smsInputs);
                 response.Status = true;
+                response.Result = smsBalance;
                 response.Message = $"SMS is sent successfully to {smsInputs.Recipients}.";
                 _logger.LogDebug("" + response.Message);
                 return response;
