@@ -335,7 +335,6 @@ namespace Nvg.SMSService.SMS
                 }
                 else
                 {
-
                     var templateExist = _smsTemplateInteractor.CheckIfTemplateExist(smsInputs.ChannelKey, smsInputs.TemplateName).Result;
                     if (!templateExist)
                     {
