@@ -3,6 +3,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using Newtonsoft.Json;
 using Nvg.API.SMS.Extensions;
 using Nvg.SMSService.Data;
@@ -62,15 +64,37 @@ namespace Nvg.API.SMS
             }
         }
 
-        private static IWebHost CreateHostBuilder(IConfiguration configuration, string[] args) =>
-        WebHost.CreateDefaultBuilder(args)
+        //private static IWebHost CreateHostBuilder(IConfiguration configuration, string[] args) =>
+        //WebHost.CreateDefaultBuilder(args)
+        //    .ConfigureServices(services => services.AddAutofac())
+        //    .UseConfiguration(configuration)
+        //    .CaptureStartupErrors(false)
+        //    .UseStartup<Startup>()
+        //    .UseSerilog()
+        //    .Build();
+        private static IWebHost CreateHostBuilder(IConfiguration configuration, string[] args)
+        {
+            var host = WebHost.CreateDefaultBuilder(args)
             .ConfigureServices(services => services.AddAutofac())
             .UseConfiguration(configuration)
             .CaptureStartupErrors(false)
-            .UseStartup<Startup>()
-            .UseSerilog()
-            .Build();
-
+            .UseStartup<Startup>();
+            //.UseSerilog()
+            //.Build();
+            if (configuration["logsService"] == "Azure")
+            {
+                host.ConfigureLogging(logging =>
+                {
+                    logging.AddApplicationInsights(configuration["ApplicationInsights:InstrumentationKey"]);
+                    logging.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Information); //#you can set the logLevel here
+                });
+            }
+            else
+            {
+                host.UseSerilog();
+            }
+            return host.Build();
+        }
         private static Serilog.ILogger CreateLogger(IConfiguration configuration)
         {
             //return new LoggerConfiguration()

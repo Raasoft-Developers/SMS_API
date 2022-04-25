@@ -90,6 +90,11 @@ namespace Nvg.API.SMS
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            if (Configuration["logsService"] == "Azure")
+            {
+                // The following line enables Application Insights telemetry collection.
+                services.AddApplicationInsightsTelemetry();
+            }
             ConfigureIdentityServer(services);
             //services.RegisterEventBus(Configuration);
             //services.ConfigureAutoMapper();
@@ -220,7 +225,7 @@ namespace Nvg.API.SMS
             app.UseCors("VueCorsPolicy");
             app.UseAuthorization();
 
-            app.UseSerilogRequestLogging();
+            //app.UseSerilogRequestLogging();
 
             app.UseEndpoints(endpoints =>
             {
