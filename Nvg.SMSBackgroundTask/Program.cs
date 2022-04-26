@@ -3,6 +3,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using Nvg.SMSBackgroundTask.Extensions;
 using Serilog;
 using System;
@@ -41,17 +43,41 @@ namespace Nvg.SMSBackgroundTask
             }
         }
 
-        private static IWebHost BuildWebHost(IConfiguration configuration, string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .CaptureStartupErrors(false)
-                .UseStartup<Startup>()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .ConfigureServices(services => services.AddAutofac())
-                .UseConfiguration(configuration)
-                .UseSerilog()
-                .Build();
+        //private static IWebHost BuildWebHost(IConfiguration configuration, string[] args) =>
+        //    WebHost.CreateDefaultBuilder(args)
+        //        .CaptureStartupErrors(false)
+        //        .UseStartup<Startup>()
+        //        .UseContentRoot(Directory.GetCurrentDirectory())
+        //        .ConfigureServices(services => services.AddAutofac())
+        //        .UseConfiguration(configuration)
+        //        .UseSerilog()
+        //        .Build();
 
-        private static ILogger CreateSerilogLogger(IConfiguration configuration)
+        private static IWebHost BuildWebHost(IConfiguration configuration, string[] args)
+        {
+            var host = WebHost.CreateDefaultBuilder(args)
+            .CaptureStartupErrors(false)
+            .UseStartup<Startup>()
+            .UseContentRoot(Directory.GetCurrentDirectory())
+            .ConfigureServices(services => services.AddAutofac())
+            .UseConfiguration(configuration);
+            //.UseSerilog()
+            //.Build();
+            if (configuration["logsService"] == "Azure")
+            {
+                host.ConfigureLogging(logging =>
+                {
+                    logging.AddApplicationInsights(configuration["ApplicationInsights:InstrumentationKey"]);
+                    logging.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Information); //#you can set the logLevel here
+                });
+            }
+            else
+            {
+                host.UseSerilog();
+            }
+            return host.Build();
+        }
+        private static Serilog.ILogger CreateSerilogLogger(IConfiguration configuration)
         {
             var seqServerUrl = configuration["Serilog:SeqServerUrl"];
             var logstashUrl = configuration["Serilog:LogstashgUrl"];

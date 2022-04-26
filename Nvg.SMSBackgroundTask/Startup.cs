@@ -28,7 +28,11 @@ namespace Nvg.SMSBackgroundTask
                 .Configure<BackgroundTaskSettings>(Configuration)
                 .AddOptions()
                 .AddEventBus(Configuration);
-
+            if (Configuration["logsService"] == "Azure")
+            {
+                // The following line enables Application Insights telemetry collection.
+                services.AddApplicationInsightsTelemetry();
+            }
             var container = new ContainerBuilder();
             container.Populate(services);
             container.RegisterModule(new ApplicationModule());
