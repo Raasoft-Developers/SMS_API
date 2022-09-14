@@ -33,8 +33,6 @@ namespace Nvg.SMSBackgroundTask
 
         public void SendSMS(SMS sms)
         {
-            try
-            {
                 _logger.LogInformation("SendSMS method");
                 string sender = string.Empty;
                 string message = sms.GetMessage(_smsTemplateInteractor);
@@ -92,10 +90,7 @@ namespace Nvg.SMSBackgroundTask
                 _smsHistoryInteractor.AddSMSHistory(smsObj);
 
                 _smsQuotaInteractor.IncrementSMSQuota(sms.ChannelKey, credits);
-            }catch(Exception ex)
-            {
-                _logger.LogError($"Error while sending SMS: {ex}");
-            }
+            
         }
     }
 }

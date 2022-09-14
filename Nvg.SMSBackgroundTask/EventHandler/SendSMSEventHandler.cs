@@ -27,6 +27,7 @@ namespace Nvg.SMSBackgroundTask.EventHandler
             _logger.LogDebug($"Subscriber received a SendSMSEvent notification.");
             if (@event.Id != Guid.Empty)
             {
+                try { 
                 using IServiceScope scope = GetScope(@event.ChannelKey);
                 var smsManager = scope.ServiceProvider.GetService<SMSManager>();
 
@@ -53,10 +54,16 @@ namespace Nvg.SMSBackgroundTask.EventHandler
                     Tag = @event.Tag
                 };
                 smsManager.SendSMS(sms);
-                /*}
-                else
-                    _logger.LogDebug($"SMS settings are not Enabled or you have crossed the MonthlySMSQuota");
-                */
+                _logger.LogDebug($"SMS Sent");
+                    /*}
+                    else
+                        _logger.LogDebug($"SMS settings are not Enabled or you have crossed the MonthlySMSQuota");
+                    */
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Error while sending SMS: {ex}");
+                }
             }
             return Task.FromResult(true);
         }
