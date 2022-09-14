@@ -46,9 +46,9 @@ namespace Nvg.SMSBackgroundTask
                 if (string.IsNullOrEmpty(sender))
                     sender = _smsProviderConnectionString.Fields["sender"];
                 _logger.LogDebug("sender: " + sender);
-                var smsResponse = _smsProvider.SendSMS(sms.Recipients, message, sender).Result;
-
-                long credits;
+               // var smsResponse = _smsProvider.SendSMS(sms.Recipients, message, sender).Result;
+            _smsProvider.SendSMS(sms.Recipients, message, sender);
+            long credits;
                 //if (smsResponse is string)
                 //{
                 //    smsStatus = smsResponse.StatusMessage;
@@ -61,14 +61,14 @@ namespace Nvg.SMSBackgroundTask
                 //    credits = (long)smsResponse.SmsCost;
                 //}
 
-                if (smsResponse.SmsCost is null)
-                {
-                    credits = 1;
-                }
-                else
-                {
-                    credits = smsResponse.SmsCost.Value;
-                }
+                //if (smsResponse.SmsCost is null)
+                //{
+                //    credits = 1;
+                //}
+                //else
+                //{
+                //    credits = smsResponse.SmsCost.Value;
+                //}
 
                 //_logger.LogDebug("SMS Response Status: " + smsResponseStatus);
                 var smsObj = new SMSHistoryDto()
@@ -82,14 +82,14 @@ namespace Nvg.SMSBackgroundTask
                     ProviderName = sms.ProviderName,
                     Tags = sms.Tag,
                     SentOn = DateTime.UtcNow,
-                    Status = smsResponse.StatusMessage,
+                    //Status = smsResponse.StatusMessage,
                     Attempts = 1,
-                    ActualSMSCount = smsResponse.Unit,
-                    ActualSMSCost = credits
+                    //ActualSMSCount = smsResponse.Unit,
+                    //ActualSMSCost = credits
                 };
                 _smsHistoryInteractor.AddSMSHistory(smsObj);
 
-                _smsQuotaInteractor.IncrementSMSQuota(sms.ChannelKey, credits);
+               // _smsQuotaInteractor.IncrementSMSQuota(sms.ChannelKey, credits);
             
         }
     }
