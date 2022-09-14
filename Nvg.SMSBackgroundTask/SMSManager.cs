@@ -82,7 +82,7 @@ namespace Nvg.SMSBackgroundTask
                     ProviderName = sms.ProviderName,
                     Tags = sms.Tag,
                     SentOn = DateTime.UtcNow,
-                    //Status = smsResponse.StatusMessage,
+                    Status = "SENT", //smsResponse.StatusMessage,
                     Attempts = 1,
                     //ActualSMSCount = smsResponse.Unit,
                     //ActualSMSCost = credits
