@@ -54,7 +54,7 @@ namespace Nvg.SMSBackgroundTask.EventHandler
                     TemplateName = @event.TemplateName,
                     Tag = @event.Tag
                 };
-                var res = smsManager.SendSMS(sms);
+                var res = await smsManager.SendSMS(sms);
                 _logger.LogDebug($"SMS Sent: {JsonConvert.SerializeObject(res) }");
                     /*}
                     else
