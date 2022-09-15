@@ -7,6 +7,7 @@ using Nvg.SMSService.SMSHistory;
 using Nvg.SMSService.SMSQuota;
 using Nvg.SMSService.SMSServiceProviders;
 using System;
+using System.Threading.Tasks;
 
 namespace Nvg.SMSBackgroundTask
 {
@@ -31,7 +32,7 @@ namespace Nvg.SMSBackgroundTask
             _logger = logger;
         }
 
-        public async void SendSMS(SMS sms)
+        public async Task<SmsProviderResponse> SendSMS(SMS sms)
         {
             _logger.LogInformation("SendSMS method");
             string sender = string.Empty;
@@ -71,26 +72,29 @@ namespace Nvg.SMSBackgroundTask
             }
 
             //_logger.LogDebug("SMS Response Status: " + smsResponseStatus);
-            var smsObj = new SMSHistoryDto()
+            if (smsResponse.Status != "Error")
             {
-                MessageSent = message,
-                Sender = sender,
-                Recipients = sms.Recipients,
-                TemplateName = sms.TemplateName,
-                TemplateVariant = sms.Variant,
-                ChannelKey = sms.ChannelKey,
-                ProviderName = sms.ProviderName,
-                Tags = sms.Tag,
-                SentOn = DateTime.UtcNow,
-                Status = smsResponse.StatusMessage,
-                Attempts = 1,
-                ActualSMSCount = smsResponse.Unit,
-                ActualSMSCost = credits
-            };
-            _smsHistoryInteractor.AddSMSHistory(smsObj);
+                var smsObj = new SMSHistoryDto()
+                {
+                    MessageSent = message,
+                    Sender = sender,
+                    Recipients = sms.Recipients,
+                    TemplateName = sms.TemplateName,
+                    TemplateVariant = sms.Variant,
+                    ChannelKey = sms.ChannelKey,
+                    ProviderName = sms.ProviderName,
+                    Tags = sms.Tag,
+                    SentOn = DateTime.UtcNow,
+                    Status = smsResponse.StatusMessage,
+                    Attempts = 1,
+                    ActualSMSCount = smsResponse.Unit,
+                    ActualSMSCost = credits
+                };
+                _smsHistoryInteractor.AddSMSHistory(smsObj);
 
-            _smsQuotaInteractor.IncrementSMSQuota(sms.ChannelKey, credits);
-
+                _smsQuotaInteractor.IncrementSMSQuota(sms.ChannelKey, credits);
+            }
+            return smsResponse;
         }
     }
 }

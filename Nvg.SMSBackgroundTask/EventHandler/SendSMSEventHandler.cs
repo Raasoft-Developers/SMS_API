@@ -1,6 +1,7 @@
 ﻿using EventBus.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Nvg.SMSBackgroundTask.Events;
 using Nvg.SMSBackgroundTask.Extensions;
 using Nvg.SMSBackgroundTask.Models;
@@ -53,8 +54,8 @@ namespace Nvg.SMSBackgroundTask.EventHandler
                     TemplateName = @event.TemplateName,
                     Tag = @event.Tag
                 };
-                smsManager.SendSMS(sms);
-                _logger.LogDebug($"SMS Sent");
+                var res = smsManager.SendSMS(sms);
+                _logger.LogDebug($"SMS Sent: {JsonConvert.SerializeObject(res) }");
                     /*}
                     else
                         _logger.LogDebug($"SMS settings are not Enabled or you have crossed the MonthlySMSQuota");

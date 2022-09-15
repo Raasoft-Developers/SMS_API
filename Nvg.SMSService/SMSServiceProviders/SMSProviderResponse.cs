@@ -9,5 +9,6 @@ namespace Nvg.SMSService.SMSServiceProviders
         public string StatusMessage { get; set; }
         public long? Unit { get; set; }
         public long? SmsCost { get; set; }
+        public string Status { get; set; }
     }
 }
