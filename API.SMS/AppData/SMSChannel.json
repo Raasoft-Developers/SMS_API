@@ -1,0 +1,7 @@
+[
+  {
+    "key": "default-channel",
+    "smsProviderName": "default-provider",
+    "smsPoolName": "default-pool"
+  }
+]
