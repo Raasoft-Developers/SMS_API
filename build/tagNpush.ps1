@@ -17,7 +17,7 @@ if($tag -eq ""){
 }
 
 #select services to push
-$allservices = @("nvgapisms","nvgsmsbackgroundtask")
+$allservices = @("apisms","smsbackgroundtask")
 if($num -eq "*"){
 For($i=0;$i -lt $allservices.Count;$i++){
 	$name=$allservices[$i];

@@ -1,9 +1,0 @@
-[
-  {
-    "name": "default-template",
-    "variant": "",
-    "sender": "",
-    "smsPoolName": "default-pool",
-    "messageTemplate": "Hi {User}, We have received your request. {Content}."
-  }
-]

@@ -338,8 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-/Nvg.API.SMS/.config/dotnet-tools.json
+/API.SMS/.config/dotnet-tools.json
 /docker-compose.yml
 /docker-compose.override.yml
 /docker-compose.dcproj
-/Nvg.API.SMS/Logs
+/API.SMS/Logs
